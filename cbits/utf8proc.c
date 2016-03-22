@@ -75,7 +75,7 @@
  */
 
 
-#include <xqilla/utils/utf8proc.h>
+#include "utf8proc.h"
 #include "utf8proc_data.h"
 
 const int8_t utf8proc_utf8class[256] = {

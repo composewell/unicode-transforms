@@ -92,7 +92,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <limits.h>
-#include <xqilla/framework/XQillaExport.hpp>
+#include <XQillaExport.hpp>
 
 #define UTF8PROC_NULLTERM         (1<<0)
 #define UTF8PROC_STABLE           (1<<1)
