@@ -1,0 +1,83 @@
+name:                unicode-transforms
+version:             0.1.0.0
+synopsis:            Unicode transforms (normalization, casefolding etc.)
+description:
+  This is a lightweight library supporting a limited set of unicode
+  transformations on `ByteStrings` (UTF-8) and `Text` (UTF-16).
+  without requiring any other system libraries. It is based on the `utf8proc` C
+  utility bundled with this package.
+  .
+  Following is a list of features and limitations of this library.
+  Feature               | Limitation
+  -------               | -----------
+  Unicode normalization | -
+  Case folding          | No option for special handling of `i` in Turkish
+  Case conversion       | No locale specific handling
+  Boundary Analysis     | No locale specific handling
+  .
+  This package provides a subset of the functionality provided by the full
+  featured `text-icu` package. It can be chosen over `text-icu` when you do
+  not need the extra functionality and more importantly do not want a
+  dependency on the `icu` libraries.
+  .
+  For more details see the README.md file.
+
+homepage:            http://github.com/harendra-kumar/unicode-transforms
+license:             BSD3
+license-file:        LICENSE
+author:              Harendra Kumar
+maintainer:          harendra.kumar@gmail.com
+copyright:           2016 Harendra Kumar
+category:            Data,Text,Unicode
+stability:           Experimental
+
+build-type:          Simple
+cabal-version:       >=1.10
+
+extra-source-files:
+  README.md
+
+library
+  default-language:    Haskell98
+  ghc-options:         -Wall
+                       -fwarn-identities
+                       -fwarn-incomplete-record-updates
+                       -fwarn-incomplete-uni-patterns
+                       -fwarn-tabs
+
+  cc-options:          -Wall
+
+  exposed-modules:     Data.ByteString.UTF8.Normalize
+                       Data.Text.Normalize
+                       Data.Unicode.Normalize
+  other-modules:
+                       Data.Unicode.Transform
+
+  build-depends:        base >= 4 && < 5
+                      , bytestring
+                      , text
+
+  include-dirs:        cbits
+  c-sources:           cbits/utf8proc.c
+
+test-suite test
+  default-language:    Haskell98
+  type:                exitcode-stdio-1.0
+  ghc-options:         -Wall -threaded -rtsopts -with-rtsopts=-N
+  hs-source-dirs:      test
+  main-is:             Tests.hs
+  other-modules:       Properties
+                       QuickCheckUtils
+  build-depends:         base >= 4 && < 5
+                       , bytestring
+                       , deepseq
+                       , getopt-generics
+                       , QuickCheck >= 2.4
+                       , test-framework
+                       , test-framework-quickcheck2 >= 0.2
+                       , text
+                       , unicode-transforms
+
+source-repository head
+  type:     git
+  location: https://github.com/harendra-kumar/unicode-transforms
