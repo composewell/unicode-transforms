@@ -36,6 +36,10 @@ cabal-version:       >=1.10
 
 extra-source-files:
   README.md
+  cbits/utf8proc.h
+  cbits/utf8proc_data.h
+  cbits/XQillaExport.hpp
+  stack.yaml
 
 library
   default-language:    Haskell98
