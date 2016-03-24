@@ -89,11 +89,14 @@ Some thoughts on consolidation. A total of 5 packages proposed to cover unicode
 support: 
 1. **_unicode-properties_**: A single package for character database with
 scripts to update it based on unicode standard database updates.
+
 2. **_unicode-transforms_**: A lightweight native Haskell package for basic unicode
 string transforms (normalization, case folding etc.) based on unicode-chars.
 Not a replacement for text-icu.
+
 3. **_utf8-string_**: A single UTF8 bytestring package including a normalized
 string representation like text-normal
+
 4. **_text_**: Existing text package (UTF16 representation). Include normalized
 text (text-normal) in the text package based on the native Haskell
 unicode-transforms package
