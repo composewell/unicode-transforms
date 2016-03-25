@@ -1,12 +1,11 @@
 # Unicode Transforms
 This is a lightweight library supporting a limited set of unicode
-transformations on `ByteStrings` (UTF-8) and `Text` (UTF-16).
-without requiring any other system libraries.
+transformations (currently only normalizations) on `ByteStrings` (UTF-8) and
+`Text` without requiring any other system libraries.
 
-Currently it exposes only normalization API. Support for more features listed
-in a later section exists but the API is not exposed intentionally. If you have
-a use case for any of these features please raise an issue or send a pull
-request.
+This package aims to fill the gap for some common unicode operations not
+supported by `text` or any other packages without requiring the heavyweight
+`text-icu` package. It aims to provide an API similar to `text-icu`.
 
 This package is based on the `utf8proc` C utility. The utf8proc version bundled
 with this package is taken from the
@@ -14,37 +13,34 @@ with this package is taken from the
 (xqilla version 2.3.2). It should not be too difficult to translate this into a
 native Haskell package.
 
-## Comparison with `text-icu`
-`text-icu` is a full featured implementation of unicode operations via bindings
-to the `icu` libraries. If you do not mind a dependency on the `icu` libraries
-(separately installed) or need a comprehensive set of unicode operations then
-`text-icu` will be a better choice.
-
 ## Features
 
-### Exposed
+### Normalization
 Normalization in NFC, NFKC, NFD, NFKD forms is fully supported and exposed via
 an API.
 
+### Casemapping and Casefolding
+The `text` package already provides proper unicode casemapping and casefolding
+operations. This package does not aim to expose these though the implementation
+is available.
+
 ### Available but not exposed
-The following features are available but not exposed via an API. If you need
-any of those they can be exposed quickly, please raise an issue or send a pull
-request.
+The following additional features are available but not exposed via an API. If
+you need any of those they can be exposed quickly, please raise an issue or
+send a pull request.
 
-Major features:
-
- Feature               | Limitations
- -------               | -----------
- Case folding          | No option for special handling of `i` in Turkish
- Case conversion       | No locale specific handling
- Boundary Analysis     | No locale specific handling
-
-Additional features:
+* Boundary Analysis (No locale specific handling)
 * NLF sequence conversion
 * Stripping certain character classes
 * Lumping certain characters
 
 ### Missing features
+
+`text-icu` is a full featured implementation of unicode operations via bindings
+to the `icu` libraries. If you do not mind a dependency on the `icu` libraries
+(separately installed) or need a comprehensive set of unicode operations then
+`text-icu` will be a better choice.
+
 The following features provided by `text-icu` are missing in this package:
 * Normalization checks
 * FCD normalization for collation
@@ -54,7 +50,7 @@ The following features provided by `text-icu` are missing in this package:
 
 # Haskell Unicode Landscape
 
-Unicode functionality in Haskell is fragemented across various packages.  The
+Unicode functionality in Haskell is fragmented across various packages.  The
 most comprehensive functionality is provided by `text-icu` which is based on
 the `icu` C++ libraries.
 
@@ -80,13 +76,12 @@ the `icu` C++ libraries.
 * [text](https://www.stackage.org/lts/package/text) An efficient packed Unicode text type
 * [text-normal](https://hackage.haskell.org/package/text-normal) Data types for Unicode-normalized text - depends on text-icu
 
-# What needs to be done?
+# Thoughts on package structuring
 
-It will be good to consolidate all native haskell packages into a standard
-module structure under a minimum number of packages and evolve those.
-
-Some thoughts on consolidation. A total of 5 packages proposed to cover unicode
-support:
+In my opinion, it will be good to consolidate all native haskell packages into
+a standard module structure under a minimum number of packages and evolve
+those. The following structure in three layers should be enough to cover
+unicode handling:
 
 1. **_unicode-properties_**: A single package for character database with
 scripts to update it based on unicode standard database updates.
