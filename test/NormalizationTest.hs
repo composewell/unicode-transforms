@@ -104,4 +104,4 @@ testNormalize file = do
         checkAll []     = return ()
 
 main :: IO ()
-main = testNormalize "unicode-data/test/NormalizationTest.txt"
+main = testNormalize "unicode-data/ucd/NormalizationTest.txt"
