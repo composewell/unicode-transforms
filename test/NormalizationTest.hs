@@ -1,3 +1,6 @@
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TupleSections #-}
+
 -- |
 -- Copyright   : (c) 2016 Harendra Kumar
 --
@@ -6,8 +9,6 @@
 -- Stability   : experimental
 -- Portability : GHC
 --
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TupleSections #-}
 
 import           Control.Monad       (when)
 import           Data.Char           (chr, isSpace, ord, toUpper)
