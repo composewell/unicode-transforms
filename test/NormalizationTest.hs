@@ -1,3 +1,11 @@
+-- |
+-- Copyright   : (c) 2016 Harendra Kumar
+--
+-- License     : BSD-style
+-- Maintainer  : harendra.kumar@gmail.com
+-- Stability   : experimental
+-- Portability : GHC
+--
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TupleSections #-}
 
