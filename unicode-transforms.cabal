@@ -57,19 +57,17 @@ library
 
 test-suite test
   default-language:    Haskell98
+  ghc-options:         -Wall
+                       -fwarn-identities
+                       -fwarn-incomplete-record-updates
+                       -fwarn-incomplete-uni-patterns
+                       -fwarn-tabs
   type:                exitcode-stdio-1.0
   ghc-options:         -Wall -threaded -rtsopts -with-rtsopts=-N
   hs-source-dirs:      test
-  main-is:             Tests.hs
-  other-modules:       Properties
-                       QuickCheckUtils
+  main-is:             NormalizationTest.hs
   build-depends:         base >= 4 && < 5
-                       , bytestring
-                       , deepseq
-                       , getopt-generics
-                       , QuickCheck >= 2.4
-                       , test-framework
-                       , test-framework-quickcheck2 >= 0.2
+                       , split
                        , text
                        , unicode-transforms
 
