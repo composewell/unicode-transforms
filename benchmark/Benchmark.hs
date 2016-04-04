@@ -29,13 +29,19 @@ implementations =
 dataDir :: Path Rel Dir
 dataDir = $(mkRelDir "benchmark") </> $(mkRelDir "data")
 
+-- Truncate or expand all datasets to this size to provide a normalized
+-- measurement view across all datasets and to reduce the effect of noise
+-- because of the datasets being too small.
+dataSetSize = 1000000
+
 -- XXX read the test data fully before starting the test
 -- returns test name and data
 getDataSet :: Path b Dir -> IO [(String, Text)]
 getDataSet dir = do
     dataFiles <- fmap snd (listDir dir)
     dataList  <- mapM (readFile . toFilePath) dataFiles
-    return $ zip (map justName dataFiles) (map T.pack dataList)
+    return $ zip (map justName dataFiles)
+                 (map (T.pack . take dataSetSize . cycle) dataList)
     where
         justName  = dropExtensions . takeFileName . toFilePath
 
