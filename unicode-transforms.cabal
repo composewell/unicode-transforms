@@ -27,10 +27,12 @@ cabal-version:       >=1.10
 
 extra-source-files:
   README.md
-  cbits/utf8proc.h
-  cbits/utf8proc_data.h
-  cbits/XQillaExport.hpp
   stack.yaml
+
+flag native
+  description: Use the native haskell implementation
+  default: False
+  manual: True
 
 library
   default-language:    Haskell98
@@ -44,16 +46,42 @@ library
 
   exposed-modules:     Data.ByteString.UTF8.Normalize
                        Data.Text.Normalize
-                       Data.Unicode.Normalize
+                       Data.Text.NormalizeNative
   other-modules:
+                       Data.Unicode.Normalize
+                       Data.Unicode.Internal.Normalization
+                       Data.Unicode.Properties.DecompD
+                       Data.Unicode.Properties.CombiningClass
                        Data.Unicode.Transform
 
   build-depends:        base >= 4 && < 5
                       , bytestring
+                      , containers
+                      , data-list-sequences
                       , text
 
   include-dirs:        cbits
   c-sources:           cbits/utf8proc.c
+
+executable ucd2haskell
+  default-language:    Haskell2010
+  ghc-options:         -Wall
+                       -fwarn-identities
+                       -fwarn-incomplete-record-updates
+                       -fwarn-incomplete-uni-patterns
+                       -fwarn-tabs
+
+  hs-source-dirs:      unicode-data
+  main-is:             UCD2Haskell.hs
+  build-depends:        base
+                      , getopt-generics
+                      , tagsoup
+                      , split
+                      , binary
+                      , bytestring
+                      , containers
+                      , deepseq
+                      , filepath
 
 test-suite test
   default-language:    Haskell98
@@ -62,11 +90,15 @@ test-suite test
                        -fwarn-incomplete-record-updates
                        -fwarn-incomplete-uni-patterns
                        -fwarn-tabs
+  if flag(native)
+    ghc-options:       -hide-package "unicode-transforms"
+                       -package "unicode-transforms (Data.Text.NormalizeNative as Data.Text.Normalize)"
+
   type:                exitcode-stdio-1.0
-  ghc-options:         -Wall -threaded -rtsopts -with-rtsopts=-N
   hs-source-dirs:      test
   main-is:             NormalizationTest.hs
   build-depends:         base >= 4 && < 5
+                       , getopt-generics
                        , split
                        , text
                        , unicode-transforms
@@ -78,8 +110,11 @@ Benchmark bench
                        -fwarn-incomplete-record-updates
                        -fwarn-incomplete-uni-patterns
                        -fwarn-tabs
+  if flag(native)
+    ghc-options:       -hide-package "unicode-transforms"
+                       -package "unicode-transforms (Data.Text.NormalizeNative as Data.Text.Normalize)"
+
   type:                exitcode-stdio-1.0
-  ghc-options:         -Wall -threaded -rtsopts -with-rtsopts=-N
   hs-source-dirs:      benchmark
   main-is:             Benchmark.hs
   build-depends:         base >= 4 && < 5
