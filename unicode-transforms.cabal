@@ -105,7 +105,8 @@ test-suite test
 
 Benchmark bench
   default-language:    Haskell98
-  ghc-options:         -Wall
+  ghc-options:         -O2
+                       -Wall
                        -fwarn-identities
                        -fwarn-incomplete-record-updates
                        -fwarn-incomplete-uni-patterns
