@@ -22,13 +22,12 @@ import           Data.List                              (sortBy)
 import qualified Data.List.Sequences                    as ListSeq
 import           Data.Ord                               (comparing)
 import qualified Data.Unicode.Properties.CombiningClass as CC
-import qualified Data.Unicode.Properties.DecompD        as NFD
+import qualified Data.Unicode.Properties.Decompositions as NFD
 
-type DecompMap     = IM.IntMap [Char]
 newtype Decomposed = Decomposed { unDecomposed :: [Char] }
 
-decomposeWith :: DecompMap -> [Char] -> [Char]
-decomposeWith mp = map fst
+decompose :: [Char] -> [Char]
+decompose = map fst
             . concatMap (sortBy (comparing snd))
             . splitToCCClusters
             . concatMap (unDecomposed . decomposeFully)
@@ -37,11 +36,8 @@ decomposeWith mp = map fst
         decomposeFully = Decomposed . fst . head
                              . dropWhile (uncurry (/=))
                              . ap zip tail
-                             . iterate (concatMap (decomposeChar))
+                             . iterate (concatMap (NFD.decomposeChar))
                              . (:[])
-
-        decomposeChar :: Char -> [Char]
-        decomposeChar c = IM.findWithDefault [c] (ord c) mp
 
         splitToCCClusters :: [Char] -> [[(Char,Int)]]
         splitToCCClusters = ListSeq.splitSeq brk
@@ -51,6 +47,3 @@ decomposeWith mp = map fst
 
         combiningClassOf :: Char -> Int
         combiningClassOf c = IM.findWithDefault 0 (ord c) CC.combiningclass
-
-decompose :: [Char] -> [Char]
-decompose str = decomposeWith NFD.decompd str

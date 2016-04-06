@@ -50,7 +50,7 @@ library
   other-modules:
                        Data.Unicode.Normalize
                        Data.Unicode.Internal.Normalization
-                       Data.Unicode.Properties.DecompD
+                       Data.Unicode.Properties.Decompositions
                        Data.Unicode.Properties.CombiningClass
                        Data.Unicode.Transform
 
