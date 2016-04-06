@@ -16,8 +16,6 @@ module Data.Unicode.Internal.Normalization
     where
 
 import           Control.Monad                          (ap)
-import           Data.Char                              (ord)
-import qualified Data.IntMap.Strict                     as IM
 import           Data.List                              (sortBy)
 import qualified Data.List.Sequences                    as ListSeq
 import           Data.Ord                               (comparing)
@@ -41,9 +39,6 @@ decompose = map fst
 
         splitToCCClusters :: [Char] -> [[(Char,Int)]]
         splitToCCClusters = ListSeq.splitSeq brk
-                            . map (ap (,) combiningClassOf)
+                            . map (ap (,) CC.getCombiningClass)
             where brk _ (_,0) = False
                   brk _ _     = True
-
-        combiningClassOf :: Char -> Int
-        combiningClassOf c = IM.findWithDefault 0 (ord c) CC.combiningclass
