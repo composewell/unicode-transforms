@@ -7,7 +7,7 @@ import Data.Char (ord)
 import Data.BitArray (BitArray, bitArray, lookupBit)
 
 decomposeChar :: Char -> [Char]
---decomposeChar c | isDecomposable c == False = [c]
+decomposeChar c | isDecomposable c == False = [c]
 
 decomposeChar '\192' = "A\768"
 decomposeChar '\193' = "A\769"
