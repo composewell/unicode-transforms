@@ -15,6 +15,7 @@ import           Criterion.Main            (Benchmark, bench, bgroup,
 import           Criterion.Main.Options    (describe)
 import           Data.Text                 (Text)
 import qualified Data.Text                 as T
+import qualified Data.Text.Internal.Fusion as T
 import qualified Data.Text.ICU             as TI
 import           Options.Applicative.Extra (execParser)
 import           Path                      (Dir, Path, Rel, mkRelDir,
@@ -29,7 +30,7 @@ textICUFuncs =
     [ ("NFD", TI.normalize TI.NFD) ]
 
 stringOp = map (chr . (+ 1) . ord)
-textOp = T.map (chr . (+ 1) . ord)
+textOp = T.unstream . T.stream
 
 unicodeTransformFuncs :: [(String, String -> String)]
 unicodeTransformFuncs =
@@ -37,7 +38,7 @@ unicodeTransformFuncs =
 
 textFuncs :: [(String, Text -> Text)]
 textFuncs =
-    [ ("textOp", textOp) ]
+    [ ("text-stream-unstream", textOp) ]
 
 dataDir :: Path Rel Dir
 dataDir = $(mkRelDir "benchmark") </> $(mkRelDir "data")
@@ -70,8 +71,8 @@ main = do
     let textDataSet = map (second T.pack) dataSet
     dataSet `deepseq` textDataSet `deepseq` runMode mode
         [ bgroup "text-icu"           $ benchAll <$> textICUFuncs <*> textDataSet
-         , bgroup "String" $ benchAll <$> unicodeTransformFuncs
-                                                 <*> dataSet
+         -- , bgroup "String" $ benchAll <$> unicodeTransformFuncs
+         --                                        <*> dataSet
          , bgroup "Text" $ benchAll <$> textFuncs
                                                  <*> textDataSet
         ]
