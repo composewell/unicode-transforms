@@ -51,7 +51,8 @@ library
                        Data.Text.NormalizeNative
                        Data.Unicode.Normalize
                        Data.Unicode.Internal.Normalization
-                       Data.Unicode.Internal.Types
+                       Data.Unicode.Properties.Decompositions
+                       Data.Unicode.Properties.CombiningClass
   other-modules:
                        Data.Unicode.Transform
 
@@ -127,6 +128,7 @@ Benchmark bench
                        , criterion
                        , deepseq
                        , filepath
+                       , optparse-applicative
                        , path
                        , path-io
                        , text

@@ -1,6 +1,6 @@
 flags:
     unicode-transforms:
-        native: false
+        native: true
 
 extra-package-dbs: []
 packages:
