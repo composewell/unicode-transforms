@@ -15,7 +15,6 @@ import           Criterion.Main            (Benchmark, bench, bgroup,
 import           Criterion.Main.Options    (describe)
 import           Data.Text                 (Text)
 import qualified Data.Text                 as T
-import qualified Data.Text.Internal.Fusion as T
 import qualified Data.Text.ICU             as TI
 import           Options.Applicative.Extra (execParser)
 import           Path                      (Dir, Path, Rel, mkRelDir,
@@ -24,13 +23,13 @@ import           Path.IO                   (listDir)
 import           System.FilePath           (dropExtensions, takeFileName)
 import Data.Char (ord, chr)
 import Control.Arrow (second)
+import Data.Test.StreamUnstream (textOp)
 
 textICUFuncs :: [(String, Text -> Text)]
 textICUFuncs =
     [ ("NFD", TI.normalize TI.NFD) ]
 
 stringOp = map (chr . (+ 1) . ord)
-textOp = T.unstream . T.stream
 
 unicodeTransformFuncs :: [(String, String -> String)]
 unicodeTransformFuncs =

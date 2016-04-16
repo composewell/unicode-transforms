@@ -48,6 +48,7 @@ library
 
   exposed-modules:     Data.Text.NormalizeNative
                        Data.Unicode.Normalize
+                       Data.Test.StreamUnstream
   other-modules:
                        Data.Unicode.Transform
 
@@ -66,9 +67,6 @@ Benchmark bench
                        -fwarn-incomplete-uni-patterns
                        -fwarn-tabs
                        -funbox-strict-fields
-  if flag(native)
-    ghc-options:       -hide-package "unicode-transforms"
-                       -package "unicode-transforms (Data.Text.NormalizeNative as Data.Text.Normalize)"
 
   type:                exitcode-stdio-1.0
   hs-source-dirs:      benchmark
