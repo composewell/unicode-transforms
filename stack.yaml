@@ -1,11 +1,10 @@
 flags:
     unicode-transforms:
-        native: false
+        native: true
 
 extra-package-dbs: []
 packages:
 - '.'
 extra-deps:
 - data-list-sequences-0.1
-- bitarray-0.0.1.1
 resolver: lts-5.8

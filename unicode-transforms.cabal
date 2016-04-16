@@ -46,68 +46,16 @@ library
 
   cc-options:          -Wall
 
-  exposed-modules:     Data.ByteString.UTF8.Normalize
-                       Data.Text.Normalize
-                       Data.Text.NormalizeNative
+  exposed-modules:     Data.Text.NormalizeNative
                        Data.Unicode.Normalize
-                       Data.Unicode.Internal.Normalization
-                       Data.Unicode.Internal.Types
-                       Data.Unicode.Properties.Decompositions
-                       Data.Unicode.Properties.CombiningClass
   other-modules:
                        Data.Unicode.Transform
 
   build-depends:        base >= 4 && < 5
-                      , bitarray
-                      , bytestring
-                      , containers
-                      , data-list-sequences
                       , text
 
   include-dirs:        cbits
   c-sources:           cbits/utf8proc.c
-
-executable ucd2haskell
-  default-language:    Haskell2010
-  ghc-options:         -Wall
-                       -fwarn-identities
-                       -fwarn-incomplete-record-updates
-                       -fwarn-incomplete-uni-patterns
-                       -fwarn-tabs
-
-  hs-source-dirs:      unicode-data
-  main-is:             UCD2Haskell.hs
-  build-depends:        base
-                      , data-list-sequences
-                      , getopt-generics
-                      , tagsoup
-                      , split
-                      , binary
-                      , bytestring
-                      , containers
-                      , deepseq
-                      , filepath
-
-test-suite test
-  default-language:    Haskell98
-  ghc-options:         -Wall
-                       -fwarn-identities
-                       -fwarn-incomplete-record-updates
-                       -fwarn-incomplete-uni-patterns
-                       -fwarn-tabs
-                       -O0
-  if flag(native)
-    ghc-options:       -hide-package "unicode-transforms"
-                       -package "unicode-transforms (Data.Text.NormalizeNative as Data.Text.Normalize)"
-
-  type:                exitcode-stdio-1.0
-  hs-source-dirs:      test
-  main-is:             NormalizationTest.hs
-  build-depends:         base >= 4 && < 5
-                       , getopt-generics
-                       , split
-                       , text
-                       , unicode-transforms
 
 Benchmark bench
   default-language:    Haskell98

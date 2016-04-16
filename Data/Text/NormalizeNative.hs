@@ -16,7 +16,7 @@ module Data.Text.NormalizeNative
     , normalize
     ) where
 
-import           Data.Unicode.Internal.Normalization (decompose)
+--import           Data.Unicode.Internal.Normalization (decompose)
 import           Data.Unicode.Normalize   (NormalizationMode (..))
 import           Data.Text                      as T
 
@@ -25,6 +25,4 @@ import           Data.Text                      as T
 normalize :: NormalizationMode -> Text -> Text
 normalize mode txt =
     case mode of
-      -- this could be comparatively expensive when the string is already
-      -- decomposed we can instead work directly on the text type
-         NFD  -> T.pack $ decompose $ T.unpack txt
+         NFD  -> txt

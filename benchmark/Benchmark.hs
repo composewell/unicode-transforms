@@ -9,27 +9,35 @@
 -- Portability : GHC
 --
 
-import           Control.DeepSeq           (NFData)
+import           Control.DeepSeq           (NFData, deepseq)
 import           Criterion.Main            (Benchmark, bench, bgroup,
                                             defaultConfig, nf, runMode)
 import           Criterion.Main.Options    (describe)
 import           Data.Text                 (Text)
 import qualified Data.Text                 as T
 import qualified Data.Text.ICU             as TI
-import qualified Data.Text.Normalize       as UT
 import           Options.Applicative.Extra (execParser)
 import           Path                      (Dir, Path, Rel, mkRelDir,
                                             toFilePath, (</>))
 import           Path.IO                   (listDir)
 import           System.FilePath           (dropExtensions, takeFileName)
+import Data.Char (ord, chr)
+import Control.Arrow (second)
 
 textICUFuncs :: [(String, Text -> Text)]
 textICUFuncs =
     [ ("NFD", TI.normalize TI.NFD) ]
 
-unicodeTransformFuncs :: [(String, Text -> Text)]
+stringOp = map (chr . (+ 1) . ord)
+textOp = T.map (chr . (+ 1) . ord)
+
+unicodeTransformFuncs :: [(String, String -> String)]
 unicodeTransformFuncs =
-    [ ("NFD", UT.normalize UT.NFD) ]
+    [ ("StringOp", stringOp) ]
+
+textFuncs :: [(String, Text -> Text)]
+textFuncs =
+    [ ("textOp", textOp) ]
 
 dataDir :: Path Rel Dir
 dataDir = $(mkRelDir "benchmark") </> $(mkRelDir "data")
@@ -42,12 +50,12 @@ dataSetSize = 1000000
 
 -- XXX read the test data fully before starting the test
 -- returns test name and data
-getDataSet :: Path b Dir -> IO [(String, Text)]
+getDataSet :: Path b Dir -> IO [(String, String)]
 getDataSet dir = do
     dataFiles <- fmap snd (listDir dir)
     dataList  <- mapM (readFile . toFilePath) dataFiles
     return $ zip (map justName dataFiles)
-                 (map (T.pack . take dataSetSize . cycle) dataList)
+                 (map (take dataSetSize . cycle) dataList)
     where
         justName  = dropExtensions . takeFileName . toFilePath
 
@@ -59,8 +67,11 @@ main :: IO ()
 main = do
     mode    <- execParser (describe defaultConfig)
     dataSet <- getDataSet dataDir
-    runMode mode
-        [ bgroup "text-icu"           $ benchAll <$> textICUFuncs <*> dataSet
-        , bgroup "unicode-transforms" $ benchAll <$> unicodeTransformFuncs
+    let textDataSet = map (second T.pack) dataSet
+    dataSet `deepseq` textDataSet `deepseq` runMode mode
+        [ bgroup "text-icu"           $ benchAll <$> textICUFuncs <*> textDataSet
+         , bgroup "String" $ benchAll <$> unicodeTransformFuncs
                                                  <*> dataSet
+         , bgroup "Text" $ benchAll <$> textFuncs
+                                                 <*> textDataSet
         ]
