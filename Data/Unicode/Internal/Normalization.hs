@@ -1,7 +1,6 @@
 -- |
 -- Module      : Data.Unicode.Internal.Normalization
--- Copyright   : (c) 2014–2015 Antonio Nikishaev
---               (c) 2016 Harendra Kumar
+-- Copyright   : (c) 2016 Harendra Kumar
 --
 -- License     : BSD-style
 -- Maintainer  : harendra.kumar@gmail.com
@@ -17,29 +16,48 @@ module Data.Unicode.Internal.Normalization
 
 import           Control.Monad                          (ap)
 import           Data.List                              (sortBy)
-import qualified Data.List.Sequences                    as ListSeq
 import           Data.Ord                               (comparing)
 import qualified Data.Unicode.Properties.CombiningClass as CC
 import qualified Data.Unicode.Properties.Decompositions as NFD
---import qualified Data.Text as T
---import qualified Data.Text.Lazy as TL
 
 decompose :: String -> String
-decompose = map fst
-            . concatMap (sortBy (comparing snd))
-            . splitToCCClusters
-            . decomposeString
+decompose = reorder . decomposeChars
+--decompose = reorder
+--decompose = decomposeChars
+--decompose str = (ccOverhead str) ++ (dcOverhead str)
     where
-        decomposeString [] = []
-        decomposeString [x] =
+        decomposeChars [] = []
+        decomposeChars [x] =
             case NFD.isDecomposable x of
-                True -> decomposeString (NFD.decomposeChar x)
+                True -> decomposeChars (NFD.decomposeChar x)
                 False -> [x]
-        decomposeString (x : xs) = decomposeString [x] ++ decomposeString xs
+        decomposeChars (x : xs) = decomposeChars [x] ++ decomposeChars xs
 
+        -- TODO try streaming fusion on lists
+            -- can compose or use map efficiently
+            -- use takewhile/break on char/cc tuples
 
-        splitToCCClusters :: [Char] -> [[(Char,Int)]]
-        splitToCCClusters = ListSeq.splitSeq brk
-                            . map (ap (,) CC.getCombiningClass)
-            where brk _ (_,0) = False
-                  brk _ _     = True
+        -- sequence of chars with 0 combining class
+        reorder (x : xs) | cc == 0 = x : reorder xs
+                where cc = CC.getCombiningClass x
+
+        -- one non-zero cc char between two zero cc chars
+        reorder (x1 : x2 : xs) | cc2 == 0 = x1 : x2 : reorder xs
+                where cc2 = CC.getCombiningClass x2
+
+        reorder [x] = [x]
+        reorder []  = []
+
+        -- sequence of two or more nonzero cc chars
+        reorder xs = sortCluster ys ++ reorder zs
+            where
+                (ys, zs) = break ((== 0) . CC.getCombiningClass) xs
+                sortCluster =   map fst
+                              . sortBy (comparing snd)
+                              . map (ap (,) CC.getCombiningClass)
+
+        -- to measure database lookup overhead
+        ccOverhead xs = show $ sum $
+            map CC.getCombiningClass xs
+        dcOverhead xs = show $ sum $
+            map (\c -> if NFD.isDecomposable c then 1 else 0 :: Int) xs
