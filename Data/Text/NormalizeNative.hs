@@ -23,9 +23,9 @@ import           Data.Text (Text)
 
 -- | Perform Unicode normalization on a @Text@ according to the specified
 -- normalization mode.
-normalize :: NormalizationMode -> Text -> Text
+--normalize :: NormalizationMode -> Text -> Text
+normalize :: NormalizationMode -> String -> String
 normalize mode txt =
     case mode of
-      -- this could be comparatively expensive when the string is already
-      -- decomposed we can instead work directly on the text type
-         NFD  -> (T.pack . decompose . T.unpack) txt
+          NFD  -> decompose txt
+         --NFD  -> (T.pack . decompose . T.unpack) txt

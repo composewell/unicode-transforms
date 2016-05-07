@@ -21,21 +21,22 @@ import qualified Data.List.Sequences                    as ListSeq
 import           Data.Ord                               (comparing)
 import qualified Data.Unicode.Properties.CombiningClass as CC
 import qualified Data.Unicode.Properties.Decompositions as NFD
+--import qualified Data.Text as T
+--import qualified Data.Text.Lazy as TL
 
-newtype Decomposed = Decomposed { unDecomposed :: [Char] }
-
-decompose :: [Char] -> [Char]
+decompose :: String -> String
 decompose = map fst
             . concatMap (sortBy (comparing snd))
             . splitToCCClusters
-            . concatMap (unDecomposed . decomposeFully)
+            . decomposeString
     where
-        decomposeFully :: Char -> Decomposed
-        decomposeFully = Decomposed . fst . head
-                             . dropWhile (uncurry (/=))
-                             . ap zip tail
-                             . iterate (concatMap (NFD.decomposeChar))
-                             . (:[])
+        decomposeString [] = []
+        decomposeString [x] =
+            case NFD.isDecomposable x of
+                True -> decomposeString (NFD.decomposeChar x)
+                False -> [x]
+        decomposeString (x : xs) = decomposeString [x] ++ decomposeString xs
+
 
         splitToCCClusters :: [Char] -> [[(Char,Int)]]
         splitToCCClusters = ListSeq.splitSeq brk
