@@ -9,12 +9,11 @@
 -- Portability : GHC
 --
 
-import           Control.Arrow             (second)
-import           Control.DeepSeq           (NFData, deepseq)
+import           Control.DeepSeq           (NFData)
 import           Criterion.Main            (Benchmark, bench, bgroup,
-                                            defaultConfig, nf, runMode)
+                                            defaultConfig, env, nf, runMode)
 import           Criterion.Main.Options    (describe)
-import           Data.Char                 (chr, ord)
+import           Data.Bifunctor            (second)
 import           Data.Text                 (Text)
 import qualified Data.Text                 as T
 import qualified Data.Text.ICU             as TI
@@ -42,28 +41,25 @@ dataDir = $(mkRelDir "benchmark") </> $(mkRelDir "data")
 dataSetSize :: Int
 dataSetSize = 1000000
 
--- XXX read the test data fully before starting the test
--- returns test name and data
-getDataSet :: Path b Dir -> IO [(String, String)]
-getDataSet dir = do
-    dataFiles <- fmap snd (listDir dir)
-    dataList  <- mapM (readFile . toFilePath) dataFiles
-    return $ zip (map justName dataFiles)
-                 (map (take dataSetSize . cycle) dataList)
-    where
-        justName  = dropExtensions . takeFileName . toFilePath
+makeBench :: (NFData a, NFData b) => (String, a -> b) -> (String, IO a) -> Benchmark
+makeBench (implName, func) (dataName, setup) =
+    env setup (\txt -> bench (implName ++ "/" ++ dataName) (nf func txt))
 
-benchAll :: NFData b => (String, a -> b) -> (String, a) -> Benchmark
-benchAll (implName, func) (dataName, txt)=
-    bench (implName ++ "/" ++ dataName) (nf func txt)
+strInput :: FilePath -> (String, IO String)
+strInput file = (dataName file,
+                 fmap (take dataSetSize . cycle) (readFile file))
+    where dataName = dropExtensions . takeFileName
+
+txtInput :: FilePath -> (String, IO Text)
+txtInput file = second (fmap T.pack) (strInput file)
 
 main :: IO ()
 main = do
     mode    <- execParser (describe defaultConfig)
-    dataSet <- getDataSet dataDir
-    let textDataSet = map (second T.pack) dataSet
-    dataSet `deepseq` textDataSet `deepseq` runMode mode
-        [ bgroup "text-icu"           $ benchAll <$> textICUFuncs <*> textDataSet
-        , bgroup "unicode-transforms" $ benchAll <$> unicodeTransformFuncs
-                                                  <*> dataSet
+    dataFiles <- fmap (map toFilePath . snd) (listDir dataDir)
+    runMode mode
+        [ bgroup "text-icu"           $ makeBench <$> textICUFuncs
+                                                  <*> (map txtInput dataFiles)
+        , bgroup "unicode-transforms" $ makeBench <$> unicodeTransformFuncs
+                                                  <*> (map strInput dataFiles)
         ]
