@@ -18,14 +18,10 @@ module Data.Text.NormalizeNative
 
 import           Data.Unicode.Internal.Normalization (decompose)
 import           Data.Unicode.Normalize   (NormalizationMode (..))
-import           Data.Text                      as T
-import           Data.Text (Text)
 
--- | Perform Unicode normalization on a @Text@ according to the specified
+-- | Perform Unicode normalization on a @String@ according to the specified
 -- normalization mode.
---normalize :: NormalizationMode -> Text -> Text
 normalize :: NormalizationMode -> String -> String
-normalize mode txt =
+normalize mode str =
     case mode of
-          NFD  -> decompose txt
-         --NFD  -> (T.pack . decompose . T.unpack) txt
+          NFD  -> decompose str
