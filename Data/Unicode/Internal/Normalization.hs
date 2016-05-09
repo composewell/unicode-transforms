@@ -25,13 +25,14 @@ decompose = reorder . decomposeChars
 --decompose = reorder
 --decompose = decomposeChars
 --decompose str = (ccOverhead str) ++ (dcOverhead str)
+--decompose str = dcOverhead str
     where
         decomposeChars [] = []
-        decomposeChars [x] =
+        decomposeChars (x : xs) = do
             case NFD.isDecomposable x of
-                True -> decomposeChars (NFD.decomposeChar x)
-                False -> [x]
-        decomposeChars (x : xs) = decomposeChars [x] ++ decomposeChars xs
+                True ->    decomposeChars (NFD.decomposeChar x)
+                        ++ decomposeChars xs
+                False -> x : decomposeChars xs
 
         -- TODO try streaming fusion on lists
             -- can compose or use map efficiently
