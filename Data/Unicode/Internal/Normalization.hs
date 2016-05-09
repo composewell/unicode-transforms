@@ -24,9 +24,14 @@ decompose :: String -> String
 decompose = reorder . decomposeChars
 --decompose = reorder
 --decompose = decomposeChars
+--decompose = dcOverhead
+--decompose = ccOverhead
 --decompose str = (ccOverhead str) ++ (dcOverhead str)
---decompose str = dcOverhead str
     where
+        -- TODO:
+            -- search for block
+            -- quick check for same block
+            -- find decomposition in the block
         decomposeChars [] = []
         decomposeChars (x : xs) = do
             case NFD.isDecomposable x of
@@ -39,12 +44,10 @@ decompose = reorder . decomposeChars
             -- use takewhile/break on char/cc tuples
 
         -- sequence of chars with 0 combining class
-        reorder (x : xs) | cc == 0 = x : reorder xs
-                where cc = CC.getCombiningClass x
+        reorder (x : xs) | not (CC.isCombining x) = x : reorder xs
 
         -- one non-zero cc char between two zero cc chars
-        reorder (x1 : x2 : xs) | cc2 == 0 = x1 : x2 : reorder xs
-                where cc2 = CC.getCombiningClass x2
+        reorder (x1 : x2 : xs) | not (CC.isCombining x2) = x1 : x2 : reorder xs
 
         reorder [x] = [x]
         reorder []  = []
@@ -52,7 +55,7 @@ decompose = reorder . decomposeChars
         -- sequence of two or more nonzero cc chars
         reorder xs = sortCluster ys ++ reorder zs
             where
-                (ys, zs) = break ((== 0) . CC.getCombiningClass) xs
+                (ys, zs) = break (not . CC.isCombining) xs
                 sortCluster =   map fst
                               . sortBy (comparing snd)
                               . map (ap (,) CC.getCombiningClass)
