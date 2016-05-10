@@ -25,6 +25,7 @@ decompose = reorder . decomposeChars
 --decompose = reorder
 --decompose = decomposeChars
 --decompose = dcOverhead
+--decompose = combinableOverhead
 --decompose = ccOverhead
 --decompose str = (ccOverhead str) ++ (dcOverhead str)
     where
@@ -61,6 +62,8 @@ decompose = reorder . decomposeChars
                               . map (ap (,) CC.getCombiningClass)
 
         -- to measure database lookup overhead
+        combinableOverhead xs = show $ sum $
+            map (\c -> if CC.isCombining c then 1 else 0 :: Int) xs
         ccOverhead xs = show $ sum $
             map CC.getCombiningClass xs
         dcOverhead xs = show $ sum $
