@@ -60,6 +60,7 @@ library:
     - data-list-sequences
     - text
 
+# developer mode only
 executables:
   ucd2haskell:
     source-dirs: unicode-data
@@ -74,6 +75,17 @@ executables:
       - containers
       - deepseq
       - filepath
+  normalizefile:
+    ghc-options: -O2 -funbox-strict-fields
+    source-dirs: benchmark
+    main:        NormalizeFile.hs
+    dependencies:
+      - deepseq
+      - filepath
+      - path
+      - path-io
+      - text
+      - unicode-transforms
 
 tests:
   test:
