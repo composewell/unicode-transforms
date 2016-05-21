@@ -10,15 +10,15 @@
 -- Portability : GHC
 --
 
-import           Control.Monad       (when)
-import           Data.Char           (chr, isSpace, ord, toUpper)
-import           Data.Function       ((&))
-import           Data.List           (intercalate, isPrefixOf)
-import           Data.List.Split     (splitOn)
-import           Data.Text           (Text)
-import qualified Data.Text           as T
-import           Data.Text.Normalize (NormalizationMode (..), normalize)
-import           Text.Printf         (printf)
+import           Control.Monad             (when)
+import           Data.Char                 (chr, isSpace, ord, toUpper)
+import           Data.Function             ((&))
+import           Data.List                 (intercalate, isPrefixOf)
+import           Data.List.Split           (splitOn)
+import           Data.Text                 (Text)
+import qualified Data.Text                 as T
+import           Data.Text.NormalizeNative (NormalizationMode (..), normalize)
+import           Text.Printf               (printf)
 
 chrToHex :: Char -> [Char]
 chrToHex = (map toUpper) . (printf "%.4x") . ord

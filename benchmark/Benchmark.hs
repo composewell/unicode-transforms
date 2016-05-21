@@ -17,7 +17,7 @@ import           Data.Bifunctor            (second)
 import           Data.Text                 (Text)
 import qualified Data.Text                 as T
 import qualified Data.Text.ICU             as TI
-import qualified Data.Text.Normalize       as UT
+import qualified Data.Text.NormalizeNative as UT
 import           Options.Applicative.Extra (execParser)
 import           Path                      (Dir, Path, Rel, mkRelDir,
                                             toFilePath, (</>))

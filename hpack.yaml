@@ -1,0 +1,103 @@
+name:                unicode-transforms
+version:             0.1.0.0
+synopsis:            Unicode transforms (normalization, casefolding etc.)
+description:
+  This is a lightweight library supporting a limited set of unicode
+  transformations (only normalizations as of now) on ByteStrings (UTF-8) and
+  Text without requiring any other system libraries. It is based on
+  the utf8proc C utility.
+  .
+  text-icu is a full featured alternative for all unicode operations but with
+  a dependency on the system installed icu libraries. This package aims to
+  provide an API similar to text-icu.
+  .
+  For more details see the README.md file.
+
+homepage:            http://github.com/harendra-kumar/unicode-transforms
+license:             BSD3
+license-file:        LICENSE
+author:              Harendra Kumar
+maintainer:          harendra.kumar@gmail.com
+copyright:           2016 Harendra Kumar
+category:            Data,Text,Unicode
+stability:           Experimental
+github:              harendra-kumar/unicode-transforms
+
+extra-source-files:
+  - README.md
+  - stack.yaml
+
+ghc-options:
+  - -Wall
+  - -fwarn-identities
+  - -fwarn-incomplete-record-updates
+  - -fwarn-incomplete-uni-patterns
+  - -fwarn-tabs
+
+dependencies: base >= 4 && < 5
+
+library:
+  cc-options: -Wall -O2
+  include-dirs: cbits
+  c-sources:    cbits/utf8proc.c
+
+  ghc-options: -O2 -funbox-strict-fields
+  source-dirs: .
+  exposed-modules:
+    - Data.ByteString.UTF8.Normalize
+    - Data.Text.Normalize
+    - Data.Text.NormalizeNative
+    - Data.Unicode.Normalize
+    - Data.Unicode.Internal.Normalization
+    - Data.Unicode.Properties.Decompositions
+    - Data.Unicode.Properties.CombiningClass
+  other-modules:
+    - Data.Unicode.Transform
+  dependencies:
+    - bitarray
+    - bytestring
+    - containers
+    - data-list-sequences
+    - text
+
+executables:
+  ucd2haskell:
+    source-dirs: unicode-data
+    main:        UCD2Haskell.hs
+    dependencies:
+      - data-list-sequences
+      - getopt-generics
+      - tagsoup
+      - split
+      - binary
+      - bytestring
+      - containers
+      - deepseq
+      - filepath
+
+tests:
+  test:
+    ghc-options: -O0
+    source-dirs: test
+    main:        NormalizationTest.hs
+    dependencies:
+      - getopt-generics
+      - split
+      - text
+      - unicode-transforms
+
+benchmarks:
+  bench:
+    ghc-options: -O2 -funbox-strict-fields
+    source-dirs: benchmark
+    main:        Benchmark.hs
+    dependencies:
+      - criterion
+      - deepseq
+      - filepath
+      - optparse-applicative
+      - path
+      - path-io
+      - text
+      - text-icu
+      - unicode-transforms

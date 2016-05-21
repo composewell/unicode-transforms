@@ -1,11 +1,6 @@
-flags:
-    unicode-transforms:
-        native: true
-
-extra-package-dbs: []
 packages:
 - '.'
+resolver: lts-5.16
 extra-deps:
 - data-list-sequences-0.1
 - bitarray-0.0.1.1
-resolver: lts-5.8

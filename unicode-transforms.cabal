@@ -1,19 +1,13 @@
+-- This file has been generated from package.yaml by hpack version 0.14.0.
+--
+-- see: https://github.com/sol/hpack
+
 name:                unicode-transforms
 version:             0.1.0.0
 synopsis:            Unicode transforms (normalization, casefolding etc.)
-description:
-  This is a lightweight library supporting a limited set of unicode
-  transformations (only normalizations as of now) on ByteStrings (UTF-8) and
-  Text without requiring any other system libraries. It is based on
-  the utf8proc C utility.
-  .
-  text-icu is a full featured alternative for all unicode operations but with
-  a dependency on the system installed icu libraries. This package aims to
-  provide an API similar to text-icu.
-  .
-  For more details see the README.md file.
-
+description:         This is a lightweight library supporting a limited set of unicode transformations (only normalizations as of now) on ByteStrings (UTF-8) and Text without requiring any other system libraries. It is based on the utf8proc C utility. . text-icu is a full featured alternative for all unicode operations but with a dependency on the system installed icu libraries. This package aims to provide an API similar to text-icu. . For more details see the README.md file.
 homepage:            http://github.com/harendra-kumar/unicode-transforms
+bug-reports:         https://github.com/harendra-kumar/unicode-transforms/issues
 license:             BSD3
 license-file:        LICENSE
 author:              Harendra Kumar
@@ -21,120 +15,99 @@ maintainer:          harendra.kumar@gmail.com
 copyright:           2016 Harendra Kumar
 category:            Data,Text,Unicode
 stability:           Experimental
-
 build-type:          Simple
-cabal-version:       >=1.10
+cabal-version:       >= 1.10
 
 extra-source-files:
-  README.md
-  stack.yaml
-
-flag native
-  description: Use the native haskell implementation
-  default: False
-  manual: True
-
-library
-  default-language:    Haskell98
-  ghc-options:         -Wall
-                       -fwarn-identities
-                       -fwarn-incomplete-record-updates
-                       -fwarn-incomplete-uni-patterns
-                       -fwarn-tabs
-                       -funbox-strict-fields
-                       -O2
-
-  cc-options:          -Wall
-
-  exposed-modules:     Data.ByteString.UTF8.Normalize
-                       Data.Text.Normalize
-                       Data.Text.NormalizeNative
-                       Data.Unicode.Normalize
-                       Data.Unicode.Internal.Normalization
-                       Data.Unicode.Properties.Decompositions
-                       Data.Unicode.Properties.CombiningClass
-  other-modules:
-                       Data.Unicode.Transform
-
-  build-depends:        base >= 4 && < 5
-                      , bitarray
-                      , bytestring
-                      , containers
-                      , data-list-sequences
-                      , text
-
-  include-dirs:        cbits
-  c-sources:           cbits/utf8proc.c
-
-executable ucd2haskell
-  default-language:    Haskell2010
-  ghc-options:         -Wall
-                       -fwarn-identities
-                       -fwarn-incomplete-record-updates
-                       -fwarn-incomplete-uni-patterns
-                       -fwarn-tabs
-
-  hs-source-dirs:      unicode-data
-  main-is:             UCD2Haskell.hs
-  build-depends:        base
-                      , data-list-sequences
-                      , getopt-generics
-                      , tagsoup
-                      , split
-                      , binary
-                      , bytestring
-                      , containers
-                      , deepseq
-                      , filepath
-
-test-suite test
-  default-language:    Haskell98
-  ghc-options:         -Wall
-                       -fwarn-identities
-                       -fwarn-incomplete-record-updates
-                       -fwarn-incomplete-uni-patterns
-                       -fwarn-tabs
-                       -O0
-  if flag(native)
-    ghc-options:       -hide-package "unicode-transforms"
-                       -package "unicode-transforms (Data.Text.NormalizeNative as Data.Text.Normalize)"
-
-  type:                exitcode-stdio-1.0
-  hs-source-dirs:      test
-  main-is:             NormalizationTest.hs
-  build-depends:         base >= 4 && < 5
-                       , getopt-generics
-                       , split
-                       , text
-                       , unicode-transforms
-
-Benchmark bench
-  default-language:    Haskell98
-  ghc-options:         -O2
-                       -Wall
-                       -fwarn-identities
-                       -fwarn-incomplete-record-updates
-                       -fwarn-incomplete-uni-patterns
-                       -fwarn-tabs
-                       -funbox-strict-fields
-  if flag(native)
-    ghc-options:       -hide-package "unicode-transforms"
-                       -package "unicode-transforms (Data.Text.NormalizeNative as Data.Text.Normalize)"
-
-  type:                exitcode-stdio-1.0
-  hs-source-dirs:      benchmark
-  main-is:             Benchmark.hs
-  build-depends:         base >= 4 && < 5
-                       , criterion
-                       , deepseq
-                       , filepath
-                       , optparse-applicative
-                       , path
-                       , path-io
-                       , text
-                       , text-icu
-                       , unicode-transforms
+    README.md
+    stack.yaml
 
 source-repository head
-  type:     git
+  type: git
   location: https://github.com/harendra-kumar/unicode-transforms
+
+library
+  hs-source-dirs:
+      .
+  default-language: Haskell2010
+  cc-options: -Wall -O2
+  ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs -O2 -funbox-strict-fields
+  exposed-modules:
+      Data.ByteString.UTF8.Normalize
+      Data.Text.Normalize
+      Data.Text.NormalizeNative
+      Data.Unicode.Normalize
+      Data.Unicode.Internal.Normalization
+      Data.Unicode.Properties.Decompositions
+      Data.Unicode.Properties.CombiningClass
+  other-modules:
+      Data.Unicode.Transform
+  build-depends:
+      base >= 4 && < 5
+    , bitarray
+    , bytestring
+    , containers
+    , data-list-sequences
+    , text
+  include-dirs:
+      cbits
+  c-sources:
+      cbits/utf8proc.c
+
+executable ucd2haskell
+  default-language: Haskell2010
+  ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
+  hs-source-dirs:
+      unicode-data
+  main-is: UCD2Haskell.hs
+  build-depends:
+      base >= 4 && < 5
+    , data-list-sequences
+    , getopt-generics
+    , tagsoup
+    , split
+    , binary
+    , bytestring
+    , containers
+    , deepseq
+    , filepath
+
+test-suite test
+  default-language: Haskell2010
+  ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs -O0
+  type: exitcode-stdio-1.0
+  hs-source-dirs:
+      test
+  main-is: NormalizationTest.hs
+  build-depends:
+      base >= 4 && < 5
+    , getopt-generics
+    , split
+    , text
+    , unicode-transforms
+  other-modules:
+      Properties
+      QuickCheckUtils
+      Spec
+      Tests
+
+benchmark bench
+  type: exitcode-stdio-1.0
+  main-is: Benchmark.hs
+  hs-source-dirs:
+      benchmark
+  ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs -O2 -funbox-strict-fields
+  build-depends:
+      base >= 4 && < 5
+    , criterion
+    , deepseq
+    , filepath
+    , optparse-applicative
+    , path
+    , path-io
+    , text
+    , text-icu
+    , unicode-transforms
+  other-modules:
+      Devanagari
+  default-language: Haskell2010
