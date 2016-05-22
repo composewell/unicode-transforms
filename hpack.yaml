@@ -49,6 +49,7 @@ library:
     - Data.Text.NormalizeNative
     - Data.Unicode.Normalize
     - Data.Unicode.Internal.Normalization
+    - Data.Unicode.Properties.Decomposable
     - Data.Unicode.Properties.Decompositions
     - Data.Unicode.Properties.CombiningClass
   other-modules:

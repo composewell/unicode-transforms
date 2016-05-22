@@ -18,6 +18,7 @@ import           Control.Monad                          (ap)
 import           Data.List                              (sortBy)
 import           Data.Ord                               (comparing)
 import qualified Data.Unicode.Properties.CombiningClass as CC
+import qualified Data.Unicode.Properties.Decomposable   as NFD
 import qualified Data.Unicode.Properties.Decompositions as NFD
 
 decompose :: String -> String
