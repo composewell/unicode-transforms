@@ -39,6 +39,8 @@ library
       Data.Unicode.Normalize
       Data.Unicode.Internal.Normalization
       Data.Unicode.Properties.Decomposable
+      Data.Unicode.Properties.Decompose
+      Data.Unicode.Properties.DecomposeHangul
       Data.Unicode.Properties.Decompositions
       Data.Unicode.Properties.CombiningClass
   other-modules:
@@ -89,6 +91,7 @@ executable ucd2haskell
     , containers
     , deepseq
     , filepath
+    , unicode-transforms
 
 test-suite test
   default-language: Haskell2010

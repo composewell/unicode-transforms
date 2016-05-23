@@ -50,6 +50,8 @@ library:
     - Data.Unicode.Normalize
     - Data.Unicode.Internal.Normalization
     - Data.Unicode.Properties.Decomposable
+    - Data.Unicode.Properties.Decompose
+    - Data.Unicode.Properties.DecomposeHangul
     - Data.Unicode.Properties.Decompositions
     - Data.Unicode.Properties.CombiningClass
   other-modules:
@@ -76,6 +78,7 @@ executables:
       - containers
       - deepseq
       - filepath
+      - unicode-transforms
   normalizefile:
     ghc-options: -O2 -funbox-strict-fields
     source-dirs: benchmark
