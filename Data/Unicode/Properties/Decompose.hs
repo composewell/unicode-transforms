@@ -19,7 +19,7 @@ import           Data.Unicode.Properties.Decompositions  (decomposeCharHigh,
 
 -- Note: this is a partial function we do not expect to call this if
 -- isDecomposable is false.
-{-# NOINLINE decomposeChar #-}
+{-# INLINE decomposeChar #-}
 decomposeChar :: Char -> [Char]
 decomposeChar c
     | n <  hangulFirst = decomposeCharLow c

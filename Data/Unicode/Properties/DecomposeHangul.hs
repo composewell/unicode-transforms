@@ -1,3 +1,4 @@
+{-# LANGUAGE BangPatterns #-}
 -- |
 -- Module      : Data.Unicode.Properties.DecomposeHangul
 -- Copyright   : (c) 2016 Harendra Kumar
@@ -10,7 +11,8 @@ module Data.Unicode.Properties.DecomposeHangul
 (decomposeCharHangul, hangulFirst, hangulLast)
 where
 
-import           Data.Char (chr, ord)
+import           Data.Char (ord)
+import           GHC.Base  (unsafeChr)
 
 -- Hangul characters can be decomposed algorithmically instead of via mappings
 
@@ -37,13 +39,13 @@ hangulLast = hangulFirst + jamoLCount * jamoVCount * jamoTCount - 1
 {-# NOINLINE decomposeCharHangul #-}
 decomposeCharHangul :: Char -> [Char]
 decomposeCharHangul c
-    | ti == 0   = l : v : []
-    | otherwise = l : v : t : []
+    | ti == 0   = let f !x !y    = [x, y]    in f l v
+    | otherwise = let f !x !y !z = [x, y, z] in f l v t
     where
         i = (ord c) - hangulFirst
-        ti = i `mod` jamoTCount
-        tn = i `div` jamoTCount
+        ti = i `rem` jamoTCount
+        tn = i `quot` jamoTCount
 
-        l = chr (jamoLFirst + tn `div` jamoVCount)
-        v = chr (jamoVFirst + tn `mod` jamoVCount)
-        t = chr (jamoTFirst + ti)
+        l = unsafeChr (jamoLFirst + tn `quot` jamoVCount)
+        v = unsafeChr (jamoVFirst + tn `rem` jamoVCount)
+        t = unsafeChr (jamoTFirst + ti)
