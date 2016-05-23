@@ -14,12 +14,12 @@ module Data.Unicode.Internal.Normalization
     )
     where
 
-import           Control.Monad                          (ap)
-import           Data.List                              (sortBy)
-import           Data.Ord                               (comparing)
-import qualified Data.Unicode.Properties.CombiningClass as CC
-import qualified Data.Unicode.Properties.Decomposable   as NFD
-import qualified Data.Unicode.Properties.Decompose      as NFD
+import           Control.Monad                           (ap)
+import           Data.List                               (sortBy)
+import           Data.Ord                                (comparing)
+
+import qualified Data.Unicode.Properties.CombiningClass  as CC
+import qualified Data.Unicode.Properties.Decompose       as NFD
 
 decompose :: String -> String
 decompose = reorder . decomposeChars
@@ -30,16 +30,20 @@ decompose = reorder . decomposeChars
 --decompose = ccOverhead
 --decompose str = (ccOverhead str) ++ (dcOverhead str)
     where
-        -- TODO:
-            -- search for block
-            -- quick check for same block
-            -- find decomposition in the block
         decomposeChars [] = []
         decomposeChars (x : xs) = do
-            case NFD.isDecomposable x of
-                True ->    decomposeChars (NFD.decomposeChar x)
-                        ++ decomposeChars xs
-                False -> x : decomposeChars xs
+            case NFD.isHangul x of
+                True ->
+                    case NFD.decomposeCharHangul x of
+                        Left  (l, v)    -> l : v : decomposeChars xs
+                        Right (l, v, t) -> l : v : t : decomposeChars xs
+                False ->
+                    -- TODO: return fully decomposed form to avoid rechecks on
+                    -- recursion or at least do recursive decompose strictly
+                    case NFD.isDecomposable x of
+                        True ->    decomposeChars (NFD.decomposeChar x)
+                                ++ decomposeChars xs
+                        False -> x : decomposeChars xs
 
         -- TODO try streaming fusion on lists
             -- can compose or use map efficiently

@@ -5,11 +5,9 @@ where
 
 import Data.Char (ord)
 import Data.BitArray (BitArray, bitArray, lookupBit)
-import Data.Unicode.Properties.DecomposeHangul (hangulFirst, hangulLast)
 
 isDecomposable :: Char -> Bool
 isDecomposable c | (ord c) < 192 || (ord c) > 195101 = False
-isDecomposable c | (ord c) >= hangulFirst && (ord c) <= hangulLast = True
 isDecomposable c = lookupBit bitmap (ord c)
 
 bitList :: [(Int, Bool)]

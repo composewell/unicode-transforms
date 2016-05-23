@@ -8,7 +8,7 @@
 -- Stability   : experimental
 --
 module Data.Unicode.Properties.DecomposeHangul
-(decomposeCharHangul, hangulFirst, hangulLast)
+(decomposeCharHangul, isHangul)
 where
 
 import           Data.Char (ord)
@@ -36,11 +36,15 @@ hangulFirst, hangulLast :: Int
 hangulFirst = 0xac00
 hangulLast = hangulFirst + jamoLCount * jamoVCount * jamoTCount - 1
 
-{-# NOINLINE decomposeCharHangul #-}
-decomposeCharHangul :: Char -> [Char]
+isHangul :: Char -> Bool
+isHangul c = n >= hangulFirst && n <= hangulLast
+    where n = ord c
+
+{-# INLINE decomposeCharHangul #-}
+decomposeCharHangul :: Char -> Either (Char, Char) (Char, Char, Char)
 decomposeCharHangul c
-    | ti == 0   = let f !x !y    = [x, y]    in f l v
-    | otherwise = let f !x !y !z = [x, y, z] in f l v t
+    | ti == 0   = Left (l, v)
+    | otherwise = Right (l, v, t)
     where
         i = (ord c) - hangulFirst
         ti = i `rem` jamoTCount

@@ -7,22 +7,10 @@
 -- Stability   : experimental
 --
 module Data.Unicode.Properties.Decompose
-(decomposeChar)
+(decomposeChar, decomposeCharHangul, isHangul, isDecomposable)
 where
 
-import           Data.Char                               (chr, ord)
+import           Data.Unicode.Properties.Decomposable    (isDecomposable)
 import           Data.Unicode.Properties.DecomposeHangul (decomposeCharHangul,
-                                                          hangulFirst,
-                                                          hangulLast)
-import           Data.Unicode.Properties.Decompositions  (decomposeCharHigh,
-                                                          decomposeCharLow)
-
--- Note: this is a partial function we do not expect to call this if
--- isDecomposable is false.
-{-# INLINE decomposeChar #-}
-decomposeChar :: Char -> [Char]
-decomposeChar c
-    | n <  hangulFirst = decomposeCharLow c
-    | n <= hangulLast  = decomposeCharHangul c
-    | otherwise        = decomposeCharHigh c
-    where n = ord c
+                                                          isHangul)
+import           Data.Unicode.Properties.Decompositions  (decomposeChar)
