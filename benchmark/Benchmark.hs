@@ -17,6 +17,7 @@ import           Data.Bifunctor            (second)
 import           Data.Text                 (Text)
 import qualified Data.Text                 as T
 import qualified Data.Text.ICU             as TI
+import qualified Data.Text.Normalize       as UTF8Proc
 import qualified Data.Text.NormalizeNative as UT
 import           Options.Applicative.Extra (execParser)
 import           Path                      (Dir, Path, Rel, mkRelDir,
@@ -27,6 +28,10 @@ import           System.FilePath           (dropExtensions, takeFileName)
 textICUFuncs :: [(String, Text -> Text)]
 textICUFuncs =
     [ ("NFD", TI.normalize TI.NFD) ]
+
+utf8ProcFuncs :: [(String, Text -> Text)]
+utf8ProcFuncs =
+    [ ("NFD", UTF8Proc.normalize UTF8Proc.NFD) ]
 
 unicodeTransformFuncs :: [(String, String -> String)]
 unicodeTransformFuncs =
@@ -59,6 +64,8 @@ main = do
     dataFiles <- fmap (map toFilePath . snd) (listDir dataDir)
     runMode mode
         [ bgroup "text-icu"           $ makeBench <$> textICUFuncs
+                                                  <*> (map txtInput dataFiles)
+        , bgroup "utf8proc"           $ makeBench <$> utf8ProcFuncs
                                                   <*> (map txtInput dataFiles)
         , bgroup "unicode-transforms" $ makeBench <$> unicodeTransformFuncs
                                                   <*> (map strInput dataFiles)
