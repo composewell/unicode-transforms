@@ -86,14 +86,19 @@ data CharProps = CharProps {
 -- Generate data structures for decompositions
 -------------------------------------------------------------------------------
 
-genBitmap :: String -> [Char] -> String
-genBitmap testBit chrList = unlines
-    [
-      testBit <> " :: Char -> Bool"
-    , testBit <> " c | (ord c) < "
+genSignature :: String -> String
+genSignature testBit = testBit <> " :: Char -> Bool"
+
+genRangeCheck :: String -> [Int] -> String
+genRangeCheck testBit ordList =
+      testBit <> " c | (ord c) < "
       <> show (minimum ordList) <> " || (ord c) > "
       <> show (maximum ordList) <> " = False"
-    , testBit <> " c = lookupBit bitmap (ord c)"
+
+genBitmap :: String -> [Int] -> String
+genBitmap testBit ordList = unlines
+    [
+      testBit <> " c = lookupBit bitmap (ord c)"
     , ""
     , "bitList :: [(Int, Bool)]"
     , "bitList = " ++ (show $ map (,True) ordList)
@@ -103,8 +108,6 @@ genBitmap testBit chrList = unlines
       ++ (show (minimum ordList, maximum ordList))
       ++ " bitList"
     ]
-    where
-        ordList = map ord chrList
 
 genCombiningClass :: PropertiesDB -> String -> String
 genCombiningClass props file = unlines
@@ -120,7 +123,9 @@ genCombiningClass props file = unlines
             , concat $ map genCombiningClassDef ccmap
             , "getCombiningClass _ = 0\n"
             , ""
-            , genBitmap "isCombining" (map fst ccmap)
+            , genSignature  "isCombining"
+            , genRangeCheck "isCombining" ordList
+            , genBitmap     "isCombining" ordList
             ]
     where
         genCombiningClassDef (c, d) =
@@ -128,6 +133,8 @@ genCombiningClass props file = unlines
 
         ccmap = (filter (\(_,cc) -> cc /= 0)
                  . map (\(c,prop) -> (c, _combiningClass prop))) props
+
+        ordList = map (ord . fst) ccmap
 
 decompositions :: PropertiesDB -> [(Char, [Char])]
 decompositions =
@@ -144,9 +151,16 @@ genDecomposable props file = unlines
             , ""
             , "import Data.Char (ord)"
             , "import Data.BitArray (BitArray, bitArray, lookupBit)"
+            , "import Data.Unicode.Properties.DecomposeHangul (hangulFirst, hangulLast)"
             , ""
-            , genBitmap "isDecomposable" (map fst (decompositions props))
+            , genSignature  "isDecomposable"
+            , genRangeCheck "isDecomposable" ordList
+            , "isDecomposable c | (ord c) >= hangulFirst && (ord c) <= hangulLast = True"
+            , genBitmap     "isDecomposable" ordList
             ]
+    where
+        notHangul n = n < hangulFirst || n > hangulLast
+        ordList = filter notHangul (map (ord . fst) (decompositions props))
 
 decomposeChar :: Char -> Decomp -> [Char]
 decomposeChar c DCSelf   = [c]
