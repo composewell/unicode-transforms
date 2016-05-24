@@ -65,20 +65,6 @@ library:
 
 # developer mode only
 executables:
-  ucd2haskell:
-    source-dirs: unicode-data
-    main:        UCD2Haskell.hs
-    dependencies:
-      - data-list-sequences
-      - getopt-generics
-      - tagsoup
-      - split
-      - binary
-      - bytestring
-      - containers
-      - deepseq
-      - filepath
-      - unicode-transforms
   normalizefile:
     ghc-options: -O2 -funbox-strict-fields
     source-dirs: benchmark
