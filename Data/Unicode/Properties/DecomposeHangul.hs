@@ -47,9 +47,9 @@ decomposeCharHangul c
     | otherwise = Right (l, v, t)
     where
         i = (ord c) - hangulFirst
-        ti = i `rem` jamoTCount
-        tn = i `quot` jamoTCount
+        !(tn, ti) = i  `quotRem` jamoTCount
+        !(li, vi) = tn `quotRem` jamoVCount
 
-        l = unsafeChr (jamoLFirst + tn `quot` jamoVCount)
-        v = unsafeChr (jamoVFirst + tn `rem` jamoVCount)
+        l = unsafeChr (jamoLFirst + li)
+        v = unsafeChr (jamoVFirst + vi)
         t = unsafeChr (jamoTFirst + ti)

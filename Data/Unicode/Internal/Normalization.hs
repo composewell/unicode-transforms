@@ -30,20 +30,26 @@ decompose = reorder . decomposeChars
 --decompose = ccOverhead
 --decompose str = (ccOverhead str) ++ (dcOverhead str)
     where
-        decomposeChars [] = []
-        decomposeChars (x : xs) = do
+        decomposeChars = foldr decomposeAndFold []
+
+        decomposeAndFold x xs =
             case NFD.isHangul x of
                 True ->
                     case NFD.decomposeCharHangul x of
-                        Left  (l, v)    -> l : v : decomposeChars xs
-                        Right (l, v, t) -> l : v : t : decomposeChars xs
+                        Left  (l, v)    -> l : v : xs
+                        Right (l, v, t) -> l : v : t : xs
                 False ->
                     -- TODO: return fully decomposed form to avoid rechecks on
                     -- recursion or at least do recursive decompose strictly
                     case NFD.isDecomposable x of
-                        True ->    decomposeChars (NFD.decomposeChar x)
-                                ++ decomposeChars xs
-                        False -> x : decomposeChars xs
+                        True -> decomposeAll (NFD.decomposeChar x) ++ xs
+                        False -> x : xs
+
+        decomposeAll [] = []
+        decomposeAll (x : xs) =
+            case NFD.isDecomposable x of
+                True -> decomposeAll (NFD.decomposeChar x) ++ decomposeAll xs
+                False -> x : xs
 
         -- TODO try streaming fusion on lists
             -- can compose or use map efficiently
