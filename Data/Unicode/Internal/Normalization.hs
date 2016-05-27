@@ -22,7 +22,7 @@ import qualified Data.Unicode.Properties.CombiningClass  as CC
 import qualified Data.Unicode.Properties.Decompose       as NFD
 
 decompose :: String -> String
-decompose = reorder . decomposeChars
+decompose = decomposeChars []
 --decompose = reorder
 --decompose = decomposeChars
 --decompose = dcOverhead
@@ -30,44 +30,37 @@ decompose = reorder . decomposeChars
 --decompose = ccOverhead
 --decompose str = (ccOverhead str) ++ (dcOverhead str)
     where
-        decomposeChars = foldr decomposeAndFold []
-
-        decomposeAndFold x xs =
+        decomposeChars buf [] = buf
+        decomposeChars buf (x : xs) = do
             case NFD.isHangul x of
                 True ->
-                    case NFD.decomposeCharHangul x of
-                        Left  (l, v)    -> l : v : xs
-                        Right (l, v, t) -> l : v : t : xs
+                    buf ++ case NFD.decomposeCharHangul x of
+                        Left  (l, v)    -> (l : v : decomposeChars [] xs)
+                        Right (l, v, t) -> (l : v : t : decomposeChars [] xs)
                 False ->
                     -- TODO: return fully decomposed form to avoid rechecks on
                     -- recursion or at least do recursive decompose strictly
                     case NFD.isDecomposable x of
-                        True -> decomposeAll (NFD.decomposeChar x) ++ xs
-                        False -> x : xs
+                        True  ->  let ys = NFD.decomposeChar x ++ xs
+                                  in decomposeChars buf ys
+                        False -> reorder buf x xs
 
-        decomposeAll [] = []
-        decomposeAll (x : xs) =
-            case NFD.isDecomposable x of
-                True -> decomposeAll (NFD.decomposeChar x) ++ decomposeAll xs
-                False -> x : xs
+        -- TODO: how to sort when the characters have same combining classes
+        -- (reorder buffer) (input char) (undecomposed list)
+        reorder [] x xs = decomposeChars [x] xs
 
-        -- TODO try streaming fusion on lists
-            -- can compose or use map efficiently
-            -- use takewhile/break on char/cc tuples
+        -- input char is a starter, flush the reorder buffer
+        reorder buf x xs | not (CC.isCombining x) =
+            buf ++ (x : decomposeChars [] xs)
 
-        -- sequence of chars with 0 combining class
-        reorder (x : xs) | not (CC.isCombining x) = x : reorder xs
+        -- input char is combining and there is a starter char in the buffer
+        -- flush the starter char and add the combining char to the buffer
+        reorder buf@[y] x xs | not (CC.isCombining y) =
+                y : decomposeChars [x] xs
 
-        -- one non-zero cc char between two zero cc chars
-        reorder (x1 : x2 : xs) | not (CC.isCombining x2) = x1 : x2 : reorder xs
-
-        reorder [x] = [x]
-        reorder []  = []
-
-        -- sequence of two or more nonzero cc chars
-        reorder xs = sortCluster ys ++ reorder zs
+        -- more than one combining char in the buffer, sort them
+        reorder buf x xs = decomposeChars (sortCluster (buf ++ [x])) xs
             where
-                (ys, zs) = break (not . CC.isCombining) xs
                 sortCluster =   map fst
                               . sortBy (comparing snd)
                               . map (ap (,) CC.getCombiningClass)
