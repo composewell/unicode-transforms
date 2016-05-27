@@ -62,7 +62,16 @@ decompose = decomposeChars []
         reorder buf@[y] x xs | not (CC.isCombining y) =
                 y : decomposeChars [x] xs
 
-        -- more than one combining char in the buffer, sort them
+        -- optimized ordering for common case of two combining chars
+        reorder buf@[y] x xs = decomposeChars orderedPair xs
+            where
+                orderedPair =
+                    case inOrder y x of
+                        True  -> buf ++ [x]
+                        False -> x : buf
+                inOrder x y = CC.getCombiningClass x <= CC.getCombiningClass y
+
+        -- unoptimized generic sort for more than two combining chars
         reorder buf x xs = decomposeChars (sortCluster (buf ++ [x])) xs
             where
                 sortCluster =   map fst
