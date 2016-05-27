@@ -51,7 +51,11 @@ decompose = decomposeChars []
 
         -- input char is a starter, flush the reorder buffer
         reorder buf x xs | not (CC.isCombining x) =
-            buf ++ (x : decomposeChars [] xs)
+            -- Unbox the string concatenation for common cases
+            case buf of
+              [y]       -> (y : x : decomposeChars [] xs)
+              [y1, y2]  -> (y1 : y2 : x : decomposeChars [] xs)
+              _         -> buf ++ (x : decomposeChars [] xs)
 
         -- input char is combining and there is a starter char in the buffer
         -- flush the starter char and add the combining char to the buffer
