@@ -9,7 +9,7 @@
 --
 module Data.ByteString.UTF8.Normalize
     (
-    module Data.Unicode.Normalize
+    module Data.Unicode.Types
     -- * Normalization
     , normalize
     ) where
@@ -17,8 +17,8 @@ module Data.ByteString.UTF8.Normalize
 import           Data.ByteString        (ByteString)
 import           Data.ByteString.Unsafe (unsafePackMallocCStringLen,
                                          unsafeUseAsCStringLen)
-import           Data.Unicode.Normalize
-import           Data.Unicode.Transform
+import           Data.Unicode.Types
+import           Data.Unicode.UTF8Proc
 import           System.IO.Unsafe       (unsafePerformIO)
 
 -- | Perform Unicode normalization on a UTF8 encoded @ByteString@ according to

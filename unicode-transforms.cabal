@@ -35,16 +35,16 @@ library
   exposed-modules:
       Data.ByteString.UTF8.Normalize
       Data.Text.Normalize
-      Data.Text.NormalizeNative
       Data.Unicode.Normalize
+      Data.Unicode.Types
+  other-modules:
       Data.Unicode.Internal.Normalization
       Data.Unicode.Properties.Decomposable
       Data.Unicode.Properties.Decompose
       Data.Unicode.Properties.DecomposeHangul
       Data.Unicode.Properties.Decompositions
       Data.Unicode.Properties.CombiningClass
-  other-modules:
-      Data.Unicode.Transform
+      Data.Unicode.UTF8Proc
   build-depends:
       base >= 4 && < 5
     , bitarray

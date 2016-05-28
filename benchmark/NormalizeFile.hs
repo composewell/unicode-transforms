@@ -9,9 +9,10 @@
 -- Portability : GHC
 --
 
-import           Control.DeepSeq           (deepseq)
-import qualified Data.Text.NormalizeNative as UT
-import           System.Environment        (getArgs)
+import           Control.DeepSeq        (deepseq)
+import           System.Environment     (getArgs)
+
+import qualified Data.Unicode.Normalize as UT
 
 -- Truncate or expand all datasets to this size to provide a normalized
 -- measurement view across all datasets and to reduce the effect of noise

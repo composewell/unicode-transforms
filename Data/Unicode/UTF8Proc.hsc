@@ -2,7 +2,7 @@
 {-# LANGUAGE ForeignFunctionInterface #-}
 
 -- |
--- Module      : Data.Unicode.Transform
+-- Module      : Data.Unicode.UTF8Proc
 -- Copyright   : (c) 2016 Harendra Kumar
 --
 -- License     : BSD-style
@@ -45,7 +45,7 @@
 -- * Regular expressions
 --
 
-module Data.Unicode.Transform
+module Data.Unicode.UTF8Proc
     (
         -- * Normalization operation parameters
           NormalForm(..)

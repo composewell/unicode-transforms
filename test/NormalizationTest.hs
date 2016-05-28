@@ -17,7 +17,7 @@ import           Data.List                 (intercalate, isPrefixOf)
 import           Data.List.Split           (splitOn)
 import           Data.Text                 (Text)
 import qualified Data.Text                 as T
-import           Data.Text.NormalizeNative (NormalizationMode (..), normalize)
+import           Data.Unicode.Normalize    (NormalizationMode (..), normalize)
 import           Text.Printf               (printf)
 
 chrToHex :: Char -> [Char]
