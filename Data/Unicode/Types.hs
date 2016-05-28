@@ -1,5 +1,5 @@
 -- |
--- Module      : Data.Unicode.Normalize
+-- Module      : Data.Unicode.Types
 -- Copyright   : (c) 2016 Harendra Kumar
 --
 -- License     : BSD-style
@@ -10,7 +10,7 @@
 -- Character set normalization functions for Unicode.  The documentation and
 -- API in this module is largely borrowed from @text-icu@.
 
-module Data.Unicode.Normalize
+module Data.Unicode.Types
     (
     -- * Unicode normalization API
     -- $api

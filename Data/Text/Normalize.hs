@@ -9,17 +9,17 @@
 --
 module Data.Text.Normalize
     (
-    module Data.Unicode.Normalize
+    module Data.Unicode.Types
     -- * Normalization
     , normalize
     ) where
 
-import           Data.Unicode.Transform
-import           Data.Unicode.Normalize   (NormalizationMode (..))
-import           Data.Text                      (Text)
-import           Data.Text.Foreign              (fromPtr, useAsPtr)
-import           Foreign.Ptr                    (castPtr)
-import           System.IO.Unsafe               (unsafePerformIO)
+import           Data.Text             (Text)
+import           Data.Text.Foreign     (fromPtr, useAsPtr)
+import           Data.Unicode.Types    (NormalizationMode (..))
+import           Data.Unicode.UTF8Proc
+import           Foreign.Ptr           (castPtr)
+import           System.IO.Unsafe      (unsafePerformIO)
 
 -- | Perform Unicode normalization on a @Text@ according to the specified
 -- normalization mode.
