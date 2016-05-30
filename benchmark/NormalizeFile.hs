@@ -12,7 +12,8 @@
 import           Control.DeepSeq        (deepseq)
 import           System.Environment     (getArgs)
 
-import qualified Data.Unicode.Normalize as UT
+import qualified Data.Text.NormalizeNative as UT
+import Data.Text (pack, Text)
 
 -- Truncate or expand all datasets to this size to provide a normalized
 -- measurement view across all datasets and to reduce the effect of noise
@@ -20,11 +21,11 @@ import qualified Data.Unicode.Normalize as UT
 dataSetSize :: Int
 dataSetSize = 1000000
 
-strInput :: FilePath -> IO String
-strInput file = fmap (take dataSetSize . cycle) (readFile file)
+txtInput :: FilePath -> IO Text
+txtInput file = fmap (pack . take dataSetSize . cycle) (readFile file)
 
 main :: IO ()
 main = do
     [file] <- getArgs
-    input <- strInput file
+    input <- txtInput file
     UT.normalize UT.NFD input `deepseq` return ()

@@ -17,7 +17,7 @@ import           Data.List                 (intercalate, isPrefixOf)
 import           Data.List.Split           (splitOn)
 import           Data.Text                 (Text)
 import qualified Data.Text                 as T
-import           Data.Unicode.Normalize    (NormalizationMode (..), normalize)
+import           Data.Text.NormalizeNative    (NormalizationMode (..), normalize)
 import           Text.Printf               (printf)
 
 chrToHex :: Char -> [Char]
@@ -39,7 +39,7 @@ checkEqual opName op (c1, c2) =
 
 checkOp :: String -> NormalizationMode -> [(Text, Text)] -> IO Bool
 checkOp name op pairs = do
-    res <- mapM (checkEqual name (T.pack . (normalize op) . T.unpack)) pairs
+    res <- mapM (checkEqual name ((normalize op))) pairs
     return $ all (== True) res
 
 checkNFC :: (Text, Text, Text, Text, Text) -> IO Bool

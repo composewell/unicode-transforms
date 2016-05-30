@@ -18,7 +18,8 @@ import           Data.Text                 (Text)
 import qualified Data.Text                 as T
 import qualified Data.Text.ICU             as TI
 import qualified Data.Text.Normalize       as UTF8Proc
-import qualified Data.Text.NormalizeNative as UT
+import qualified Data.Text.NormalizeNative as UTText
+import qualified Data.Unicode.Normalize as UT
 import           Options.Applicative.Extra (execParser)
 import           Path                      (Dir, Path, Rel, mkRelDir,
                                             toFilePath, (</>))
@@ -32,6 +33,10 @@ textICUFuncs =
 utf8ProcFuncs :: [(String, Text -> Text)]
 utf8ProcFuncs =
     [ ("NFD", UTF8Proc.normalize UTF8Proc.NFD) ]
+
+unicodeTransformTextFuncs :: [(String, Text -> Text)]
+unicodeTransformTextFuncs =
+    [ ("NFD", UTText.normalize UTText.NFD) ]
 
 unicodeTransformFuncs :: [(String, String -> String)]
 unicodeTransformFuncs =
@@ -69,4 +74,6 @@ main = do
                                                   <*> (map txtInput dataFiles)
         , bgroup "unicode-transforms" $ makeBench <$> unicodeTransformFuncs
                                                   <*> (map strInput dataFiles)
+        , bgroup "unicode-transforms-text" $ makeBench <$> unicodeTransformTextFuncs
+                                                  <*> (map txtInput dataFiles)
         ]

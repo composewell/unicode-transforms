@@ -9,21 +9,21 @@
 --
 -- Normalization for Haskell @String@s.
 --
-module Data.Unicode.Normalize
+module Data.Text.NormalizeNative
     (
     -- * Normalization
       NormalizationMode (..)
     , normalize
     ) where
 
-import           Data.Text                             (unpack)
-import           Data.Text.Internal.Fusion.Common      (streamList)
+import           Data.Text                             (Text)
+import           Data.Text.Internal.Fusion             (stream)
 import           Data.Unicode.Internal.NormalizeStream (unstream)
 import           Data.Unicode.Types                    (NormalizationMode (..))
 
 -- | Perform Unicode normalization on a @String@ according to the specified
 -- normalization mode.
-normalize :: NormalizationMode -> String -> String
+normalize :: NormalizationMode -> Text -> Text
 normalize mode =
     case mode of
-          NFD  -> unpack . unstream . streamList
+          NFD  -> unstream . stream
