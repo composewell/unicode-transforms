@@ -36,13 +36,13 @@ library
       Data.ByteString.UTF8.Normalize
       Data.Text.Normalize
       Data.Text.NormalizeNative
+      Data.Unicode.Internal.NormalizeStream
       Data.Unicode.Normalize
       Data.Unicode.Types
       Data.Unicode.Properties.CombiningClass
       Data.Unicode.Properties.Decompose
   other-modules:
       Data.Unicode.Internal.Normalization
-      Data.Unicode.Internal.NormalizeStream
       Data.Unicode.Properties.Decomposable
       Data.Unicode.Properties.DecomposeHangul
       Data.Unicode.Properties.Decompositions

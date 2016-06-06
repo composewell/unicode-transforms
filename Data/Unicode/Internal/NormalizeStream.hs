@@ -12,14 +12,18 @@
 --
 module Data.Unicode.Internal.NormalizeStream
     (
-      unstream
+      stream
+    , unstream
+--    , decomposeX
     )
     where
 
 import           Control.Monad                          (ap)
 import           Data.List                              (sortBy)
 import           Data.Ord                               (comparing)
-import           Data.Text.Internal.Fusion              (Step (..), Stream (..))
+-- import           Data.Text.Internal.Fusion              (Step (..), Stream (..))
+import Data.Text.Internal.Fusion.Types
+import Data.Text.Internal.Fusion.Size
 
 import qualified Data.Text.Array                        as A
 import           Data.Text.Internal                     (Text (..))
@@ -27,6 +31,10 @@ import           Data.Text.Internal.Fusion.Size         (upperBound)
 import           Data.Text.Internal.Private             (runText)
 import           Data.Text.Internal.Unsafe.Char         (unsafeWrite)
 import           GHC.ST                                 (ST (..))
+
+import Data.Text.Internal.Unsafe.Char (ord, unsafeChr, unsafeWrite)
+import Data.Text.Internal.Unsafe.Shift (shiftL, shiftR)
+import qualified Data.Text.Internal.Encoding.Utf16 as U16
 
 import qualified Data.Unicode.Properties.CombiningClass as CC
 import qualified Data.Unicode.Properties.Decompose      as NFD
@@ -68,7 +76,7 @@ decomposeChar marr index robuf ch = do
         False -> reorder marr index robuf ch
 
     where
-        -- {-# INLINE decomposeAll #-}
+        {-# NOINLINE decomposeAll #-}
         decomposeAll _ i rbuf [] = return (i, rbuf)
         decomposeAll arr i rbuf (x : xs)  =
             case NFD.isDecomposable x of
@@ -126,10 +134,25 @@ decomposeChar marr index robuf ch = do
         -- unoptimized generic sort for more than two combining chars
         reorder _ i buf x = return (i, (sortCluster (buf ++ [x])))
             where
-                -- {-# NOINLINE sortCluster #-}
+                {-# NOINLINE sortCluster #-}
                 sortCluster =   map fst
                               . sortBy (comparing snd)
                               . map (ap (,) CC.getCombiningClass)
+
+-- | /O(n)/ Convert a 'Text' into a 'Stream Char'.
+stream :: Text -> Stream Char
+stream (Text arr off len) = Stream next off (betweenSize (len `shiftR` 1) len)
+    where
+      !end = off+len
+      {-# INLINE next #-}
+      next !i
+          | i >= end                   = Done
+          | n >= 0xD800 && n <= 0xDBFF = Yield (U16.chr2 n n2) (i + 2)
+          | otherwise                  = Yield (unsafeChr n) (i + 1)
+          where
+            n  = A.unsafeIndex arr i
+            n2 = A.unsafeIndex arr (i + 1)
+{-# INLINE [0] stream #-}
 
 -- | /O(n)/ Convert a 'Stream Char' into a normalized 'Text'.
 unstream :: Stream Char -> Text
@@ -138,28 +161,32 @@ unstream (Stream next0 s0 len) = runText $ \done -> do
   -- worst case encoding size of two 16-bit units for the char. Just add an
   -- extra space to the buffer so that we do not end up reallocating even when
   -- all the chars are encoded as single unit.
-  let mlen = upperBound 4 len + 1 + maxDecomposeLen
+  let margin = 1 + maxDecomposeLen
+      mlen = (upperBound 4 len + margin)
   arr0 <- A.new mlen
-  let outer !arr !maxi rb = encode rb
+  let outer !arr !maxi = encode
        where
         -- keep the common case loop as small as possible
         encode !si !di rbuf =
-            case next0 si of
-                Done -> do
-                    di' <- writeReorderBuffer arr di rbuf
-                    done arr di'
-                Skip si'    -> encode si' di rbuf
-                Yield c si'
-                    -- simply check for the worst case
-                    | maxi < di + 1 -> realloc si di rbuf
-                    | otherwise -> do
-                            (di', rbuf') <- decomposeChar arr di rbuf c
-                            encode si' di' rbuf'
+            -- simply check for the worst case
+            if maxi < di + margin
+            then realloc si di rbuf
+            else
+                case next0 si of
+                    Done -> do
+                        di' <- writeReorderBuffer arr di rbuf
+                        done arr di'
+                    Skip si'    -> encode si' di rbuf
+                    Yield c si' -> do
+                                (di', rbuf') <- decomposeChar arr di rbuf c
+                                encode si' di' rbuf'
+                                -- n <- unsafeWrite arr di c
+                                -- encode si' (di + n) rbuf
 
         -- keep uncommon case separate from the common case code
         {-# NOINLINE realloc #-}
         realloc !si !di rbuf = do
-            let newlen = (maxi + 1 + maxDecomposeLen) * 2
+            let newlen = maxi * 2
             arr' <- A.new newlen
             A.copyM arr' 0 arr 0 di
             outer arr' (newlen - 1) si di rbuf
@@ -171,3 +198,5 @@ unstream (Stream next0 s0 len) = runText $ \done -> do
 -- we can generate this from UCD
 maxDecomposeLen :: Int
 maxDecomposeLen = 10
+
+-- decomposeX = unstream . stream

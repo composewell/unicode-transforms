@@ -1,3 +1,4 @@
+-- {-# OPTIONS_GHC -funfolding-fun-discount=90 #-}
 -- |
 -- Module      : Data.Unicode.Normalize
 -- Copyright   : (c) 2016 Harendra Kumar
@@ -17,8 +18,8 @@ module Data.Text.NormalizeNative
     ) where
 
 import           Data.Text                             (Text)
-import           Data.Text.Internal.Fusion             (stream)
-import           Data.Unicode.Internal.NormalizeStream (unstream)
+-- import           Data.Text.Internal.Fusion             (stream)
+import           Data.Unicode.Internal.NormalizeStream (stream, unstream)
 import           Data.Unicode.Types                    (NormalizationMode (..))
 
 -- | Perform Unicode normalization on a @String@ according to the specified
