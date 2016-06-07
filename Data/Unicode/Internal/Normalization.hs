@@ -25,7 +25,6 @@ decompose :: String -> String
 decompose = decomposeChars []
 --decompose = reorder
 --decompose = decomposeChars
---decompose = dcOverhead
 --decompose = combinableOverhead
 --decompose = ccOverhead
 --decompose str = (ccOverhead str) ++ (dcOverhead str)
@@ -41,9 +40,9 @@ decompose = decomposeChars []
                     -- TODO: return fully decomposed form to avoid rechecks on
                     -- recursion or at least do recursive decompose strictly
                     case NFD.isDecomposable x of
-                        True  ->  let ys = NFD.decomposeChar x ++ xs
-                                  in decomposeChars buf ys
-                        False -> reorder buf x xs
+                        NFD.TrueA  ->  let ys = NFD.decomposeChar x ++ xs
+                                       in decomposeChars buf ys
+                        _          -> reorder buf x xs
 
         -- TODO: how to sort when the characters have same combining classes
         -- (reorder buffer) (input char) (undecomposed list)
@@ -83,5 +82,3 @@ decompose = decomposeChars []
             map (\c -> if CC.isCombining c then 1 else 0 :: Int) xs
         ccOverhead xs = show $ sum $
             map CC.getCombiningClass xs
-        dcOverhead xs = show $ sum $
-            map (\c -> if NFD.isDecomposable c then 1 else 0 :: Int) xs

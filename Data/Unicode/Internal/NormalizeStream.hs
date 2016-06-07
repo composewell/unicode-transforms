@@ -72,18 +72,19 @@ decomposeChar marr i rbuf c | NFD.isHangul c = do
 decomposeChar marr index robuf ch = do
     -- TODO: return fully decomposed form
     case NFD.isDecomposable ch of
-        True  -> decomposeAll marr index robuf (NFD.decomposeChar ch)
-        False -> reorder marr index robuf ch
+      NFD.FalseA -> reorder marr index robuf ch
+      NFD.TrueA  -> decomposeAll marr index robuf (NFD.decomposeChar ch)
+      _ -> reorder marr index robuf ch
 
     where
-        {-# NOINLINE decomposeAll #-}
+        {-# INLINE decomposeAll #-}
         decomposeAll _ i rbuf [] = return (i, rbuf)
         decomposeAll arr i rbuf (x : xs)  =
             case NFD.isDecomposable x of
-                True  -> do
+                NFD.TrueA  -> do
                     (i', rbuf') <- decomposeAll arr i rbuf (NFD.decomposeChar x)
                     decomposeAll arr i' rbuf' xs
-                False -> do
+                _ -> do
                     (i', rbuf') <- reorder arr i rbuf x
                     decomposeAll arr i' rbuf' xs
 
@@ -134,7 +135,7 @@ decomposeChar marr index robuf ch = do
         -- unoptimized generic sort for more than two combining chars
         reorder _ i buf x = return (i, (sortCluster (buf ++ [x])))
             where
-                {-# NOINLINE sortCluster #-}
+                {-# INLINE sortCluster #-}
                 sortCluster =   map fst
                               . sortBy (comparing snd)
                               . map (ap (,) CC.getCombiningClass)
