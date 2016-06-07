@@ -148,7 +148,9 @@ stream (Text arr off len) = Stream next off (betweenSize (len `shiftR` 1) len)
       {-# INLINE next #-}
       next !i
           | i >= end                   = Done
-          | n >= 0xD800 && n <= 0xDBFF = Yield (U16.chr2 n n2) (i + 2)
+          -- shift generates only two branches instead of three in case of
+          -- range check, works quite a bit faster with llvm backend.
+          | (n `shiftR` 10) == 0x36    = Yield (U16.chr2 n n2) (i + 2)
           | otherwise                  = Yield (unsafeChr n) (i + 1)
           where
             n  = A.unsafeIndex arr i

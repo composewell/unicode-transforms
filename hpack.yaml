@@ -41,7 +41,7 @@ library:
   include-dirs: cbits
   c-sources:    cbits/utf8proc.c
 
-  ghc-options: -O2 -funbox-strict-fields
+  ghc-options: -O2 -funbox-strict-fields -fllvm
   source-dirs: .
   exposed-modules:
     - Data.ByteString.UTF8.Normalize
