@@ -762,6 +762,7 @@ getCombiningClass '\125142' = 220
 getCombiningClass _ = 0
 
 
+{-# INLINE isCombining #-}
 isCombining :: Char -> Bool
 isCombining c | (ord c) < 768 || (ord c) > 125142 = False
 isCombining c = lookupBit bitmap (ord c)

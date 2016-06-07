@@ -122,6 +122,7 @@ genCombiningClass props file = unlines
             , concat $ map genCombiningClassDef ccmap
             , "getCombiningClass _ = 0\n"
             , ""
+            , "{-# INLINE isCombining #-}"
             , genSignature  "isCombining"
             , genRangeCheck "isCombining" ordList
             , genBitmap     "isCombining" ordList
