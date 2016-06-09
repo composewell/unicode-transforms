@@ -21,60 +21,64 @@ module Data.Unicode.Internal.NormalizeStream
 import           Control.Monad                          (ap)
 import           Data.List                              (sortBy)
 import           Data.Ord                               (comparing)
--- import           Data.Text.Internal.Fusion              (Step (..), Stream (..))
-import Data.Text.Internal.Fusion.Types
-import Data.Text.Internal.Fusion.Size
-
 import qualified Data.Text.Array                        as A
 import           Data.Text.Internal                     (Text (..))
-import           Data.Text.Internal.Fusion.Size         (upperBound)
+import qualified Data.Text.Internal.Encoding.Utf16      as U16
+import           Data.Text.Internal.Fusion.Size         (betweenSize,
+                                                         upperBound)
+import           Data.Text.Internal.Fusion.Types        (Step (..), Stream (..))
 import           Data.Text.Internal.Private             (runText)
 import           Data.Text.Internal.Unsafe.Char         (unsafeWrite)
+import           Data.Text.Internal.Unsafe.Char         (unsafeChr)
+import           Data.Text.Internal.Unsafe.Shift        (shiftR)
 import           GHC.ST                                 (ST (..))
-
-import Data.Text.Internal.Unsafe.Char (ord, unsafeChr, unsafeWrite)
-import Data.Text.Internal.Unsafe.Shift (shiftL, shiftR)
-import qualified Data.Text.Internal.Encoding.Utf16 as U16
 
 import qualified Data.Unicode.Properties.CombiningClass as CC
 import qualified Data.Unicode.Properties.Decompose      as NFD
 
--- We can unfold the loop for the common 2 char case
+data ReBuf = Empty | One {-# UNPACK #-} !Char | Many [Char]
+
 {-# INLINE writeReorderBuffer #-}
-writeReorderBuffer :: A.MArray s -> Int -> [Char] -> ST s Int
-writeReorderBuffer marr i rbuf = go i rbuf
+writeReorderBuffer :: A.MArray s -> Int -> ReBuf -> ST s Int
+writeReorderBuffer _ di Empty = return di
+
+writeReorderBuffer marr di (One c) = do
+    n <- unsafeWrite marr di c
+    return (di + n)
+
+writeReorderBuffer marr di (Many str) = go di str
     where
-        go di [] = return di
-        go di (x : xs) = do
-            n <- unsafeWrite marr di x
-            go (di + n) xs
+        go i [] = return i
+        go i (c : cs) = do
+            n <- unsafeWrite marr i c
+            go (i + n) cs
 
 -- {-# INLINE decomposeCharHangul #-}
-decomposeCharHangul :: A.MArray s -> Int -> Char -> ST s (Int, [Char])
+decomposeCharHangul :: A.MArray s -> Int -> Char -> ST s (Int, ReBuf)
 decomposeCharHangul marr j c = do
     case NFD.decomposeCharHangul c of
         Left  (l, v)    -> do
             n1 <- unsafeWrite marr j l
             n2 <- unsafeWrite marr (j + n1) v
-            return ((j + n1 + n2), [])
+            return ((j + n1 + n2), Empty)
         Right (l, v, t) -> do
             n1 <- unsafeWrite marr j l
             n2 <- unsafeWrite marr (j + n1) v
             n3 <- unsafeWrite marr (j + n1 + n2) t
-            return (j + n1 + n2 + n3, [])
+            return (j + n1 + n2 + n3, Empty)
 
 {-# INLINE decomposeChar #-}
-decomposeChar :: A.MArray s -> Int -> [Char] -> Char -> ST s (Int, [Char])
-decomposeChar marr i rbuf c | NFD.isHangul c = do
-    j <- writeReorderBuffer marr i rbuf
+decomposeChar :: A.MArray s -> Int -> ReBuf -> Char -> ST s (Int, ReBuf)
+decomposeChar marr i reBuf c | NFD.isHangul c = do
+    j <- writeReorderBuffer marr i reBuf
     decomposeCharHangul marr j c
 
-decomposeChar marr index robuf ch = do
+decomposeChar marr index reBuf ch = do
     -- TODO: return fully decomposed form
     case NFD.isDecomposable ch of
-      NFD.FalseA -> reorder marr index robuf ch
-      NFD.TrueA  -> decomposeAll marr index robuf (NFD.decomposeChar ch)
-      _ -> reorder marr index robuf ch
+      NFD.FalseA -> reorder marr index reBuf ch
+      NFD.TrueA  -> decomposeAll marr index reBuf (NFD.decomposeChar ch)
+      _ -> reorder marr index reBuf ch
 
     where
         {-# INLINE decomposeAll #-}
@@ -89,51 +93,43 @@ decomposeChar marr index robuf ch = do
                     decomposeAll arr i' rbuf' xs
 
         -- TODO: how to sort when the characters have same combining classes
-        -- (reorder buffer) (input char) (undecomposed list)
+        -- (array) (array index) (reorder buffer) (input char)
         {-# INLINE reorder #-}
-        reorder _ i [] c = return (i, [c])
+        reorder _ i Empty c = return (i, One c)
 
         -- input char is a starter, flush the reorder buffer
-        reorder arr i rbuf c | not (CC.isCombining c) =
-            -- Unbox the string concatenation for common cases
-            case rbuf of
-              [y]       -> do
-                            n1 <- unsafeWrite arr i y
-                            n2 <- unsafeWrite arr (i + n1) c
-                            return ((i + n1 + n2), [])
-            {-
-              [y1, y2]  -> do
-                            n1 <- unsafeWrite marr i y1
-                            n2 <- unsafeWrite marr (i + n1) y2
-                            n3 <- unsafeWrite marr (i + n1 + n2) c
-                            return ((i + n1 + n2 + n3), [])
-            -}
-              _         -> do
-                            j <- writeReorderBuffer arr i rbuf
-                            n <- unsafeWrite arr j c
-                            return (j + n, [])
+        reorder arr i (One c0) c | not (CC.isCombining c) = do
+            n1 <- unsafeWrite arr i c0
+            n2 <- unsafeWrite arr (i + n1) c
+            return ((i + n1 + n2), Empty)
 
         -- input char is combining and there is a starter char in the buffer
         -- flush the starter char and add the combining char to the buffer
-        reorder arr i [y] c | not (CC.isCombining y) = do
-            n <- unsafeWrite arr i y
-            return (i + n, [c])
+        reorder arr i (One c0) c | not (CC.isCombining c0) = do
+            n <- unsafeWrite arr i c0
+            return (i + n, One c)
 
         -- optimized ordering for common case of two combining chars
-        reorder  _ i buf@[y] x = return (i, orderedPair)
+        -- XXX replace many with Two here
+        reorder  _ i (One c0) c = return (i, Many orderedPair)
             where
                 -- {-# INLINE orderedPair #-}
                 orderedPair =
-                    case inOrder y x of
-                        True  -> buf ++ [x]
-                        -- True  -> [y, x]
-                        False -> x : buf
+                    case inOrder c0 c of
+                        True  -> [c0, c]
+                        False -> [c, c0]
 
                 inOrder c1 c2 =
                     CC.getCombiningClass c1 <= CC.getCombiningClass c2
 
+        -- input char is a starter, flush the reorder buffer
+        reorder arr i rbuf c | not (CC.isCombining c) = do
+            j <- writeReorderBuffer arr i rbuf
+            n <- unsafeWrite arr j c
+            return (j + n, Empty)
+
         -- unoptimized generic sort for more than two combining chars
-        reorder _ i buf x = return (i, (sortCluster (buf ++ [x])))
+        reorder _ i (Many str) c = return (i, Many (sortCluster (str ++ [c])))
             where
                 {-# INLINE sortCluster #-}
                 sortCluster =   map fst
@@ -194,7 +190,7 @@ unstream (Stream next0 s0 len) = runText $ \done -> do
             A.copyM arr' 0 arr 0 di
             outer arr' (newlen - 1) si di rbuf
 
-  outer arr0 (mlen - 1) s0 0 []
+  outer arr0 (mlen - 1) s0 0 Empty
 {-# INLINE [0] unstream #-}
 -- {-# RULES "STREAM stream/unstream fusion" forall s. stream (unstream s) = s #-}
 
