@@ -765,7 +765,8 @@ getCombiningClass _ = 0
 {-# INLINE isCombining #-}
 isCombining :: Char -> Bool
 isCombining c | (ord c) < 768 || (ord c) > 125142 = False
-isCombining c = lookupBit combiningBitmap (ord c)
+-- isCombining c = lookupBit combiningBitmap (ord c)
+isCombining c = True
 
 combiningMin, combiningMax :: Int
 combiningMin = 768

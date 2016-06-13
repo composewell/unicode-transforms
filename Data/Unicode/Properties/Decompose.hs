@@ -31,8 +31,10 @@ data DecomposeResult = FalseA | FalseB | FalseC | TrueA
 {-# INLINE isDecomposable #-}
 isDecomposable :: Char -> DecomposeResult
 isDecomposable c | (ord c) <  decomposeMin = FalseA
-isDecomposable c | (ord c) <= decomposeMax =
+isDecomposable c | (ord c) <= decomposeMax = TrueA
+    {-
     case lookupBit decomposeBitmap (ord c) of
       True -> TrueA
       False -> FalseB
+-}
 isDecomposable _ = FalseC
