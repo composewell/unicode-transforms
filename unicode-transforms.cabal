@@ -4,7 +4,7 @@
 
 name:                unicode-transforms
 version:             0.1.0.0
-synopsis:            Unicode transforms (normalization, casefolding etc.)
+synopsis:            Unicode transforms (normalization NFC/NFD/NFKC/NFKD)
 description:         This is a lightweight library supporting a limited set of unicode transformations (only normalizations as of now) on ByteStrings (UTF-8) and Text without requiring any other system libraries. It is based on the utf8proc C utility. . text-icu is a full featured alternative for all unicode operations but with a dependency on the system installed icu libraries. This package aims to provide an API similar to text-icu. . For more details see the README.md file.
 homepage:            http://github.com/harendra-kumar/unicode-transforms
 bug-reports:         https://github.com/harendra-kumar/unicode-transforms/issues
@@ -19,6 +19,7 @@ build-type:          Simple
 cabal-version:       >= 1.10
 
 extra-source-files:
+    NOTES.md
     README.md
     stack.yaml
 
