@@ -77,14 +77,15 @@ main = do
     runMode mode
         [
 #ifdef BENCH_ICU
-          bgroup "text-icu"           $ makeBench <$> textICUFuncs
-                                                  <*> (map txtInput dataFiles)
+          bgroup "text-icu"
+              $ makeBench <$> textICUFuncs <*> (map txtInput dataFiles)
         ,
 #endif
-          bgroup "utf8proc"           $ makeBench <$> utf8ProcFuncs
-                                                  <*> (map txtInput dataFiles)
-        , bgroup "unicode-transforms" $ makeBench <$> unicodeTransformFuncs
-                                                  <*> (map strInput dataFiles)
-        , bgroup "unicode-transforms-text" $ makeBench <$> unicodeTransformTextFuncs
-                                                  <*> (map txtInput dataFiles)
+          bgroup "utf8proc"
+            $ makeBench <$> utf8ProcFuncs <*> (map txtInput dataFiles)
+        , bgroup "unicode-transforms-string"
+            $ makeBench <$> unicodeTransformFuncs <*> (map strInput dataFiles)
+        , bgroup "unicode-transforms-text"
+            $ makeBench <$> unicodeTransformTextFuncs
+                        <*> (map txtInput dataFiles)
         ]
