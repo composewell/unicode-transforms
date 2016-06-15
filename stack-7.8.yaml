@@ -2,8 +2,6 @@ packages:
 - '.'
 resolver: lts-2.22
 extra-deps:
-- data-list-sequences-0.1
-- bitarray-0.0.1.1
 - path-0.5.7
 - path-io-1.1.0
 - directory-1.2.2.0
