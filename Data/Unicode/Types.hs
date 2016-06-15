@@ -1,3 +1,7 @@
+{-# LANGUAGE CPP                #-}
+#if __GLASGOW_HASKELL__ < 7100
+{-# LANGUAGE DeriveDataTypeable #-}
+#endif
 -- |
 -- Module      : Data.Unicode.Types
 -- Copyright   : (c) 2016 Harendra Kumar
