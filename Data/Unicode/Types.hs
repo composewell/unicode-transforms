@@ -16,19 +16,16 @@
 
 module Data.Unicode.Types
     (
-    -- * Unicode normalization API
-    -- $api
       NormalizationMode(..)
     ) where
 
 import           Data.Typeable (Typeable)
 
--- $api
---
--- The 'normalize' function transforms Unicode text into an equivalent
+-- |
+-- Normalization transforms Unicode text into an equivalent
 -- composed or decomposed form, allowing for easier sorting and
--- searching of text.  'normalize' supports the standard normalization
--- forms described in <http://www.unicode.org/unicode/reports/tr15/>,
+-- searching of text. Standard normalization forms are described in
+-- <http://www.unicode.org/unicode/reports/tr15/>,
 -- Unicode Standard Annex #15: Unicode Normalization Forms.
 --
 -- Characters with accents or other adornments can be encoded in
@@ -78,11 +75,11 @@ import           Data.Typeable (Typeable)
 -- corresponding semantic characters.  When sorting and searching, you
 -- will often want to use these mappings.
 --
--- 'normalize' helps solve these problems by transforming text into
+-- Normalization helps solve these problems by transforming text into
 -- the canonical composed and decomposed forms as shown in the first
 -- example above.  In addition, you can have it perform compatibility
 -- decompositions so that you can treat compatibility characters the
--- same as their equivalents.  Finally, 'normalize' rearranges accents
+-- same as their equivalents.  Finally, normalization rearranges accents
 -- into the proper canonical order, so that you do not have to worry
 -- about accent rearrangement on your own.
 --
@@ -92,8 +89,7 @@ import           Data.Typeable (Typeable)
 -- conversion to such character encodings the Unicode text needs to be
 -- normalized to 'NFC'.  For more usage examples, see the Unicode
 -- Standard Annex.
-
--- | Normalization modes.
+--
 data NormalizationMode
     = NFD    -- ^ Canonical decomposition.
     | NFKD   -- ^ Compatibility decomposition.

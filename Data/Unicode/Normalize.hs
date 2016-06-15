@@ -7,12 +7,13 @@
 -- Stability   : experimental
 -- Portability : GHC
 --
--- Normalization for Haskell @String@s.
+-- Unicode normalization for Haskell @String@ data type.
 --
 module Data.Unicode.Normalize
     (
-    -- * Normalization
+    -- * Normalization Modes
       NormalizationMode (..)
+    -- * Normalization API
     , normalize
     ) where
 

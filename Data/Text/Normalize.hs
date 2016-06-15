@@ -7,10 +7,13 @@
 -- Stability   : experimental
 -- Portability : GHC
 --
+-- Unicode normalization for @Text@ data type.
+--
 module Data.Text.Normalize
     (
-    module Data.Unicode.Types
-    -- * Normalization
+    -- * Normalization Modes
+      NormalizationMode(..)
+    -- * Normalization API
     , normalize
     ) where
 
@@ -21,7 +24,7 @@ import           Data.Unicode.UTF8Proc
 import           Foreign.Ptr           (castPtr)
 import           System.IO.Unsafe      (unsafePerformIO)
 
--- | Perform Unicode normalization on a @Text@ according to the specified
+-- | Perform Unicode normalization on @Text@ according to the specified
 -- normalization mode.
 normalize :: NormalizationMode -> Text -> Text
 normalize mode txt =

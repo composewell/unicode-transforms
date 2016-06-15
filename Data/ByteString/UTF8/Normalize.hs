@@ -7,10 +7,13 @@
 -- Stability   : experimental
 -- Portability : GHC
 --
+-- Unicode normalization for @ByteString@ data type.
+--
 module Data.ByteString.UTF8.Normalize
     (
-    module Data.Unicode.Types
-    -- * Normalization
+    -- * Normalization Modes
+      NormalizationMode(..)
+    -- * Normalization API
     , normalize
     ) where
 
