@@ -1,6 +1,10 @@
 {-# LANGUAGE CPP                      #-}
 {-# LANGUAGE ForeignFunctionInterface #-}
 
+#if __GLASGOW_HASKELL__ < 7100
+{-# LANGUAGE DeriveDataTypeable       #-}
+#endif
+
 -- |
 -- Module      : Data.Unicode.UTF8Proc
 -- Copyright   : (c) 2016 Harendra Kumar

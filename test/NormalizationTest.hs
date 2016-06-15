@@ -1,5 +1,6 @@
+{-# LANGUAGE CPP               #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TupleSections #-}
+{-# LANGUAGE TupleSections     #-}
 
 -- |
 -- Copyright   : (c) 2016 Harendra Kumar
@@ -10,15 +11,22 @@
 -- Portability : GHC
 --
 
-import           Control.Monad             (when)
-import           Data.Char                 (chr, isSpace, ord, toUpper)
-import           Data.Function             ((&))
-import           Data.List                 (intercalate, isPrefixOf)
-import           Data.List.Split           (splitOn)
-import           Data.Text                 (Text)
-import qualified Data.Text                 as T
-import           Data.Text.NormalizeNative    (NormalizationMode (..), normalize)
-import           Text.Printf               (printf)
+import           Control.Monad       (when)
+import           Data.Char           (chr, isSpace, ord, toUpper)
+#if MIN_VERSION_base(4,8,0)
+import           Data.Function       ((&))
+#endif
+import           Data.List           (intercalate, isPrefixOf)
+import           Data.List.Split     (splitOn)
+import           Data.Text           (Text)
+import qualified Data.Text           as T
+import           Data.Text.NormalizeNative (NormalizationMode (..), normalize)
+import           Text.Printf         (printf)
+
+#if !MIN_VERSION_base(4,8,0)
+(&) :: a -> (a -> b) -> b
+x & f = f x
+#endif
 
 chrToHex :: Char -> [Char]
 chrToHex = (map toUpper) . (printf "%.4x") . ord

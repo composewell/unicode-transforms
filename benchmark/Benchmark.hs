@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP             #-}
 {-# LANGUAGE TemplateHaskell #-}
 
 -- |
@@ -9,6 +10,9 @@
 -- Portability : GHC
 --
 
+#if !MIN_VERSION_base(4,8,0)
+import           Control.Applicative ((<$>), (<*>))
+#endif
 import           Control.DeepSeq           (NFData)
 import           Criterion.Main            (Benchmark, bench, bgroup,
                                             defaultConfig, env, nf, runMode)
