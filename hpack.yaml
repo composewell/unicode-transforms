@@ -41,6 +41,10 @@ flags:
     description: Use llvm backend for compilation
     default: False
     manual: True
+  bench-icu:
+    description: Use text-icu for benchmark comparison
+    default: False
+    manual: True
 
 ghc-options:
   - -Wall
@@ -111,6 +115,12 @@ tests:
 benchmarks:
   bench:
     ghc-options: -O2 -funbox-strict-fields
+    when:
+      - condition: flag(bench-icu)
+        cpp-options: -DBENCH_ICU
+        dependencies:
+          - text-icu >= 0.6.2.1
+
     source-dirs: benchmark
     main:        Benchmark.hs
     dependencies:
@@ -121,5 +131,4 @@ benchmarks:
       - path
       - path-io
       - text
-      - text-icu >= 0.6.2.1
       - unicode-transforms

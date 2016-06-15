@@ -42,6 +42,11 @@ source-repository head
   type: git
   location: https://github.com/harendra-kumar/unicode-transforms
 
+flag bench-icu
+  description: Use text-icu for benchmark comparison
+  manual: True
+  default: False
+
 flag llvm
   description: Use llvm backend for compilation
   manual: True
@@ -131,8 +136,11 @@ benchmark bench
     , path
     , path-io
     , text
-    , text-icu >= 0.6.2.1
     , unicode-transforms
+  if flag(bench-icu)
+    cpp-options: -DBENCH_ICU
+    build-depends:
+        text-icu >= 0.6.2.1
   other-modules:
       NormalizeFile
   default-language: Haskell2010

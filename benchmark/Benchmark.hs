@@ -20,7 +20,6 @@ import           Criterion.Main.Options    (describe)
 import           Data.Bifunctor            (second)
 import           Data.Text                 (Text)
 import qualified Data.Text                 as T
-import qualified Data.Text.ICU             as TI
 import qualified Data.Text.Normalize       as UTF8Proc
 import qualified Data.Text.NormalizeNative as UTText
 import qualified Data.String.Normalize     as UT
@@ -30,9 +29,13 @@ import           Path                      (Dir, Path, Rel, mkRelDir,
 import           Path.IO                   (listDir)
 import           System.FilePath           (dropExtensions, takeFileName)
 
+#ifdef BENCH_ICU
+import qualified Data.Text.ICU             as TI
+
 textICUFuncs :: [(String, Text -> Text)]
 textICUFuncs =
     [ ("NFD", TI.normalize TI.NFD) ]
+#endif
 
 utf8ProcFuncs :: [(String, Text -> Text)]
 utf8ProcFuncs =
@@ -72,9 +75,13 @@ main = do
     mode    <- execParser (describe defaultConfig)
     dataFiles <- fmap (map toFilePath . snd) (listDir dataDir)
     runMode mode
-        [ bgroup "text-icu"           $ makeBench <$> textICUFuncs
+        [
+#ifdef BENCH_ICU
+          bgroup "text-icu"           $ makeBench <$> textICUFuncs
                                                   <*> (map txtInput dataFiles)
-        , bgroup "utf8proc"           $ makeBench <$> utf8ProcFuncs
+        ,
+#endif
+          bgroup "utf8proc"           $ makeBench <$> utf8ProcFuncs
                                                   <*> (map txtInput dataFiles)
         , bgroup "unicode-transforms" $ makeBench <$> unicodeTransformFuncs
                                                   <*> (map strInput dataFiles)
