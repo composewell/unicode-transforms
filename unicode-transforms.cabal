@@ -1,4 +1,4 @@
--- This file has been generated from package.yaml by hpack version 0.14.0.
+-- This file has been generated from package.yaml by hpack version 0.14.1.
 --
 -- see: https://github.com/sol/hpack
 
@@ -27,12 +27,17 @@ source-repository head
   type: git
   location: https://github.com/harendra-kumar/unicode-transforms
 
+flag llvm
+  description: Use llvm backend for compilation
+  manual: True
+  default: False
+
 library
   hs-source-dirs:
       .
   default-language: Haskell2010
+  ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs -O2 -funbox-strict-fields
   cc-options: -Wall -O2
-  ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs -O2 -funbox-strict-fields -fllvm
   exposed-modules:
       Data.ByteString.UTF8.Normalize
       Data.Text.Normalize
@@ -55,6 +60,8 @@ library
     , containers
     , data-list-sequences
     , text
+  if flag(llvm)
+    ghc-options: -fllvm
   include-dirs:
       cbits
   c-sources:

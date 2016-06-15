@@ -28,12 +28,19 @@ extra-source-files:
   - README.md
   - stack.yaml
 
+flags:
+  llvm:
+    description: Use llvm backend for compilation
+    default: False
+    manual: True
+
 ghc-options:
   - -Wall
   - -fwarn-identities
   - -fwarn-incomplete-record-updates
   - -fwarn-incomplete-uni-patterns
   - -fwarn-tabs
+
 
 dependencies: base >= 4 && < 5
 
@@ -42,7 +49,11 @@ library:
   include-dirs: cbits
   c-sources:    cbits/utf8proc.c
 
-  ghc-options: -O2 -funbox-strict-fields -fllvm
+  ghc-options: -O2 -funbox-strict-fields
+  when:
+    - condition: flag(llvm)
+      ghc-options: -fllvm
+
   source-dirs: .
   exposed-modules:
     - Data.ByteString.UTF8.Normalize
