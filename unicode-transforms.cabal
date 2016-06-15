@@ -19,9 +19,24 @@ build-type:          Simple
 cabal-version:       >= 1.10
 
 extra-source-files:
+    benchmark/data/AllChars.txt
+    benchmark/data/Deutsch.txt
+    benchmark/data/Devanagari.txt
+    benchmark/data/English.txt
+    benchmark/data/Japanese.txt
+    benchmark/data/Korean.txt
+    benchmark/data/Vietnamese.txt
+    cbits/utf8proc.h
+    cbits/utf8proc_data.h
+    cbits/XQillaExport.hpp
     NOTES.md
     README.md
+    stack-7.10.yaml
+    stack-7.8.yaml
+    stack-8.0.yaml
     stack.yaml
+    unicode-data/README.md
+    unicode-data/ucd/NormalizationTest.txt
 
 source-repository head
   type: git
@@ -54,11 +69,9 @@ library
       Data.Unicode.Types
       Data.Unicode.UTF8Proc
   build-depends:
-      base >= 4 && < 5
+      base >= 4.7 && < 5
     , bitarray
     , bytestring
-    , containers
-    , data-list-sequences
     , text
   if flag(llvm)
     ghc-options: -fllvm
@@ -73,8 +86,8 @@ executable normalizefile
       benchmark
   ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs -O2 -funbox-strict-fields
   build-depends:
-      base >= 4 && < 5
-    , deepseq
+      base >= 4.7 && < 5
+    , deepseq >= 1.1.0.0
     , filepath
     , path
     , path-io
@@ -92,7 +105,7 @@ test-suite test
       test
   main-is: NormalizationTest.hs
   build-depends:
-      base >= 4 && < 5
+      base >= 4.7 && < 5
     , getopt-generics
     , split
     , text
@@ -110,15 +123,15 @@ benchmark bench
       benchmark
   ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs -O2 -funbox-strict-fields
   build-depends:
-      base >= 4 && < 5
-    , criterion
-    , deepseq
+      base >= 4.7 && < 5
+    , criterion >= 0.4.0
+    , deepseq >= 1.1.0.0
     , filepath
     , optparse-applicative
     , path
     , path-io
     , text
-    , text-icu
+    , text-icu >= 0.6.2.1
     , unicode-transforms
   other-modules:
       NormalizeFile

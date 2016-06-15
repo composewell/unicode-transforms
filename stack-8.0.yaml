@@ -2,6 +2,5 @@ packages:
 - '.'
 resolver: nightly-2016-06-07
 extra-deps:
-- data-list-sequences-0.1
 - bitarray-0.0.1.1
 - text-icu-0.7.0.1

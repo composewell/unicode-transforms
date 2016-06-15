@@ -6,5 +6,4 @@ packages:
 - '.'
 resolver: lts-6.3
 extra-deps:
-- data-list-sequences-0.1
 - bitarray-0.0.1.1

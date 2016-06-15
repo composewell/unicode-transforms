@@ -26,7 +26,15 @@ github:              harendra-kumar/unicode-transforms
 extra-source-files:
   - NOTES.md
   - README.md
+  - benchmark/data/*.txt
+  - cbits/*.h
+  - cbits/XQillaExport.hpp
   - stack.yaml
+  - stack-7.8.yaml
+  - stack-7.10.yaml
+  - stack-8.0.yaml
+  - unicode-data/README.md
+  - unicode-data/ucd/NormalizationTest.txt
 
 flags:
   llvm:
@@ -42,7 +50,7 @@ ghc-options:
   - -fwarn-tabs
 
 
-dependencies: base >= 4 && < 5
+dependencies: base >= 4.7 && < 5
 
 library:
   cc-options: -Wall -O2
@@ -73,8 +81,6 @@ library:
   dependencies:
     - bitarray
     - bytestring
-    - containers
-    - data-list-sequences
     - text
 
 # developer mode only
@@ -84,7 +90,7 @@ executables:
     source-dirs: benchmark
     main:        NormalizeFile.hs
     dependencies:
-      - deepseq
+      - deepseq >= 1.1.0.0
       - filepath
       - path
       - path-io
@@ -108,12 +114,12 @@ benchmarks:
     source-dirs: benchmark
     main:        Benchmark.hs
     dependencies:
-      - criterion
-      - deepseq
+      - criterion >= 0.4.0
+      - deepseq >= 1.1.0.0
       - filepath
       - optparse-applicative
       - path
       - path-io
       - text
-      - text-icu
+      - text-icu >= 0.6.2.1
       - unicode-transforms
