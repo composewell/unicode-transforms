@@ -17,7 +17,9 @@ import           Control.DeepSeq     (NFData)
 import           Criterion.Main      (Benchmark, bench, bgroup, defaultMain, nf)
 import           Data.Text           (Text)
 import qualified Data.Text           as T
+#ifdef BENCH_ICU
 import qualified Data.Text.ICU       as TI
+#endif
 import qualified Data.Text.Normalize as UT
 import           Path                (Dir, Path, Rel, mkRelDir, toFilePath,
                                       (</>))
@@ -26,8 +28,12 @@ import           System.FilePath     (dropExtensions, takeFileName)
 
 implementations :: [(String, Text -> Text)]
 implementations =
-    [ ("text-icu"           , TI.normalize TI.NFD)
-    , ("unicode-transforms" , UT.normalize UT.NFD)
+    [
+#ifdef BENCH_ICU
+    ("text-icu"           , TI.normalize TI.NFD)
+    ,
+#endif
+      ("unicode-transforms" , UT.normalize UT.NFD)
     ]
 
 dataDir :: Path Rel Dir
