@@ -9,7 +9,7 @@
 --
 -- Unicode normalization for Haskell @String@ data type.
 --
-module Data.Unicode.Normalize
+module Data.String.Normalize
     (
     -- * Normalization Modes
       NormalizationMode (..)

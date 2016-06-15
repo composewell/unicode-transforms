@@ -57,9 +57,9 @@ library:
   source-dirs: .
   exposed-modules:
     - Data.ByteString.UTF8.Normalize
+    - Data.String.Normalize
     - Data.Text.Normalize
     - Data.Text.NormalizeNative
-    - Data.Unicode.Normalize
   other-modules:
     - Data.Unicode.Internal.Normalization
     - Data.Unicode.Internal.NormalizeStream
