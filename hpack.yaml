@@ -72,6 +72,7 @@ library:
     - Data.String.Normalize
     - Data.Text.Normalize
     - Data.Text.NormalizeNative
+    - Data.Unicode.Types
   other-modules:
     - Data.Unicode.Internal.Normalization
     - Data.Unicode.Internal.NormalizeStream
@@ -80,7 +81,6 @@ library:
     - Data.Unicode.Properties.Decompose
     - Data.Unicode.Properties.DecomposeHangul
     - Data.Unicode.Properties.Decompositions
-    - Data.Unicode.Types
     - Data.Unicode.UTF8Proc
   dependencies:
     - bitarray
