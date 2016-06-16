@@ -10,6 +10,7 @@ homepage:            http://github.com/harendra-kumar/unicode-transforms
 bug-reports:         https://github.com/harendra-kumar/unicode-transforms/issues
 license:             BSD3
 license-file:        LICENSE
+tested-with:         ghc-7.8.4, ghc-7.10.3, ghc-8.0.1
 author:              Harendra Kumar
 maintainer:          harendra.kumar@gmail.com
 copyright:           2016 Harendra Kumar
