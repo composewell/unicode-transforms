@@ -55,8 +55,8 @@ library
 
   exposed-modules:     Data.ByteString.UTF8.Normalize
                        Data.Text.Normalize
-  other-modules:
                        Data.Unicode.Types
+  other-modules:
                        Data.Unicode.UTF8Proc
 
   build-depends:        base >= 4.7 && < 5
