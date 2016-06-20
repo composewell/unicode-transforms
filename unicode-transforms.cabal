@@ -1,5 +1,5 @@
 name:                unicode-transforms
-version:             0.1.0.0
+version:             0.1.0.1
 synopsis:            Unicode transforms (normalization NFC/NFD/NFKC/NFKD)
 description:
   This is a lightweight library supporting a limited set of unicode
