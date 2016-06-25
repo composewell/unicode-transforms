@@ -37,4 +37,4 @@ See GDB-TRACE.txt for instructions to trace execution in gdb.
 --------------------------------------------------------------------------
 
 Benchmarks:
-  stack build :bench --benchmark-arguments unicode-transforms-text/NFD/
+  stack build :bench --benchmark-arguments unicode-transforms-text/NFD/English
