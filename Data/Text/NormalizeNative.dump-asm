@@ -1,0 +1,1594 @@
+
+==================== Asm code ====================
+2016-06-25 12:17:05.144385 UTC
+
+.data
+	.align 8
+.align 1
+.globl __stginit_main@main:Data.Text.NormalizeNative
+.type __stginit_main@main:Data.Text.NormalizeNative, @object
+__stginit_main@main:Data.Text.NormalizeNative:
+
+
+==================== Asm code ====================
+2016-06-25 12:17:05.15242 UTC
+
+.data
+	.align 8
+.align 1
+lvl_r3Nn_closure:
+	.quad	lvl_r3Nn_info
+	.quad	0
+	.quad	0
+	.quad	0
+
+
+==================== Asm code ====================
+2016-06-25 12:17:05.152901 UTC
+
+.section .rodata
+	.align 8
+.align 1
+c4fZ_str:
+	.byte	78
+	.byte	111
+	.byte	114
+	.byte	109
+	.byte	97
+	.byte	108
+	.byte	105
+	.byte	122
+	.byte	101
+	.byte	78
+	.byte	97
+	.byte	116
+	.byte	105
+	.byte	118
+	.byte	101
+	.byte	46
+	.byte	104
+	.byte	115
+	.byte	58
+	.byte	40
+	.byte	50
+	.byte	57
+	.byte	44
+	.byte	53
+	.byte	41
+	.byte	45
+	.byte	40
+	.byte	51
+	.byte	48
+	.byte	44
+	.byte	51
+	.byte	53
+	.byte	41
+	.byte	124
+	.byte	99
+	.byte	97
+	.byte	115
+	.byte	101
+	.byte	0
+
+
+==================== Asm code ====================
+2016-06-25 12:17:05.153832 UTC
+
+.text
+	.align 8
+	.long	S4g3_srt-(lvl_r3Nn_info)+0
+	.long	0
+	.quad	0
+	.quad	4294967318
+lvl_r3Nn_info:
+_c4g0:
+	leaq -16(%rbp),%rax
+	cmpq %r15,%rax
+	jb _c4g1
+_c4g2:
+	movq %r13,%rdi
+	movq %rbx,%rsi
+	subq $8,%rsp
+	xorl %eax,%eax
+	call newCAF
+	addq $8,%rsp
+	testq %rax,%rax
+	je _c4fY
+_c4fX:
+	movq $stg_bh_upd_frame_info,-16(%rbp)
+	movq %rax,-8(%rbp)
+	movl $c4fZ_str,%r14d
+	addq $-16,%rbp
+	jmp patError_info
+_c4fY:
+	jmp *(%rbx)
+_c4g1:
+	jmp *-16(%r13)
+	.size lvl_r3Nn_info, .-lvl_r3Nn_info
+
+
+==================== Asm code ====================
+2016-06-25 12:17:05.164932 UTC
+
+.data
+	.align 8
+.align 1
+poly_a_r45I_closure:
+	.quad	poly_a_r45I_info
+
+
+==================== Asm code ====================
+2016-06-25 12:17:05.165944 UTC
+
+.text
+	.align 8
+	.quad	8589934597
+	.quad	0
+	.quad	15
+poly_a_r45I_info:
+_c4gn:
+	leaq -16(%rbp),%rax
+	cmpq %r15,%rax
+	jb _c4go
+_c4gp:
+	movq $block_c4gd_info,-8(%rbp)
+	movq %r14,%rbx
+	addq $-8,%rbp
+	testb $7,%bl
+	jne _c4gd
+_c4ge:
+	jmp *(%rbx)
+.text
+	.align 8
+	.quad	0
+	.quad	32
+block_c4gd_info:
+_c4gd:
+	movq %rbx,%rax
+	andl $7,%eax
+	cmpq $2,%rax
+	jae _c4gl
+_c4gm:
+	movl $()_closure+1,%ebx
+	addq $8,%rbp
+	jmp *(%rbp)
+_c4gl:
+	movq $block_c4gv_info,-8(%rbp)
+	movq 14(%rbx),%rax
+	movq 6(%rbx),%rbx
+	movq %rax,(%rbp)
+	addq $-8,%rbp
+	jmp stg_ap_v_fast
+_c4go:
+	movl $poly_a_r45I_closure,%ebx
+	jmp *-8(%r13)
+.text
+	.align 8
+	.quad	1
+	.quad	32
+block_c4gv_info:
+_c4gv:
+	movq 8(%rbp),%r14
+	addq $16,%rbp
+	jmp poly_a_r45I_info
+	.size poly_a_r45I_info, .-poly_a_r45I_info
+
+
+==================== Asm code ====================
+2016-06-25 12:17:05.174742 UTC
+
+.data
+	.align 8
+.align 1
+lvl1_r45J_closure:
+	.quad	lvl1_r45J_info
+	.quad	0
+	.quad	0
+	.quad	0
+
+
+==================== Asm code ====================
+2016-06-25 12:17:05.175522 UTC
+
+.section .rodata
+	.align 8
+.align 1
+c4gL_str:
+	.byte	68
+	.byte	97
+	.byte	116
+	.byte	97
+	.byte	47
+	.byte	85
+	.byte	110
+	.byte	105
+	.byte	99
+	.byte	111
+	.byte	100
+	.byte	101
+	.byte	47
+	.byte	80
+	.byte	114
+	.byte	111
+	.byte	112
+	.byte	101
+	.byte	114
+	.byte	116
+	.byte	105
+	.byte	101
+	.byte	115
+	.byte	47
+	.byte	68
+	.byte	101
+	.byte	99
+	.byte	111
+	.byte	109
+	.byte	112
+	.byte	111
+	.byte	115
+	.byte	101
+	.byte	46
+	.byte	104
+	.byte	115
+	.byte	58
+	.byte	40
+	.byte	51
+	.byte	51
+	.byte	44
+	.byte	49
+	.byte	41
+	.byte	45
+	.byte	40
+	.byte	51
+	.byte	52
+	.byte	44
+	.byte	53
+	.byte	48
+	.byte	41
+	.byte	124
+	.byte	102
+	.byte	117
+	.byte	110
+	.byte	99
+	.byte	116
+	.byte	105
+	.byte	111
+	.byte	110
+	.byte	32
+	.byte	105
+	.byte	115
+	.byte	68
+	.byte	101
+	.byte	99
+	.byte	111
+	.byte	109
+	.byte	112
+	.byte	111
+	.byte	115
+	.byte	97
+	.byte	98
+	.byte	108
+	.byte	101
+	.byte	0
+
+
+==================== Asm code ====================
+2016-06-25 12:17:05.17645 UTC
+
+.text
+	.align 8
+	.long	S4g3_srt-(lvl1_r45J_info)+0
+	.long	0
+	.quad	0
+	.quad	4294967318
+lvl1_r45J_info:
+_c4gM:
+	leaq -16(%rbp),%rax
+	cmpq %r15,%rax
+	jb _c4gN
+_c4gO:
+	movq %r13,%rdi
+	movq %rbx,%rsi
+	subq $8,%rsp
+	xorl %eax,%eax
+	call newCAF
+	addq $8,%rsp
+	testq %rax,%rax
+	je _c4gK
+_c4gJ:
+	movq $stg_bh_upd_frame_info,-16(%rbp)
+	movq %rax,-8(%rbp)
+	movl $c4gL_str,%r14d
+	addq $-16,%rbp
+	jmp patError_info
+_c4gK:
+	jmp *(%rbx)
+_c4gN:
+	jmp *-16(%r13)
+	.size lvl1_r45J_info, .-lvl1_r45J_info
+
+
+==================== Asm code ====================
+2016-06-25 12:17:05.184665 UTC
+
+.data
+	.align 8
+.align 1
+lvl2_r45K_closure:
+	.quad	lvl2_r45K_info
+	.quad	0
+	.quad	0
+	.quad	0
+
+
+==================== Asm code ====================
+2016-06-25 12:17:05.185172 UTC
+
+.section .rodata
+	.align 8
+.align 1
+c4h0_str:
+	.byte	68
+	.byte	97
+	.byte	116
+	.byte	97
+	.byte	47
+	.byte	85
+	.byte	110
+	.byte	105
+	.byte	99
+	.byte	111
+	.byte	100
+	.byte	101
+	.byte	47
+	.byte	73
+	.byte	110
+	.byte	116
+	.byte	101
+	.byte	114
+	.byte	110
+	.byte	97
+	.byte	108
+	.byte	47
+	.byte	78
+	.byte	111
+	.byte	114
+	.byte	109
+	.byte	97
+	.byte	108
+	.byte	105
+	.byte	122
+	.byte	101
+	.byte	83
+	.byte	116
+	.byte	114
+	.byte	101
+	.byte	97
+	.byte	109
+	.byte	46
+	.byte	104
+	.byte	115
+	.byte	58
+	.byte	40
+	.byte	49
+	.byte	48
+	.byte	48
+	.byte	44
+	.byte	57
+	.byte	41
+	.byte	45
+	.byte	40
+	.byte	49
+	.byte	50
+	.byte	55
+	.byte	44
+	.byte	51
+	.byte	56
+	.byte	41
+	.byte	124
+	.byte	102
+	.byte	117
+	.byte	110
+	.byte	99
+	.byte	116
+	.byte	105
+	.byte	111
+	.byte	110
+	.byte	32
+	.byte	114
+	.byte	101
+	.byte	111
+	.byte	114
+	.byte	100
+	.byte	101
+	.byte	114
+	.byte	0
+
+
+==================== Asm code ====================
+2016-06-25 12:17:05.186061 UTC
+
+.text
+	.align 8
+	.long	S4g3_srt-(lvl2_r45K_info)+0
+	.long	0
+	.quad	0
+	.quad	4294967318
+lvl2_r45K_info:
+_c4h1:
+	leaq -16(%rbp),%rax
+	cmpq %r15,%rax
+	jb _c4h2
+_c4h3:
+	movq %r13,%rdi
+	movq %rbx,%rsi
+	subq $8,%rsp
+	xorl %eax,%eax
+	call newCAF
+	addq $8,%rsp
+	testq %rax,%rax
+	je _c4gZ
+_c4gY:
+	movq $stg_bh_upd_frame_info,-16(%rbp)
+	movq %rax,-8(%rbp)
+	movl $c4h0_str,%r14d
+	addq $-16,%rbp
+	jmp patError_info
+_c4gZ:
+	jmp *(%rbx)
+_c4h2:
+	jmp *-16(%r13)
+	.size lvl2_r45K_info, .-lvl2_r45K_info
+
+
+==================== Asm code ====================
+2016-06-25 12:17:05.300089 UTC
+
+.data
+	.align 8
+.align 1
+.globl $wnormalize_closure
+.type $wnormalize_closure, @object
+$wnormalize_closure:
+	.quad	$wnormalize_info
+	.quad	0
+
+
+==================== Asm code ====================
+2016-06-25 12:17:05.301294 UTC
+
+.text
+	.align 8
+.globl $wnormalize_slow
+.type $wnormalize_slow, @object
+$wnormalize_slow:
+_c4ha:
+	movq 24(%rbp),%r8
+	movq 16(%rbp),%rdi
+	movq 8(%rbp),%rsi
+	movq (%rbp),%r14
+	addq $32,%rbp
+	jmp $wnormalize_info
+	.size $wnormalize_slow, .-$wnormalize_slow
+
+
+==================== Asm code ====================
+2016-06-25 12:17:05.302402 UTC
+
+.text
+	.align 8
+	.quad	4294967297
+	.quad	20
+sat_s46t_info:
+_c4iC:
+	leaq -16(%rbp),%rax
+	cmpq %r15,%rax
+	jb _c4iD
+_c4iE:
+	movq $stg_upd_frame_info,-16(%rbp)
+	movq %rbx,-8(%rbp)
+	movq 24(%rbx),%rax
+	cmpq $11,%rax
+	jne _c4iA
+_c4iB:
+	movl $[]_closure+1,%ebx
+	addq $-16,%rbp
+	jmp *(%rbp)
+_c4iA:
+	leaq 1(%rax),%r14
+	movq 16(%rbx),%rbx
+	addq $-16,%rbp
+	jmp go1_s46m_info
+_c4iD:
+	jmp *-16(%r13)
+	.size sat_s46t_info, .-sat_s46t_info
+
+
+==================== Asm code ====================
+2016-06-25 12:17:05.303391 UTC
+
+.text
+	.align 8
+	.quad	4294967299
+	.quad	4294967297
+	.quad	13
+sat_s46q_info:
+_c4iN:
+	movq 7(%rbx),%rax
+	movq 15(%rbx),%rbx
+	movl $0,16(%rax,%rbx,4)
+	movl $()_closure+1,%ebx
+	jmp *(%rbp)
+	.size sat_s46q_info, .-sat_s46q_info
+
+
+==================== Asm code ====================
+2016-06-25 12:17:05.304667 UTC
+
+.text
+	.align 8
+	.quad	4294967300
+	.quad	1
+	.quad	10
+go1_s46m_info:
+_c4iR:
+	addq $80,%r12
+	cmpq 856(%r13),%r12
+	ja _c4iV
+_c4iU:
+	movq 7(%rbx),%rax
+	movq $sat_s46t_info,-72(%r12)
+	movq %rbx,-56(%r12)
+	movq %r14,-48(%r12)
+	movq $sat_s46q_info,-40(%r12)
+	movq %rax,-32(%r12)
+	movq %r14,-24(%r12)
+	movq $:_con_info,-16(%r12)
+	leaq -39(%r12),%rax
+	movq %rax,-8(%r12)
+	leaq -72(%r12),%rax
+	movq %rax,(%r12)
+	leaq -14(%r12),%rbx
+	jmp *(%rbp)
+_c4iV:
+	movq $80,904(%r13)
+	jmp *-8(%r13)
+	.size go1_s46m_info, .-go1_s46m_info
+
+
+==================== Asm code ====================
+2016-06-25 12:17:05.305828 UTC
+
+.text
+	.align 8
+	.quad	4294967296
+	.quad	18
+lvl3_s46H_info:
+_c4j0:
+	leaq -16(%rbp),%rax
+	cmpq %r15,%rax
+	jb _c4j1
+_c4j2:
+	movq $stg_upd_frame_info,-16(%rbp)
+	movq %rbx,-8(%rbp)
+	cmpq $0,16(%rbx)
+	setl %al
+	movzbl %al,%eax
+	shlq $3,%rax
+	movq Bool_closure_tbl(%rax),%rbx
+	addq $-16,%rbp
+	jmp *(%rbp)
+_c4j1:
+	jmp *-16(%r13)
+	.size lvl3_s46H_info, .-lvl3_s46H_info
+
+
+==================== Asm code ====================
+2016-06-25 12:17:05.307 UTC
+
+.text
+	.align 8
+	.quad	12884901900
+	.quad	4294967298
+	.quad	9
+$s$wa_s481_info:
+_c4jE:
+	addq $16,%r12
+	cmpq 856(%r13),%r12
+	ja _c4jI
+_c4jH:
+	cmpq 21(%rbx),%rsi
+	jge _c4k5
+_c4k6:
+	movq 13(%rbx),%rax
+	movq 5(%rbx),%rcx
+	movl 16(%rcx,%rsi,4),%ecx
+	cmpq $65536,%rcx
+	jl _c4jZ
+_c4k0:
+	addq $-65536,%rcx
+	movq %rcx,%rdx
+	sarq $10,%rdx
+	addq $55296,%rdx
+	movw %dx,16(%rax,%r14,2)
+	andl $1023,%ecx
+	addq $56320,%rcx
+	leaq 1(%r14),%rdx
+	movw %cx,16(%rax,%rdx,2)
+	addq $-16,%r12
+	incq %rsi
+	addq $2,%r14
+	jmp $s$wa_s481_info
+_c4jI:
+	movq $16,904(%r13)
+	jmp *-8(%r13)
+_c4jZ:
+	movw %cx,16(%rax,%r14,2)
+	addq $-16,%r12
+	incq %rsi
+	incq %r14
+	jmp $s$wa_s481_info
+_c4k5:
+	movq $I#_con_info,-8(%r12)
+	movq %r14,(%r12)
+	leaq -7(%r12),%rbx
+	jmp *(%rbp)
+	.size $s$wa_s481_info, .-$s$wa_s481_info
+
+
+==================== Asm code ====================
+2016-06-25 12:17:05.313153 UTC
+
+.text
+	.align 8
+	.long	S4g3_srt-(sat_s49l_info)+8
+	.long	0
+	.quad	4294967299
+	.quad	8589934593
+	.quad	64424509449
+sat_s49l_info:
+_c4kX:
+	leaq -96(%rbp),%rax
+	cmpq %r15,%rax
+	jb _c4kY
+_c4kZ:
+	movq 23(%rbx),%rax
+	leaq 11(%rax),%rcx
+	testq %rcx,%rcx
+	jl _c4pB
+_c4pC:
+	movq $4611686018427387904,%rdx
+	movq %rcx,%rsi
+	andq %rdx,%rsi
+	testq %rsi,%rsi
+	jne _c4pB
+_c4l6:
+	movq $block_c4hH_info,-40(%rbp)
+	movq 7(%rbx),%rdx
+	movq 15(%rbx),%rbx
+	movq %rbx,%rsi
+	movq %rcx,%rbx
+	shlq $1,%rbx
+	movq %rdx,-32(%rbp)
+	movq %rsi,-24(%rbp)
+	movq %rax,-16(%rbp)
+	movq %rcx,-8(%rbp)
+	addq $-40,%rbp
+	jmp stg_newByteArray#
+.text
+	.align 8
+	.long	S4g3_srt-(block_c4hH_info)+8
+	.long	0
+	.quad	900
+	.quad	64424509472
+block_c4hH_info:
+_c4hH:
+	addq $80,%r12
+	cmpq 856(%r13),%r12
+	ja _c4la
+_c4l9:
+	movq $stg_ARR_WORDS_info,-72(%r12)
+	movq $48,-64(%r12)
+	movq $go1_s46m_info,-8(%r12)
+	leaq -72(%r12),%rax
+	movq %rax,(%r12)
+	movq $block_c4hL_info,-16(%rbp)
+	xorl %r14d,%r14d
+	movq %rbx,%rcx
+	leaq -7(%r12),%rbx
+	movq %rax,-8(%rbp)
+	movq %rcx,(%rbp)
+	addq $-16,%rbp
+	jmp go1_s46m_info
+.text
+	.align 8
+	.long	S4g3_srt-(block_c4hL_info)+8
+	.long	0
+	.quad	3590
+	.quad	64424509472
+block_c4hL_info:
+_c4hL:
+	movq $block_c4hP_info,(%rbp)
+	movq %rbx,%r14
+	jmp poly_a_r45I_info
+.text
+	.align 8
+	.long	S4g3_srt-(block_c4hP_info)+8
+	.long	0
+	.quad	3590
+	.quad	64424509472
+block_c4hP_info:
+_c4hP:
+	movq 24(%rbp),%rax
+	movq 32(%rbp),%rbx
+	movq 8(%rbp),%rcx
+	movq %rbx,%rdx
+	addq 40(%rbp),%rdx
+	xorl %esi,%esi
+	xorl %edi,%edi
+	movq 48(%rbp),%r8
+	decq %r8
+	movq 16(%rbp),%r9
+_c4hW:
+	addq $24,%r12
+	cmpq 856(%r13),%r12
+	ja _c4lf
+_c4le:
+	movq $lvl3_s46H_info,-16(%r12)
+	movq %r8,%r10
+	shlq $1,%r10
+	movq %r10,(%r12)
+	leaq -16(%r12),%r11
+_n4s2:
+	movq %rdi,128(%rsp)
+	movq %r9,%rdi
+	movq %r10,%r9
+	movq 128(%rsp),%r10
+	movq %rax,80(%rsp)
+	movq %r11,%rax
+	movq %rbx,%r11
+	movq %rsi,%rbx
+	movq %rdx,%rsi
+	movq %rcx,%rdx
+	movq 80(%rsp),%rcx
+_c4ic:
+	addq $48,%r12
+	cmpq 856(%r13),%r12
+	ja _c4mx
+_c4mw:
+	leaq 11(%r10),%r14
+	cmpq %r14,%r8
+	jl _c4pv
+_c4pw:
+	cmpq %rsi,%r11
+	jge _c4pr
+_c4ps:
+	movzwl 16(%rcx,%r11,2),%r14d
+	cmpq $55296,%r14
+	jae _c4p7
+_c4p8:
+	addq $-48,%r12
+	incq %r11
+_n4se:
+	movq %r11,152(%rsp)
+	movq %r14,%r11
+	movq 152(%rsp),%r14
+	movq %rbx,144(%rsp)
+	movq %rcx,%rbx
+	movq %rdx,%rcx
+	movq %rsi,%rdx
+	movq %rdi,%rsi
+	movq %r8,%rdi
+	movq %r9,%r8
+	movq %r10,%r9
+	movq 144(%rsp),%r10
+_c4jd:
+	addq $32,%r12
+	cmpq 856(%r13),%r12
+	ja _c4mA
+_c4mz:
+	movq %rax,136(%rsp)
+	movq %r11,%rax
+	cmpq $44032,%r11
+	jl _c4oH
+_c4oJ:
+	cmpq $55203,%rax
+	jg _c4oH
+_c4oG:
+	movq $$s$wa_s481_info,-24(%r12)
+	movq %rcx,-16(%r12)
+	movq %rsi,-8(%r12)
+	movq %r10,(%r12)
+	movq $block_c4o9_info,-24(%rbp)
+	movq %rsi,%rax
+	xorl %esi,%esi
+	movq %r14,%rbx
+	movq %r9,%r14
+	movq %rbx,%rcx
+	leaq -21(%r12),%rbx
+	movq %r11,-16(%rbp)
+	movq %rcx,-8(%rbp)
+	movq %r8,(%rbp)
+	movq %rdi,16(%rbp)
+	movq %rax,32(%rbp)
+	movq %rdx,40(%rbp)
+	movq 136(%rsp),%rax
+	movq %rax,48(%rbp)
+	addq $-24,%rbp
+	jmp $s$wa_s481_info
+.text
+	.align 8
+	.long	S4g3_srt-(block_c4hX_info)+8
+	.long	0
+	.quad	10952
+	.quad	64424509472
+block_c4hX_info:
+_c4hX:
+	movq 40(%rbp),%rax
+	movq 24(%rbp),%rbx
+	movq 64(%rbp),%rcx
+	movq 56(%rbp),%rdx
+	movq 48(%rbp),%rsi
+	movq 32(%rbp),%rdi
+	movq 16(%rbp),%r8
+	movq 8(%rbp),%r9
+	addq $16,%rbp
+_n4s1:
+	movq %rbx,120(%rsp)
+	movq %rdi,%rbx
+	movq %r8,%rdi
+	movq %rsi,%r8
+	movq %r9,%rsi
+	movq %rdx,%r9
+	movq %rcx,%rdx
+	movq 120(%rsp),%rcx
+	jmp _c4hW
+_c4lT:
+	addq $16,%rbp
+	decq %rsi
+_n4s0:
+	movq %rbx,112(%rsp)
+	movq %rdi,%rbx
+	movq %r8,%rdi
+	movq %rsi,%r8
+	movq %r9,%rsi
+	movq 112(%rsp),%r9
+	jmp _c4hW
+.text
+	.align 8
+	.long	S4g3_srt-(block_c4lI_info)+8
+	.long	0
+	.quad	13000
+	.quad	64424509472
+block_c4lI_info:
+_c4lI:
+	movq 40(%rbp),%rax
+	movq 24(%rbp),%rcx
+	movq 56(%rbp),%rdx
+	movq 32(%rbp),%rsi
+	movq 64(%rbp),%rdi
+	movq 16(%rbp),%r8
+	movq 8(%rbp),%r9
+	testq %r8,%r8
+	jle _c4lT
+_c4lU:
+	movq %rdi,%r10
+	leaq 16(%rbx),%rdi
+	movq %rsi,%r11
+	xorl %esi,%esi
+	movq 48(%rbp),%r14
+	movq %rdx,64(%rsp)
+	leaq 16(%r14),%rdx
+	movq %rcx,%r14
+	xorl %ecx,%ecx
+	movq %r8,72(%rsp)
+	subq $8,%rsp
+	movq %rax,88(%rsp)
+	xorl %eax,%eax
+	movq %r11,96(%rsp)
+	movq %r10,104(%rsp)
+	movq %r9,112(%rsp)
+	call _hs_text_memcpy
+	addq $8,%rsp
+	addq $16,%rbp
+	movq 104(%rsp),%rax
+	movq 72(%rsp),%rcx
+	movq 96(%rsp),%rdx
+	movq 88(%rsp),%rsi
+	decq %rsi
+_n4rZ:
+	movq %rsi,%r8
+	movq %rcx,%rdi
+	movq %r14,%rcx
+	movq %rbx,%r9
+	movq %rdx,%rbx
+	movq 64(%rsp),%rdx
+	movq %rax,%rsi
+	movq 80(%rsp),%rax
+	jmp _c4hW
+_c4ns:
+	cmpq $1,%r10
+	jl _c4nn
+_c4no:
+	cmpq $1,%r10
+	jne _c4nx
+_c4nh:
+	cmpq $768,%rax
+	jl _c4nj
+_c4nk:
+	cmpq $125142,%rax
+	jg _c4ne
+_c4nf:
+	xorl %eax,%eax
+	addq $2,%r9
+_n4sc:
+	movq %r14,%r11
+	movq %r9,%r10
+	movq %r8,%r9
+	movq %rdi,%r8
+	movq %rsi,%rdi
+	movq %rdx,%rsi
+	movq %rcx,%rdx
+	movq %rbx,%rcx
+	movq %rax,%rbx
+	movq 136(%rsp),%rax
+	jmp _c4ic
+_c4ne:
+	xorl %eax,%eax
+	incq %r9
+_n4sb:
+	movq %r14,%r11
+	movq %r9,%r10
+	movq %r8,%r9
+	movq %rdi,%r8
+	movq %rsi,%rdi
+	movq %rdx,%rsi
+	movq %rcx,%rdx
+	movq %rbx,%rcx
+	movq %rax,%rbx
+	movq 136(%rsp),%rax
+	jmp _c4ic
+_c4nj:
+	xorl %eax,%eax
+	incq %r9
+_n4sa:
+	movq %r14,%r11
+	movq %r9,%r10
+	movq %r8,%r9
+	movq %rdi,%r8
+	movq %rsi,%rdi
+	movq %rdx,%rsi
+	movq %rcx,%rdx
+	movq %rbx,%rcx
+	movq %rax,%rbx
+	movq 136(%rsp),%rax
+	jmp _c4ic
+_c4nn:
+	testq %r10,%r10
+	jne _c4nx
+_c4mV:
+	movl $1,%eax
+	incq %r9
+_n4s9:
+	movq %r14,%r11
+	movq %r9,%r10
+	movq %r8,%r9
+	movq %rdi,%r8
+	movq %rsi,%rdi
+	movq %rdx,%rsi
+	movq %rcx,%rdx
+	movq %rbx,%rcx
+	movq %rax,%rbx
+	movq 136(%rsp),%rax
+	jmp _c4ic
+_c4o3:
+	cmpq $1,%r10
+	jl _c4o0
+_c4o1:
+	cmpq $1,%r10
+	jne _c4nx
+_c4nU:
+	cmpq $768,%rax
+	jl _c4nW
+_c4nX:
+	cmpq $125142,%rax
+	jg _c4nR
+_c4nS:
+	xorl %eax,%eax
+	addq $2,%r9
+_n4s8:
+	movq %r14,%r11
+	movq %r9,%r10
+	movq %r8,%r9
+	movq %rdi,%r8
+	movq %rsi,%rdi
+	movq %rdx,%rsi
+	movq %rcx,%rdx
+	movq %rbx,%rcx
+	movq %rax,%rbx
+	movq 136(%rsp),%rax
+	jmp _c4ic
+_c4nR:
+	xorl %eax,%eax
+	incq %r9
+_n4s7:
+	movq %r14,%r11
+	movq %r9,%r10
+	movq %r8,%r9
+	movq %rdi,%r8
+	movq %rsi,%rdi
+	movq %rdx,%rsi
+	movq %rcx,%rdx
+	movq %rbx,%rcx
+	movq %rax,%rbx
+	movq 136(%rsp),%rax
+	jmp _c4ic
+_c4nW:
+	xorl %eax,%eax
+	incq %r9
+_n4s6:
+	movq %r14,%r11
+	movq %r9,%r10
+	movq %r8,%r9
+	movq %rdi,%r8
+	movq %rsi,%rdi
+	movq %rdx,%rsi
+	movq %rcx,%rdx
+	movq %rbx,%rcx
+	movq %rax,%rbx
+	movq 136(%rsp),%rax
+	jmp _c4ic
+_c4o0:
+	testq %r10,%r10
+	jne _c4nx
+_c4ny:
+	movl $1,%eax
+	incq %r9
+_n4s5:
+	movq %r14,%r11
+	movq %r9,%r10
+	movq %r8,%r9
+	movq %rdi,%r8
+	movq %rsi,%rdi
+	movq %rdx,%rsi
+	movq %rcx,%rdx
+	movq %rbx,%rcx
+	movq %rax,%rbx
+	movq 136(%rsp),%rax
+	jmp _c4ic
+.text
+	.align 8
+	.long	S4g3_srt-(block_c4id_info)+8
+	.long	0
+	.quad	19402
+	.quad	64424509472
+block_c4id_info:
+_c4id:
+	movq 80(%rbp),%rax
+	movq 56(%rbp),%rbx
+	movq 40(%rbp),%rcx
+	movq 72(%rbp),%rdx
+	movq 64(%rbp),%rsi
+	movq 48(%rbp),%rdi
+	movq 32(%rbp),%r8
+	movq 8(%rbp),%r9
+	movq 16(%rbp),%r10
+	movq 24(%rbp),%r11
+	addq $32,%rbp
+_n4s3:
+	movq %rbx,80(%rsp)
+	movq %r11,%rbx
+	movq %r9,%r11
+	movq %r8,%r9
+	movq %rdi,%r8
+	movq %rsi,%rdi
+	movq %rdx,%rsi
+	movq %rcx,%rdx
+	movq 80(%rsp),%rcx
+	jmp _c4ic
+.text
+	.align 8
+	.long	S4g3_srt-(block_c4os_info)+8
+	.long	0
+	.quad	9673
+	.quad	64424509472
+block_c4os_info:
+_c4os:
+	movq 72(%rbp),%rax
+	movq 48(%rbp),%rcx
+	movq 32(%rbp),%rdx
+	movq 64(%rbp),%rsi
+	movq 56(%rbp),%rdi
+	movq 40(%rbp),%r8
+	movq 24(%rbp),%r9
+	movq 8(%rbp),%r10
+	movq 16(%rbp),%r11
+	addq $24,%rbp
+	movq 7(%rbx),%rbx
+	jmp _c4ic
+_c4p7:
+	cmpq $56319,%r14
+	jbe _c4p2
+_c4p3:
+	addq $-48,%r12
+	incq %r11
+_n4sd:
+	movq %r11,152(%rsp)
+	movq %r14,%r11
+	movq 152(%rsp),%r14
+	movq %rbx,144(%rsp)
+	movq %rcx,%rbx
+	movq %rdx,%rcx
+	movq %rsi,%rdx
+	movq %rdi,%rsi
+	movq %r8,%rdi
+	movq %r9,%r8
+	movq %r10,%r9
+	movq 144(%rsp),%r10
+	jmp _c4jd
+_c4p2:
+	addq $-48,%r12
+	movq %rax,136(%rsp)
+	leaq 2(%r11),%rax
+	incq %r11
+	movzwl 16(%rcx,%r11,2),%r11d
+	addq $-56320,%r11
+	addq $-55296,%r14
+	shlq $10,%r14
+	addq %r11,%r14
+	leaq 65536(%r14),%r11
+_n4s4:
+	movq %rbx,144(%rsp)
+	movq %rcx,%rbx
+	movq %rdx,%rcx
+	movq %rsi,%rdx
+	movq %rdi,%rsi
+	movq %r8,%rdi
+	movq %r9,%r8
+	movq %r10,%r9
+	movq 144(%rsp),%r10
+	movq %rax,%r14
+	movq 136(%rsp),%rax
+	jmp _c4jd
+.text
+	.align 8
+	.long	S4g3_srt-(block_c4je_info)+8
+	.long	0
+	.quad	38859
+	.quad	64424509472
+block_c4je_info:
+_c4je:
+	movq 88(%rbp),%rax
+	movq 64(%rbp),%rbx
+	movq 48(%rbp),%rcx
+	movq 80(%rbp),%rdx
+	movq 72(%rbp),%rsi
+	movq 56(%rbp),%rdi
+	movq 40(%rbp),%r8
+	movq 8(%rbp),%r9
+	movq 16(%rbp),%r10
+	movq 24(%rbp),%r11
+	movq 32(%rbp),%r14
+	addq $40,%rbp
+	jmp _c4jd
+_c4kY:
+	jmp *-8(%r13)
+_c4la:
+	movq $80,904(%r13)
+	jmp stg_gc_unpt_r1
+_c4lf:
+	movq $24,904(%r13)
+	movq $block_c4hX_info,-16(%rbp)
+	movq %rsi,-8(%rbp)
+	movq %rdi,(%rbp)
+	movq %rbx,16(%rbp)
+	movq %r8,32(%rbp)
+	movq %r9,40(%rbp)
+	movq %rdx,48(%rbp)
+	addq $-16,%rbp
+	jmp stg_gc_noregs
+.text
+	.align 8
+	.long	S4g3_srt-(block_c4lj_info)+8
+	.long	0
+	.quad	13000
+	.quad	64424509472
+block_c4lj_info:
+_c4lj:
+	andl $7,%ebx
+	cmpq $2,%rbx
+	jae _u4r4
+_c4m4:
+	movq 32(%rbp),%rax
+	movq $4611686018427387904,%rbx
+	movq %rax,%rcx
+	andq %rbx,%rcx
+	testq %rcx,%rcx
+	jne _u4r5
+_c4lB:
+	movq $block_c4lI_info,(%rbp)
+	movq %rax,%rbx
+	shlq $1,%rbx
+	jmp stg_newByteArray#
+.text
+	.align 8
+	.long	S4g3_srt-(block_c4mi_info)+8
+	.long	0
+	.quad	4808
+	.quad	64424509472
+block_c4mi_info:
+_c4mi:
+	movq $block_c4lj_info,(%rbp)
+	movq 7(%rbx),%rax
+	movq 64(%rbp),%rbx
+	movq 8(%rbp),%rcx
+	movq %rax,8(%rbp)
+	movq 16(%rbp),%rax
+	movq %rcx,16(%rbp)
+	movq %rax,64(%rbp)
+	testb $7,%bl
+	jne _c4lj
+_c4ll:
+	jmp *(%rbx)
+.text
+	.align 8
+	.long	S4g3_srt-(block_c4m8_info)+8
+	.long	0
+	.quad	4616
+	.quad	64424509472
+block_c4m8_info:
+_c4m8:
+	movq $block_c4md_info,(%rbp)
+	movq 7(%rbx),%rax
+	movq 16(%rbp),%rbx
+	movq %rax,16(%rbp)
+	testb $7,%bl
+	jne _c4md
+_c4me:
+	jmp *(%rbx)
+_c4pv:
+	movq $I#_con_info,-40(%r12)
+	movq %rbx,-32(%r12)
+	movq $I#_con_info,-24(%r12)
+	movq %r10,-16(%r12)
+	movq $I#_con_info,-8(%r12)
+	movq %r11,(%r12)
+	movq $block_c4m8_info,-16(%rbp)
+	leaq -7(%r12),%rbx
+	leaq -39(%r12),%rcx
+	movq %rcx,-8(%rbp)
+	leaq -23(%r12),%rcx
+	movq %rcx,(%rbp)
+	movq %r9,16(%rbp)
+	movq %rdi,32(%rbp)
+	movq %rsi,40(%rbp)
+	movq %rax,48(%rbp)
+	addq $-16,%rbp
+	testb $7,%bl
+	jne _c4m8
+_c4m9:
+	jmp *(%rbx)
+.text
+	.align 8
+	.long	S4g3_srt-(block_c4md_info)+8
+	.long	0
+	.quad	4744
+	.quad	64424509472
+block_c4md_info:
+_c4md:
+	movq $block_c4mi_info,(%rbp)
+	movq 7(%rbx),%rax
+	movq 8(%rbp),%rbx
+	movq %rax,8(%rbp)
+	testb $7,%bl
+	jne _c4mi
+_c4mm:
+	jmp *(%rbx)
+_c4mx:
+	movq $48,904(%r13)
+	movq $block_c4id_info,-32(%rbp)
+	movq %r11,-24(%rbp)
+	movq %r10,-16(%rbp)
+	movq %rbx,-8(%rbp)
+	movq %r9,(%rbp)
+	movq %r8,16(%rbp)
+	movq %rdi,32(%rbp)
+	movq %rsi,40(%rbp)
+	movq %rax,48(%rbp)
+	addq $-32,%rbp
+	jmp stg_gc_noregs
+_c4mA:
+	movq $32,904(%r13)
+	movq $block_c4je_info,-40(%rbp)
+	movq %r9,-32(%rbp)
+	movq %r10,-24(%rbp)
+	movq %r11,-16(%rbp)
+	movq %r14,-8(%rbp)
+	movq %r8,(%rbp)
+	movq %rdi,16(%rbp)
+	movq %rsi,32(%rbp)
+	movq %rdx,40(%rbp)
+	movq %rax,48(%rbp)
+	addq $-40,%rbp
+	jmp stg_gc_noregs
+_c4oH:
+	addq $-32,%r12
+	cmpq $192,%rax
+	jl _c4o3
+_c4o4:
+	cmpq $195101,%rax
+	jle _c4ns
+_c4nt:
+	movl $lvl1_r45J_closure,%ebx
+	addq $56,%rbp
+	jmp *(%rbx)
+_c4nx:
+	movl $lvl2_r45K_closure,%ebx
+	addq $56,%rbp
+	jmp stg_ap_0_fast
+.text
+	.align 8
+	.long	S4g3_srt-(block_c4o9_info)+8
+	.long	0
+	.quad	9673
+	.quad	64424509472
+block_c4o9_info:
+_c4o9:
+	movq $block_c4ob_info,(%rbp)
+	testb $7,%bl
+	jne _c4ob
+_c4oc:
+	jmp *(%rbx)
+.text
+	.align 8
+	.long	S4g3_srt-(block_c4ob_info)+8
+	.long	0
+	.quad	9673
+	.quad	64424509472
+block_c4ob_info:
+_c4ob:
+	movq 8(%rbp),%rax
+	movq $block_c4og_info,8(%rbp)
+	movq %rax,%rdi
+	movq 7(%rbx),%rsi
+	movq 56(%rbp),%r14
+	addq $8,%rbp
+	jmp $wa_info
+.text
+	.align 8
+	.long	S4g3_srt-(block_c4og_info)+8
+	.long	0
+	.quad	4808
+	.quad	64424509472
+block_c4og_info:
+_c4og:
+	movq $block_c4oi_info,(%rbp)
+	testb $7,%bl
+	jne _c4oi
+_c4oj:
+	jmp *(%rbx)
+.text
+	.align 8
+	.long	S4g3_srt-(block_c4oi_info)+8
+	.long	0
+	.quad	4808
+	.quad	64424509472
+block_c4oi_info:
+_c4oi:
+	movq $block_c4on_info,-8(%rbp)
+	movq 15(%rbx),%rax
+	movq 7(%rbx),%rbx
+	movq %rax,(%rbp)
+	addq $-8,%rbp
+	testb $7,%bl
+	jne _c4on
+_c4oo:
+	jmp *(%rbx)
+.text
+	.align 8
+	.long	S4g3_srt-(block_c4on_info)+8
+	.long	0
+	.quad	9609
+	.quad	64424509472
+block_c4on_info:
+_c4on:
+	movq $block_c4os_info,(%rbp)
+	movq 7(%rbx),%rax
+	movq 8(%rbp),%rbx
+	movq %rax,8(%rbp)
+	testb $7,%bl
+	jne _c4os
+_c4oz:
+	jmp *(%rbx)
+_c4pe:
+	movq $Text_con_info,-40(%r12)
+	movq %rdi,-32(%r12)
+	movq $0,-24(%r12)
+	movq %r10,-16(%r12)
+	leaq -39(%r12),%rax
+	addq $-16,%r12
+	movq %rax,%rbx
+	addq $56,%rbp
+	jmp *(%rbp)
+.text
+	.align 8
+	.quad	0
+	.quad	32
+block_c4pg_info:
+_c4pg:
+	addq $8,%rbp
+	jmp *(%rbp)
+_c4pr:
+	testq %r10,%r10
+	jne _c4pe
+_c4ph:
+	addq $-48,%r12
+	movq $block_c4pg_info,48(%rbp)
+	movl $empty_closure,%ebx
+	addq $48,%rbp
+	testb $7,%bl
+	jne _c4pg
+_c4pi:
+	jmp *(%rbx)
+_u4r5:
+	addq $72,%rbp
+_c4pB:
+	movl $array_size_error_closure,%ebx
+	jmp stg_ap_0_fast
+_u4r4:
+	addq $72,%rbp
+	jmp _c4pB
+	.size sat_s49l_info, .-sat_s49l_info
+
+
+==================== Asm code ====================
+2016-06-25 12:17:05.317743 UTC
+
+.text
+	.align 8
+	.long	$wnormalize_slow-($wnormalize_info)+0
+	.long	0
+	.quad	772
+	.long	S4g3_srt-($wnormalize_info)+8
+	.long	0
+	.quad	17179869184
+	.quad	0
+	.quad	270582939663
+.globl $wnormalize_info
+.type $wnormalize_info, @object
+$wnormalize_info:
+_c4qU:
+	leaq -32(%rbp),%rax
+	cmpq %r15,%rax
+	jb _c4qV
+_c4qW:
+	movq $block_c4he_info,-32(%rbp)
+	movq %r14,%rbx
+	movq %rsi,-24(%rbp)
+	movq %rdi,-16(%rbp)
+	movq %r8,-8(%rbp)
+	addq $-32,%rbp
+	testb $7,%bl
+	jne _c4he
+_c4hf:
+	jmp *(%rbx)
+.text
+	.align 8
+	.long	S4g3_srt-(block_c4he_info)+8
+	.long	0
+	.quad	387
+	.quad	133143986208
+block_c4he_info:
+_c4he:
+	movq %rbx,%rax
+	andl $7,%eax
+	cmpq $1,%rax
+	jne _c4qR
+_c4qS:
+	addq $32,%r12
+	cmpq 856(%r13),%r12
+	ja _c4r1
+_c4r0:
+	movq $sat_s49l_info,-24(%r12)
+	movq 8(%rbp),%rax
+	movq %rax,-16(%r12)
+	movq 16(%rbp),%rax
+	movq %rax,-8(%r12)
+	movq 24(%rbp),%rax
+	movq %rax,(%r12)
+	leaq -23(%r12),%r14
+	addq $32,%rbp
+	jmp runSTRep_info
+_c4qR:
+	movl $lvl_r3Nn_closure,%ebx
+	addq $32,%rbp
+	jmp stg_ap_0_fast
+_c4qV:
+	movl $$wnormalize_closure,%ebx
+	movq %r14,-32(%rbp)
+	movq %rsi,-24(%rbp)
+	movq %rdi,-16(%rbp)
+	movq %r8,-8(%rbp)
+	addq $-32,%rbp
+	jmp *-8(%r13)
+_c4r1:
+	movq $32,904(%r13)
+	jmp stg_gc_unpt_r1
+	.size $wnormalize_info, .-$wnormalize_info
+
+
+==================== Asm code ====================
+2016-06-25 12:17:05.327873 UTC
+
+.data
+	.align 8
+.align 1
+.globl normalize_closure
+.type normalize_closure, @object
+normalize_closure:
+	.quad	normalize_info
+	.quad	0
+
+
+==================== Asm code ====================
+2016-06-25 12:17:05.328716 UTC
+
+.text
+	.align 8
+	.long	S4g3_srt-(normalize_info)+48
+	.long	0
+	.quad	8589934607
+	.quad	0
+	.quad	12884901903
+.globl normalize_info
+.type normalize_info, @object
+normalize_info:
+_c4su:
+	leaq -16(%rbp),%rax
+	cmpq %r15,%rax
+	jb _c4sv
+_c4sw:
+	movq $block_c4sr_info,-16(%rbp)
+	movq %rsi,%rbx
+	movq %r14,-8(%rbp)
+	addq $-16,%rbp
+	testb $7,%bl
+	jne _c4sr
+_c4ss:
+	jmp *(%rbx)
+.text
+	.align 8
+	.long	S4g3_srt-(block_c4sr_info)+48
+	.long	0
+	.quad	1
+	.quad	4294967328
+block_c4sr_info:
+_c4sr:
+	movq 23(%rbx),%r8
+	movq 15(%rbx),%rdi
+	movq 7(%rbx),%rsi
+	movq 8(%rbp),%r14
+	addq $16,%rbp
+	jmp $wnormalize_info
+_c4sv:
+	movl $normalize_closure,%ebx
+	jmp *-8(%r13)
+	.size normalize_info, .-normalize_info
+
+
+==================== Asm code ====================
+2016-06-25 12:17:05.329909 UTC
+
+.section .data
+	.align 8
+.align 1
+S4g3_srt:
+	.quad	patError_closure
+	.quad	array_size_error_closure
+	.quad	empty_closure
+	.quad	lvl1_r45J_closure
+	.quad	lvl2_r45K_closure
+	.quad	lvl_r3Nn_closure
+	.quad	$wnormalize_closure
+	.quad	normalize_closure
+

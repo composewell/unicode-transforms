@@ -1,0 +1,518 @@
+ # GHC 7.10.3
+ sat_s49l_entry() //  [R1]
+         { info_tbl: [(c4hH,
+                       label: block_c4hH_info
+                       rep:StackRep [False, True, True, True]),
+                      (c4hL,
+                       label: block_c4hL_info
+                       rep:StackRep [False, False, False, True, True, True]),
+                      (c4hP,
+                       label: block_c4hP_info
+                       rep:StackRep [False, False, False, True, True, True]),
+                      (c4hX,
+                       label: block_c4hX_info
+                       rep:StackRep [True, True, False, True, False, True, False, True]),
+                      (c4id,
+                       label: block_c4id_info
+                       rep:StackRep [True, True, True, True, False, True, False, False,
+                                     True, False]),
+                      (c4je,
+                       label: block_c4je_info
+                       rep:StackRep [True, True, True, True, True, False, True, False,
+                                     False, True, False]),
+                      (c4kX,
+                       label: sat_s49l_info
+                       rep:HeapRep 1 ptrs 2 nonptrs {
+                             Fun {arity: 1 fun_type: ArgSpec 3} }),
+                      (c4lj,
+                       label: block_c4lj_info
+                       rep:StackRep [True, True, False, True, False, False, True, True]),
+                      (c4lI,
+                       label: block_c4lI_info
+                       rep:StackRep [True, True, False, True, False, False, True, True]),
+                      (c4m8,
+                       label: block_c4m8_info
+                       rep:StackRep [False, False, False, True, False, False, True,
+                                     False]),
+                      (c4md,
+                       label: block_c4md_info
+                       rep:StackRep [False, True, False, True, False, False, True,
+                                     False]),
+                      (c4mi,
+                       label: block_c4mi_info
+                       rep:StackRep [True, True, False, True, False, False, True, False]),
+                      (c4o9,
+                       label: block_c4o9_info
+                       rep:StackRep [True, True, True, False, True, False, False, True,
+                                     False]),
+                      (c4ob,
+                       label: block_c4ob_info
+                       rep:StackRep [True, True, True, False, True, False, False, True,
+                                     False]),
+                      (c4og,
+                       label: block_c4og_info
+                       rep:StackRep [True, True, False, True, False, False, True, False]),
+                      (c4oi,
+                       label: block_c4oi_info
+                       rep:StackRep [True, True, False, True, False, False, True, False]),
+                      (c4on,
+                       label: block_c4on_info
+                       rep:StackRep [False, True, True, False, True, False, False, True,
+                                     False]),
+                      (c4os,
+                       label: block_c4os_info
+                       rep:StackRep [True, True, True, False, True, False, False, True,
+                                     False]),
+                      (c4pg,
+                       label: block_c4pg_info
+                       rep:StackRep [])]
+           stack_info: arg_space: 8 updfr_space: Just 8
+         }
+     {offset
+       c4kX:
+           if ((Sp + -96) < SpLim) goto c4kY; else goto c4kZ;
+       c4kY:
+           R1 = R1;
+           call (stg_gc_fun)(R1) args: 8, res: 0, upd: 8;
+       c4kZ:
+           _s466::I64 = I64[R1 + 23];
+           _s46a::I64 = _s466::I64 + 11;
+           if (%MO_S_Lt_W64(_s46a::I64, 0)) goto c4pB; else goto c4pC;
+       c4pC:
+           if (_s46a::I64 & 4611686018427387904 != 0) goto c4pB; else goto c4l6;
+       c4l6:
+           I64[Sp - 40] = c4hH;
+           _s464::P64 = P64[R1 + 7];
+           _s465::I64 = I64[R1 + 15];
+           R1 = _s46a::I64 << 1;
+           P64[Sp - 32] = _s464::P64;
+           I64[Sp - 24] = _s465::I64;
+           I64[Sp - 16] = _s466::I64;
+           I64[Sp - 8] = _s46a::I64;
+           Sp = Sp - 40;
+           call stg_newByteArray#(R1) returns to c4hH, args: 8, res: 8, upd: 8;
+       c4hH:
+           Hp = Hp + 80;
+           if (Hp > HpLim) goto c4la; else goto c4l9;
+       c4la:
+           HpAlloc = 80;
+           R1 = R1;
+           call stg_gc_unpt_r1(R1) returns to c4hH, args: 8, res: 8, upd: 8;
+       c4l9:
+           I64[Hp - 72] = stg_ARR_WORDS_info;
+           I64[Hp - 64] = 48;
+           I64[Hp - 8] = go1_s46m_info;
+           _s46l::P64 = Hp - 72;
+           P64[Hp] = _s46l::P64;
+           I64[Sp - 16] = c4hL;
+           R2 = 0;
+           _s46i::P64 = R1;
+           R1 = Hp - 7;
+           P64[Sp - 8] = _s46l::P64;
+           P64[Sp] = _s46i::P64;
+           Sp = Sp - 16;
+           call go1_s46m_info(R2,
+                              R1) returns to c4hL, args: 8, res: 8, upd: 8;
+       c4hL:
+           I64[Sp] = c4hP;
+           R2 = R1;
+           call poly_a_r45I_info(R2) returns to c4hP, args: 8, res: 8, upd: 8;
+       c4hP:
+           _s464::P64 = P64[Sp + 24];
+           _s465::I64 = I64[Sp + 32];
+           _s46l::P64 = P64[Sp + 8];
+           _s46y::I64 = _s465::I64 + I64[Sp + 40];
+           _s46E::I64 = 0;
+           _s46D::I64 = 0;
+           _s46C::I64 = _s465::I64;
+           _s46B::I64 = I64[Sp + 48] - 1;
+           _s46A::P64 = P64[Sp + 16];
+           goto c4hW;
+       c4hW:
+           Hp = Hp + 24;
+           if (Hp > HpLim) goto c4lf; else goto c4le;
+       c4lf:
+           HpAlloc = 24;
+           I64[Sp - 16] = c4hX;
+           I64[Sp - 8] = _s46E::I64;
+           I64[Sp] = _s46D::I64;
+           I64[Sp + 16] = _s46C::I64;
+           I64[Sp + 32] = _s46B::I64;
+           P64[Sp + 40] = _s46A::P64;
+           I64[Sp + 48] = _s46y::I64;
+           Sp = Sp - 16;
+           call stg_gc_noregs() returns to c4hX, args: 8, res: 8, upd: 8;
+       c4hX:
+           _s464::P64 = P64[Sp + 40];
+           _s46l::P64 = P64[Sp + 24];
+           _s46y::I64 = I64[Sp + 64];
+           _s46A::P64 = P64[Sp + 56];
+           _s46B::I64 = I64[Sp + 48];
+           _s46C::I64 = I64[Sp + 32];
+           _s46D::I64 = I64[Sp + 16];
+           _s46E::I64 = I64[Sp + 8];
+           Sp = Sp + 16;
+           goto c4hW;
+       c4le:
+           I64[Hp - 16] = lvl3_s46H_info;
+           _s46G::I64 = _s46B::I64 << 1;
+           I64[Hp] = _s46G::I64;
+           _c4i2::P64 = Hp - 16;
+           _s47j::I64 = _s46E::I64;
+           _s47i::I64 = _s46D::I64;
+           _s47h::I64 = _s46C::I64;
+           goto c4ic;
+       c4ic:
+           Hp = Hp + 48;
+           if (Hp > HpLim) goto c4mx; else goto c4mw;
+       c4mx:
+           HpAlloc = 48;
+           I64[Sp - 32] = c4id;
+           I64[Sp - 24] = _s47h::I64;
+           I64[Sp - 16] = _s47i::I64;
+           I64[Sp - 8] = _s47j::I64;
+           I64[Sp] = _s46G::I64;
+           I64[Sp + 16] = _s46B::I64;
+           P64[Sp + 32] = _s46A::P64;
+           I64[Sp + 40] = _s46y::I64;
+           P64[Sp + 48] = _c4i2::P64;
+           Sp = Sp - 32;
+           call stg_gc_noregs() returns to c4id, args: 8, res: 8, upd: 8;
+       c4id:
+           _c4i2::P64 = P64[Sp + 80];
+           _s464::P64 = P64[Sp + 56];
+           _s46l::P64 = P64[Sp + 40];
+           _s46y::I64 = I64[Sp + 72];
+           _s46A::P64 = P64[Sp + 64];
+           _s46B::I64 = I64[Sp + 48];
+           _s46G::I64 = I64[Sp + 32];
+           _s47h::I64 = I64[Sp + 8];
+           _s47i::I64 = I64[Sp + 16];
+           _s47j::I64 = I64[Sp + 24];
+           Sp = Sp + 32;
+           goto c4ic;
+       c4mw:
+           if (%MO_S_Lt_W64(_s46B::I64,
+                            _s47i::I64 + 11)) goto c4pv; else goto c4pw;
+       c4pv:
+           I64[Hp - 40] = GHC.Types.I#_con_info;
+           I64[Hp - 32] = _s47j::I64;
+           I64[Hp - 24] = GHC.Types.I#_con_info;
+           I64[Hp - 16] = _s47i::I64;
+           I64[Hp - 8] = GHC.Types.I#_con_info;
+           I64[Hp] = _s47h::I64;
+           I64[Sp - 16] = c4m8;
+           R1 = Hp - 7;
+           P64[Sp - 8] = Hp - 39;
+           P64[Sp] = Hp - 23;
+           I64[Sp + 16] = _s46G::I64;
+           P64[Sp + 32] = _s46A::P64;
+           I64[Sp + 40] = _s46y::I64;
+           P64[Sp + 48] = _c4i2::P64;
+           Sp = Sp - 16;
+           if (R1 & 7 != 0) goto c4m8; else goto c4m9;
+       c4m9:
+           call (I64[R1])(R1) returns to c4m8, args: 8, res: 8, upd: 8;
+       c4m8:
+           I64[Sp] = c4md;
+           _s47a::I64 = I64[R1 + 7];
+           R1 = P64[Sp + 16];
+           I64[Sp + 16] = _s47a::I64;
+           if (R1 & 7 != 0) goto c4md; else goto c4me;
+       c4me:
+           call (I64[R1])(R1) returns to c4md, args: 8, res: 8, upd: 8;
+       c4md:
+           I64[Sp] = c4mi;
+           _s47c::I64 = I64[R1 + 7];
+           R1 = P64[Sp + 8];
+           I64[Sp + 8] = _s47c::I64;
+           if (R1 & 7 != 0) goto c4mi; else goto c4mm;
+       c4mm:
+           call (I64[R1])(R1) returns to c4mi, args: 8, res: 8, upd: 8;
+       c4mi:
+           I64[Sp] = c4lj;
+           _s46M::I64 = I64[R1 + 7];
+           R1 = P64[Sp + 64];
+           _s46L::I64 = I64[Sp + 8];
+           I64[Sp + 8] = _s46M::I64;
+           _s46K::I64 = I64[Sp + 16];
+           I64[Sp + 16] = _s46L::I64;
+           I64[Sp + 64] = _s46K::I64;
+           if (R1 & 7 != 0) goto c4lj; else goto c4ll;
+       c4ll:
+           call (I64[R1])(R1) returns to c4lj, args: 8, res: 8, upd: 8;
+       c4lj:
+           if (R1 & 7 >= 2) goto u4r4; else goto c4m4;
+       u4r4:
+           Sp = Sp + 72;
+           goto c4pB;
+       c4m4:
+           _s46G::I64 = I64[Sp + 32];
+           if (_s46G::I64 & 4611686018427387904 != 0) goto u4r5; else goto c4lB;
+       u4r5:
+           Sp = Sp + 72;
+           goto c4pB;
+       c4pB:
+           R1 = Data.Text.Array.array_size_error_closure;
+           call stg_ap_0_fast(R1) args: 8, res: 0, upd: 8;
+       c4lB:
+           I64[Sp] = c4lI;
+           R1 = _s46G::I64 << 1;
+           call stg_newByteArray#(R1) returns to c4lI, args: 8, res: 8, upd: 8;
+       c4lI:
+           _s464::P64 = P64[Sp + 40];
+           _s46l::P64 = P64[Sp + 24];
+           _s46y::I64 = I64[Sp + 56];
+           _s46G::I64 = I64[Sp + 32];
+           _s46K::I64 = I64[Sp + 64];
+           _s46L::I64 = I64[Sp + 16];
+           _s46M::I64 = I64[Sp + 8];
+           if (%MO_S_Le_W64(_s46L::I64, 0)) goto c4lT; else goto c4lU;
+       c4lT:
+           Sp = Sp + 16;
+           _s46E::I64 = _s46M::I64;
+           _s46D::I64 = _s46L::I64;
+           _s46C::I64 = _s46K::I64;
+           _s46B::I64 = _s46G::I64 - 1;
+           _s46A::P64 = R1;
+           goto c4hW;
+       c4lU:
+           call "ccall" arg hints:  [PtrHint, , PtrHint,
+                                     ,]  result hints:  [] _hs_text_memcpy(R1 + 16, 0, P64[Sp + 48] + 16, 0, _s46L::I64);
+           Sp = Sp + 16;
+           _s46E::I64 = _s46M::I64;
+           _s46D::I64 = _s46L::I64;
+           _s46C::I64 = _s46K::I64;
+           _s46B::I64 = _s46G::I64 - 1;
+           _s46A::P64 = R1;
+           goto c4hW;
+       c4pw:
+           if (%MO_S_Ge_W64(_s47h::I64,
+                            _s46y::I64)) goto c4pr; else goto c4ps;
+       c4pr:
+           if (_s47i::I64 != 0) goto c4pe; else goto c4ph;
+       c4pe:
+           I64[Hp - 40] = Data.Text.Internal.Text_con_info;
+           P64[Hp - 32] = _s46A::P64;
+           I64[Hp - 24] = 0;
+           I64[Hp - 16] = _s47i::I64;
+           _c4pc::P64 = Hp - 39;
+           Hp = Hp - 16;
+           R1 = _c4pc::P64;
+           Sp = Sp + 56;
+           call (P64[Sp])(R1) args: 8, res: 0, upd: 8;
+       c4ph:
+           Hp = Hp - 48;
+           I64[Sp + 48] = c4pg;
+           R1 = Data.Text.Internal.empty_closure;
+           Sp = Sp + 48;
+           if (R1 & 7 != 0) goto c4pg; else goto c4pi;
+       c4pi:
+           call (I64[R1])(R1) returns to c4pg, args: 8, res: 8, upd: 8;
+       c4pg:
+           R1 = R1;
+           Sp = Sp + 8;
+           call (P64[Sp])(R1) args: 8, res: 0, upd: 8;
+       c4ps:
+           _s47q::I64 = %MO_UU_Conv_W16_W64(I16[(_s464::P64 + 16) + (_s47h::I64 << 1)]);
+           if (_s47q::I64 >= 55296) goto c4p7; else goto c4p8;
+       c4p7:
+           if (_s47q::I64 <= 56319) goto c4p2; else goto c4p3;
+       c4p2:
+           Hp = Hp - 48;
+           _s47t::I64 = _s47h::I64 + 2;
+           _s47s::I64 = ((_s47q::I64 + -55296) << 10) + (%MO_UU_Conv_W16_W64(I16[(_s464::P64 + 16) + ((_s47h::I64 + 1) << 1)]) - 56320) + 65536;
+           goto c4jd;
+       c4p3:
+           Hp = Hp - 48;
+           _s47t::I64 = _s47h::I64 + 1;
+           _s47s::I64 = _s47q::I64;
+           goto c4jd;
+       c4p8:
+           Hp = Hp - 48;
+           _s47t::I64 = _s47h::I64 + 1;
+           _s47s::I64 = _s47q::I64;
+           goto c4jd;
+       c4jd:
+           Hp = Hp + 32;
+           if (Hp > HpLim) goto c4mA; else goto c4mz;
+       c4mA:
+           HpAlloc = 32;
+           I64[Sp - 40] = c4je;
+           I64[Sp - 32] = _s47i::I64;
+           I64[Sp - 24] = _s47j::I64;
+           I64[Sp - 16] = _s47s::I64;
+           I64[Sp - 8] = _s47t::I64;
+           I64[Sp] = _s46G::I64;
+           I64[Sp + 16] = _s46B::I64;
+           P64[Sp + 32] = _s46A::P64;
+           I64[Sp + 40] = _s46y::I64;
+           P64[Sp + 48] = _c4i2::P64;
+           Sp = Sp - 40;
+           call stg_gc_noregs() returns to c4je, args: 8, res: 8, upd: 8;
+       c4je:
+           _c4i2::P64 = P64[Sp + 88];
+           _s464::P64 = P64[Sp + 64];
+           _s46l::P64 = P64[Sp + 48];
+           _s46y::I64 = I64[Sp + 80];
+           _s46A::P64 = P64[Sp + 72];
+           _s46B::I64 = I64[Sp + 56];
+           _s46G::I64 = I64[Sp + 40];
+           _s47i::I64 = I64[Sp + 8];
+           _s47j::I64 = I64[Sp + 16];
+           _s47s::I64 = I64[Sp + 24];
+           _s47t::I64 = I64[Sp + 32];
+           Sp = Sp + 40;
+           goto c4jd;
+       c4mz:
+           _s47v::I64 = _s47s::I64;
+           if (%MO_S_Lt_W64(_s47s::I64, 44032)) goto c4oH; else goto c4oJ;
+       c4oJ:
+           if (%MO_S_Gt_W64(_s47v::I64, 55203)) goto c4oH; else goto c4oG;
+       c4oH:
+           Hp = Hp - 32;
+           if (%MO_S_Lt_W64(_s47v::I64, 192)) goto c4o3; else goto c4o4;
+       c4o3:
+           if (%MO_S_Lt_W64(_s47j::I64, 1)) goto c4o0; else goto c4o1;
+       c4o0:
+           if (_s47j::I64 != 0) goto c4nx; else goto c4ny;
+       c4ny:
+           _s47j::I64 = 1;
+           _s47i::I64 = _s47i::I64 + 1;
+           _s47h::I64 = _s47t::I64;
+           goto c4ic;
+       c4o1:
+           if (_s47j::I64 != 1) goto c4nx; else goto c4nU;
+       c4nU:
+           if (%MO_S_Lt_W64(_s47v::I64, 768)) goto c4nW; else goto c4nX;
+       c4nW:
+           _s47j::I64 = 0;
+           _s47i::I64 = _s47i::I64 + 1;
+           _s47h::I64 = _s47t::I64;
+           goto c4ic;
+       c4nX:
+           if (%MO_S_Gt_W64(_s47v::I64, 125142)) goto c4nR; else goto c4nS;
+       c4nR:
+           _s47j::I64 = 0;
+           _s47i::I64 = _s47i::I64 + 1;
+           _s47h::I64 = _s47t::I64;
+           goto c4ic;
+       c4nS:
+           _s47j::I64 = 0;
+           _s47i::I64 = _s47i::I64 + 2;
+           _s47h::I64 = _s47t::I64;
+           goto c4ic;
+       c4o4:
+           if (%MO_S_Le_W64(_s47v::I64, 195101)) goto c4ns; else goto c4nt;
+       c4ns:
+           if (%MO_S_Lt_W64(_s47j::I64, 1)) goto c4nn; else goto c4no;
+       c4nn:
+           if (_s47j::I64 != 0) goto c4nx; else goto c4mV;
+       c4mV:
+           _s47j::I64 = 1;
+           _s47i::I64 = _s47i::I64 + 1;
+           _s47h::I64 = _s47t::I64;
+           goto c4ic;
+       c4no:
+           if (_s47j::I64 != 1) goto c4nx; else goto c4nh;
+       c4nx:
+           R1 = lvl2_r45K_closure;
+           Sp = Sp + 56;
+           call stg_ap_0_fast(R1) args: 8, res: 0, upd: 8;
+       c4nh:
+           if (%MO_S_Lt_W64(_s47v::I64, 768)) goto c4nj; else goto c4nk;
+       c4nj:
+           _s47j::I64 = 0;
+           _s47i::I64 = _s47i::I64 + 1;
+           _s47h::I64 = _s47t::I64;
+           goto c4ic;
+       c4nk:
+           if (%MO_S_Gt_W64(_s47v::I64, 125142)) goto c4ne; else goto c4nf;
+       c4ne:
+           _s47j::I64 = 0;
+           _s47i::I64 = _s47i::I64 + 1;
+           _s47h::I64 = _s47t::I64;
+           goto c4ic;
+       c4nf:
+           _s47j::I64 = 0;
+           _s47i::I64 = _s47i::I64 + 2;
+           _s47h::I64 = _s47t::I64;
+           goto c4ic;
+       c4nt:
+           R1 = lvl1_r45J_closure;
+           Sp = Sp + 56;
+           call (I64[R1])(R1) args: 8, res: 0, upd: 8;
+       c4oG:
+           I64[Hp - 24] = $s$wa_s481_info;
+           P64[Hp - 16] = _s46l::P64;
+           P64[Hp - 8] = _s46A::P64;
+           I64[Hp] = _s47j::I64;
+           I64[Sp - 24] = c4o9;
+           R3 = 0;
+           R2 = _s47i::I64;
+           R1 = Hp - 21;
+           I64[Sp - 16] = _s47s::I64;
+           I64[Sp - 8] = _s47t::I64;
+           I64[Sp] = _s46G::I64;
+           I64[Sp + 16] = _s46B::I64;
+           P64[Sp + 32] = _s46A::P64;
+           I64[Sp + 40] = _s46y::I64;
+           P64[Sp + 48] = _c4i2::P64;
+           Sp = Sp - 24;
+           call $s$wa_s481_info(R3,
+                                R2,
+                                R1) returns to c4o9, args: 8, res: 8, upd: 8;
+       c4o9:
+           I64[Sp] = c4ob;
+           R1 = R1;
+           if (R1 & 7 != 0) goto c4ob; else goto c4oc;
+       c4oc:
+           call (I64[R1])(R1) returns to c4ob, args: 8, res: 8, upd: 8;
+       c4ob:
+           _s47s::I64 = I64[Sp + 8];
+           I64[Sp + 8] = c4og;
+           R4 = _s47s::I64;
+           R3 = I64[R1 + 7];
+           R2 = P64[Sp + 56];
+           Sp = Sp + 8;
+           call Data.Unicode.Internal.NormalizeStream.$wa_info(R4,
+                                                               R3,
+                                                               R2) returns to c4og, args: 8, res: 8, upd: 8;
+       c4og:
+           I64[Sp] = c4oi;
+           R1 = R1;
+           if (R1 & 7 != 0) goto c4oi; else goto c4oj;
+       c4oj:
+           call (I64[R1])(R1) returns to c4oi, args: 8, res: 8, upd: 8;
+       c4oi:
+           I64[Sp - 8] = c4on;
+           _s48H::P64 = P64[R1 + 15];
+           R1 = P64[R1 + 7];
+           P64[Sp] = _s48H::P64;
+           Sp = Sp - 8;
+           if (R1 & 7 != 0) goto c4on; else goto c4oo;
+       c4oo:
+           call (I64[R1])(R1) returns to c4on, args: 8, res: 8, upd: 8;
+       c4on:
+           I64[Sp] = c4os;
+           _s48J::I64 = I64[R1 + 7];
+           R1 = P64[Sp + 8];
+           I64[Sp + 8] = _s48J::I64;
+           if (R1 & 7 != 0) goto c4os; else goto c4oz;
+       c4oz:
+           call (I64[R1])(R1) returns to c4os, args: 8, res: 8, upd: 8;
+       c4os:
+           _c4i2::P64 = P64[Sp + 72];
+           _s464::P64 = P64[Sp + 48];
+           _s46l::P64 = P64[Sp + 32];
+           _s46y::I64 = I64[Sp + 64];
+           _s46A::P64 = P64[Sp + 56];
+           _s46B::I64 = I64[Sp + 40];
+           _s46G::I64 = I64[Sp + 24];
+           _s47i::I64 = I64[Sp + 8];
+           _s47h::I64 = I64[Sp + 16];
+           Sp = Sp + 24;
+           _s47j::I64 = I64[R1 + 7];
+           goto c4ic;
+     }
+ },

@@ -1,0 +1,42 @@
+# GHC 7.10.3
+       c4ic:
+           Hp = Hp + 48;
+           if (Hp > HpLim) goto c4mx; else goto c4mw;
+.
+.
+.
+       c4mw:
+           if (%MO_S_Lt_W64(_s46B::I64,
+                            _s47i::I64 + 11)) goto c4pv; else goto c4pw;
+.
+.
+.
+       c4pw:
+           if (%MO_S_Ge_W64(_s47h::I64,
+                            _s46y::I64)) goto c4pr; else goto c4ps;
+.
+.
+.
+       c4ps:
+           _s47q::I64 = %MO_UU_Conv_W16_W64(I16[(_s464::P64 + 16) + (_s47h::I64 << 1)]);
+           if (_s47q::I64 >= 55296) goto c4p7; else goto c4p8;
+.
+.
+.
+       c4p8:
+           Hp = Hp - 48;
+           _s47t::I64 = _s47h::I64 + 1;
+           _s47s::I64 = _s47q::I64;
+           goto c4jd;
+       c4jd:
+           Hp = Hp + 32;
+           if (Hp > HpLim) goto c4mA; else goto c4mz;
+.
+.
+.
+       c4mz:
+           _s47v::I64 = _s47s::I64;
+           if (%MO_S_Lt_W64(_s47s::I64, 44032)) goto c4oH; else goto c4oJ;
+       c4oH:
+           Hp = Hp - 32;
+           if (%MO_S_Lt_W64(_s47v::I64, 192)) goto c4o3; else goto c4o4;

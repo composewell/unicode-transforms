@@ -1,0 +1,17 @@
+Run commands from the top dir of the package.
+
+1) "stack build" will build an executable named normalizefile from
+the source file benchmark/NormalizeFile.hs.
+
+2) objdump -d .stack-work/install/x86_64-linux/lts-5.16/7.10.3/bin/normalizefile > normalizefile.asm
+3) search for the regex "cmp.*\$0xc0," in the asm file (first match). That
+instruction is inside the loop we want to examine.
+put a breakpoint on that (br *0xaddr).
+
+4) start gdb and run the following commands
+handle SIGVTALRM ignore
+file .stack-work/install/x86_64-linux/lts-5.16/7.10.3/bin/normalizefile
+br *0x408bd7 # set breakpoint
+disp/i $rip
+run benchmark/data/English.txt
+# stepi in a loop
