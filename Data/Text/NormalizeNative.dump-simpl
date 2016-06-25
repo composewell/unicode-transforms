@@ -1,48 +1,44 @@
 
 ==================== Tidy Core ====================
-2016-06-25 12:17:05.053782 UTC
+2016-06-25 18:54:13.156704 UTC
 
-Result size of Tidy Core = {terms: 601, types: 389, coercions: 26}
+Result size of Tidy Core = {terms: 467, types: 313, coercions: 26}
 
-lvl_r3Nn
-lvl_r3Nn = patError "NormalizeNative.hs:(29,5)-(30,35)|case"#
+lvl_r3LM
+lvl_r3LM =
+  patError "../Data/Text/NormalizeNative.hs:(29,5)-(30,35)|case"#
 
 Rec {
-poly_a_r45I
-poly_a_r45I =
+poly_a_r3Yq
+poly_a_r3Yq =
   \ @ s1_a35H ds3_a36M eta_XC ->
     case ds3_a36M of _ {
       [] -> (# eta_XC, () #);
       : y_a36S ys_a36T ->
         case (y_a36S `cast` ...) eta_XC
         of _ { (# ipv4_a373, ipv5_a374 #) ->
-        poly_a_r45I ys_a36T ipv4_a373
+        poly_a_r3Yq ys_a36T ipv4_a373
         }
     }
 end Rec }
 
-lvl1_r45J
-lvl1_r45J =
-  patError
-    "Data/Unicode/Properties/Decompose.hs:(33,1)-(34,50)|function isDecomposable"#
-
-lvl2_r45K
-lvl2_r45K =
+lvl1_r3Yr
+lvl1_r3Yr =
   \ @ s1_a35H ->
     patError
-      "Data/Unicode/Internal/NormalizeStream.hs:(100,9)-(127,38)|function reorder"#
+      "Data/Unicode/Internal/NormalizeStream.hs:(102,9)-(129,38)|function reorder"#
 
 $wnormalize
 $wnormalize =
-  \ w_s3WZ ww_s3X3 ww1_s3X4 ww2_s3X5 ->
-    case w_s3WZ of _ {
-      __DEFAULT -> case lvl_r3Nn of wild1_00 { };
+  \ w_s3Sv ww_s3Sz ww1_s3SA ww2_s3SB ->
+    case w_s3Sv of _ {
+      __DEFAULT -> case lvl_r3LM of wild1_00 { };
       NFD ->
         runSTRep
           (\ @ s1_a35H s2_a35I ->
              let {
                x#_a35L
-               x#_a35L = +# ww2_s3X5 11 } in
+               x#_a35L = +# ww2_s3SB 11 } in
              case tagToEnum# (<# x#_a35L 0) of _ {
                False ->
                  case andI# x#_a35L 4611686018427387904 of _ {
@@ -65,33 +61,33 @@ $wnormalize =
                                 __DEFAULT -> go1_a376 (+# wild2_a37a 1);
                                 11 -> []
                               }); } in
-                     case poly_a_r45I (go1_a376 0) ipv2_a36I
+                     case poly_a_r3Yq (go1_a376 0) ipv2_a36I
                      of _ { (# ipv4_a37g, ipv5_a37h #) ->
                      let {
-                       a_a3bK
-                       a_a3bK = +# ww1_s3X4 ww2_s3X5 } in
+                       a_a3aa
+                       a_a3aa = +# ww1_s3SA ww2_s3SB } in
                      letrec {
-                       $wa_s3WY
-                       $wa_s3WY =
-                         \ ww3_s3WG ww4_s3WK ww5_s3WO ww6_s3WS ww7_s3WW w1_s3WD ->
+                       $wa_s3Su
+                       $wa_s3Su =
+                         \ ww3_s3Sc ww4_s3Sg ww5_s3Sk ww6_s3So ww7_s3Ss w1_s3S9 ->
                            let {
-                             a1_s40k
-                             a1_s40k = *# ww4_s3WK 2 } in
+                             a1_s3V2
+                             a1_s3V2 = *# ww4_s3Sg 2 } in
                            let {
-                             lvl3_s40l
-                             lvl3_s40l = tagToEnum# (<# a1_s40k 0) } in
+                             lvl2_s3V3
+                             lvl2_s3V3 = tagToEnum# (<# a1_s3V2 0) } in
                            let {
-                             $wa1_s3VV
-                             $wa1_s3VV =
-                               \ ww8_s3VL ww9_s3VP ww10_s3VT w2_s3VI ->
-                                 case lvl3_s40l of _ {
+                             $wa1_s3Rz
+                             $wa1_s3Rz =
+                               \ ww8_s3Rp ww9_s3Rt ww10_s3Rx w2_s3Rm ->
+                                 case lvl2_s3V3 of _ {
                                    False ->
-                                     case andI# a1_s40k 4611686018427387904 of _ {
+                                     case andI# a1_s3V2 4611686018427387904 of _ {
                                        __DEFAULT -> case array_size_error of wild7_00 { };
                                        0 ->
-                                         case newByteArray# (uncheckedIShiftL# a1_s40k 1) w2_s3VI
+                                         case newByteArray# (uncheckedIShiftL# a1_s3V2 1) w2_s3Rm
                                          of _ { (# ipv10_a37R, ipv11_a37S #) ->
-                                         case tagToEnum# (<=# ww9_s3VP 0) of _ {
+                                         case tagToEnum# (<=# ww9_s3Rt 0) of _ {
                                            False ->
                                              case {__pkg_ccall text-1.2.2.1 _hs_text_memcpy forall s.
                                           MutableByteArray# s
@@ -103,26 +99,26 @@ $wnormalize =
                                           -> (# State# RealWorld #)}_a37X
                                                     ipv11_a37S
                                                     (__word 0)
-                                                    ww3_s3WG
+                                                    ww3_s3Sc
                                                     (__word 0)
-                                                    (int2Word# ww9_s3VP)
+                                                    (int2Word# ww9_s3Rt)
                                                     (ipv10_a37R `cast` ...)
                                              of _ { (# ds11_a381 #) ->
-                                             $wa_s3WY
+                                             $wa_s3Su
                                                ipv11_a37S
-                                               (-# a1_s40k 1)
-                                               ww8_s3VL
-                                               ww9_s3VP
-                                               ww10_s3VT
+                                               (-# a1_s3V2 1)
+                                               ww8_s3Rp
+                                               ww9_s3Rt
+                                               ww10_s3Rx
                                                (ds11_a381 `cast` ...)
                                              };
                                            True ->
-                                             $wa_s3WY
+                                             $wa_s3Su
                                                ipv11_a37S
-                                               (-# a1_s40k 1)
-                                               ww8_s3VL
-                                               ww9_s3VP
-                                               ww10_s3VT
+                                               (-# a1_s3V2 1)
+                                               ww8_s3Rp
+                                               ww9_s3Rt
+                                               ww10_s3Rx
                                                ipv10_a37R
                                          }
                                          }
@@ -130,246 +126,139 @@ $wnormalize =
                                    True -> case array_size_error of wild7_00 { }
                                  } } in
                            let {
-                             a2_s3S5
-                             a2_s3S5 =
-                               \ w2_s3VF w3_s3VG w4_s3VH w5_s3VI ->
-                                 case w2_s3VF of _ { I# ww9_s3VL ->
-                                 case w3_s3VG of _ { I# ww11_s3VP ->
-                                 case w4_s3VH of _ { I# ww13_s3VT ->
-                                 $wa1_s3VV ww9_s3VL ww11_s3VP ww13_s3VT w5_s3VI
+                             a2_s3OI
+                             a2_s3OI =
+                               \ w2_s3Rj w3_s3Rk w4_s3Rl w5_s3Rm ->
+                                 case w2_s3Rj of _ { I# ww9_s3Rp ->
+                                 case w3_s3Rk of _ { I# ww11_s3Rt ->
+                                 case w4_s3Rl of _ { I# ww13_s3Rx ->
+                                 $wa1_s3Rz ww9_s3Rp ww11_s3Rt ww13_s3Rx w5_s3Rm
                                  }
                                  }
                                  } } in
                            let {
                              realloc_a37u
-                             realloc_a37u = a2_s3S5 `cast` ... } in
+                             realloc_a37u = a2_s3OI `cast` ... } in
                            letrec {
-                             $wa2_s3Wx
-                             $wa2_s3Wx =
-                               \ ww8_s3Wn ww9_s3Wr ww10_s3Wv w2_s3Wk ->
-                                 case tagToEnum# (<# ww4_s3WK (+# ww9_s3Wr 11)) of _ {
+                             $wa2_s3S3
+                             $wa2_s3S3 =
+                               \ ww8_s3RT ww9_s3RX ww10_s3S1 w2_s3RQ ->
+                                 case tagToEnum# (<# ww4_s3Sg (+# ww9_s3RX 11)) of _ {
                                    False ->
-                                     case tagToEnum# (>=# ww8_s3Wn a_a3bK) of _ {
+                                     case tagToEnum# (>=# ww8_s3RT a_a3aa) of _ {
                                        False ->
-                                         case indexWord16Array# ww_s3X3 ww8_s3Wn
-                                         of r#_a3qR { __DEFAULT ->
+                                         case indexWord16Array# ww_s3Sz ww8_s3RT
+                                         of r#_a3pg { __DEFAULT ->
                                          let {
-                                           $wa3_s3Wg
-                                           $wa3_s3Wg =
-                                             \ ww11_s3Wa ww12_s3We w3_s3W7 ->
+                                           $wa3_s3RM
+                                           $wa3_s3RM =
+                                             \ ww11_s3RG ww12_s3RK w3_s3RD ->
                                                let {
-                                                 x_a39c
-                                                 x_a39c = ord# ww11_s3Wa } in
-                                               let {
-                                                 $j1_a39f
-                                                 $j1_a39f =
+                                                 $j1_a39c
+                                                 $j1_a39c =
                                                    \ _ ->
-                                                     case tagToEnum# (<# x_a39c 192) of _ {
-                                                       False ->
-                                                         case tagToEnum# (<=# x_a39c 195101) of _ {
-                                                           False -> case lvl1_r45J of wild9_00 { };
-                                                           True ->
-                                                             case ww10_s3Wv of _ {
-                                                               __DEFAULT ->
-                                                                 case lvl2_r45K of wild10_00 { };
-                                                               0 ->
-                                                                 $wa2_s3Wx
-                                                                   ww12_s3We
-                                                                   (+# ww9_s3Wr 1)
-                                                                   1
-                                                                   w3_s3W7;
-                                                               1 ->
-                                                                 case tagToEnum# (<# x_a39c 768)
-                                                                 of _ {
-                                                                   False ->
-                                                                     case tagToEnum#
-                                                                            (># x_a39c 125142)
-                                                                     of _ {
-                                                                       False ->
-                                                                         $wa2_s3Wx
-                                                                           ww12_s3We
-                                                                           (+# ww9_s3Wr 2)
-                                                                           0
-                                                                           w3_s3W7;
-                                                                       True ->
-                                                                         $wa2_s3Wx
-                                                                           ww12_s3We
-                                                                           (+# ww9_s3Wr 1)
-                                                                           0
-                                                                           w3_s3W7
-                                                                     };
-                                                                   True ->
-                                                                     $wa2_s3Wx
-                                                                       ww12_s3We
-                                                                       (+# ww9_s3Wr 1)
-                                                                       0
-                                                                       w3_s3W7
-                                                                 }
-                                                             }
-                                                         };
-                                                       True ->
-                                                         case ww10_s3Wv of _ {
-                                                           __DEFAULT ->
-                                                             case lvl2_r45K of wild9_00 { };
-                                                           0 ->
-                                                             $wa2_s3Wx
-                                                               ww12_s3We (+# ww9_s3Wr 1) 1 w3_s3W7;
-                                                           1 ->
-                                                             case tagToEnum# (<# x_a39c 768) of _ {
-                                                               False ->
-                                                                 case tagToEnum# (># x_a39c 125142)
-                                                                 of _ {
-                                                                   False ->
-                                                                     $wa2_s3Wx
-                                                                       ww12_s3We
-                                                                       (+# ww9_s3Wr 2)
-                                                                       0
-                                                                       w3_s3W7;
-                                                                   True ->
-                                                                     $wa2_s3Wx
-                                                                       ww12_s3We
-                                                                       (+# ww9_s3Wr 1)
-                                                                       0
-                                                                       w3_s3W7
-                                                                 };
-                                                               True ->
-                                                                 $wa2_s3Wx
-                                                                   ww12_s3We
-                                                                   (+# ww9_s3Wr 1)
-                                                                   0
-                                                                   w3_s3W7
-                                                             }
-                                                         }
-                                                     } } in
-                                               case tagToEnum# (>=# x_a39c 44032) of _ {
-                                                 False -> $j1_a39f void#;
-                                                 True ->
-                                                   case tagToEnum# (<=# x_a39c 55203) of _ {
-                                                     False -> $j1_a39f void#;
-                                                     True ->
-                                                       letrec {
-                                                         $s$wa_s42m
-                                                         $s$wa_s42m =
-                                                           \ sc_s42j sc1_s42k sc2_s42l ->
+                                                     case ww10_s3S1 of _ {
+                                                       __DEFAULT -> case lvl1_r3Yr of wild8_00 { };
+                                                       0 ->
+                                                         $wa2_s3S3
+                                                           ww12_s3RK (+# ww9_s3RX 1) 1 w3_s3RD;
+                                                       1 ->
+                                                         case tagToEnum# (<# (ord# ww11_s3RG) 768)
+                                                         of _ {
+                                                           False ->
                                                              case tagToEnum#
-                                                                    (>=# sc1_s42k ww10_s3Wv)
+                                                                    (># (ord# ww11_s3RG) 125142)
                                                              of _ {
                                                                False ->
-                                                                 case readWideCharArray#
-                                                                        ipv3_a36J sc1_s42k sc2_s42l
-                                                                 of _
-                                                                 { (# ipv10_a3aE, ipv11_a3aF #) ->
-                                                                 let {
-                                                                   a3_a3aD
-                                                                   a3_a3aD = ord# ipv11_a3aF } in
-                                                                 case tagToEnum# (<# a3_a3aD 65536)
-                                                                 of _ {
-                                                                   False ->
-                                                                     let {
-                                                                       a4_a3aH
-                                                                       a4_a3aH =
-                                                                         -# a3_a3aD 65536 } in
-                                                                     case writeWord16Array#
-                                                                            ww3_s3WG
-                                                                            sc_s42j
-                                                                            (narrow16Word#
-                                                                               (int2Word#
-                                                                                  (+#
-                                                                                     (uncheckedIShiftRA#
-                                                                                        a4_a3aH 10)
-                                                                                     55296)))
-                                                                            ipv10_a3aE
-                                                                     of s2#_a3aP { __DEFAULT ->
-                                                                     case writeWord16Array#
-                                                                            ww3_s3WG
-                                                                            (+# sc_s42j 1)
-                                                                            (narrow16Word#
-                                                                               (int2Word#
-                                                                                  (+#
-                                                                                     (andI#
-                                                                                        a4_a3aH
-                                                                                        1023)
-                                                                                     56320)))
-                                                                            s2#_a3aP
-                                                                     of s2#1_a3aQ { __DEFAULT ->
-                                                                     $s$wa_s42m
-                                                                       (+# sc_s42j 2)
-                                                                       (+# sc1_s42k 1)
-                                                                       s2#1_a3aQ
-                                                                     }
-                                                                     };
-                                                                   True ->
-                                                                     case writeWord16Array#
-                                                                            ww3_s3WG
-                                                                            sc_s42j
-                                                                            (narrow16Word#
-                                                                               (int2Word# a3_a3aD))
-                                                                            ipv10_a3aE
-                                                                     of s2#_a3aX { __DEFAULT ->
-                                                                     $s$wa_s42m
-                                                                       (+# sc_s42j 1)
-                                                                       (+# sc1_s42k 1)
-                                                                       s2#_a3aX
-                                                                     }
-                                                                 }
-                                                                 };
-                                                               True -> (# sc2_s42l, I# sc_s42j #)
-                                                             }; } in
-                                                       case $s$wa_s42m ww9_s3Wr 0 w3_s3W7
-                                                       of _ { (# ipv10_a3b3, ipv11_a3b4 #) ->
-                                                       case ipv11_a3b4 of _ { I# ww14_a3ba ->
-                                                       case $wa
-                                                              ww3_s3WG
-                                                              ww14_a3ba
-                                                              ww11_s3Wa
-                                                              ipv10_a3b3
-                                                       of _ { (# ipv12_a3be, ipv13_a3bf #) ->
-                                                       case ipv13_a3bf
-                                                       of _ { (di'_a3bj, ri'_a3bk) ->
-                                                       case di'_a3bj of _ { I# ww16_X3Yo ->
-                                                       case ri'_a3bk of _ { I# ww18_X3Yw ->
-                                                       $wa2_s3Wx
-                                                         ww12_s3We ww16_X3Yo ww18_X3Yw ipv12_a3be
+                                                                 $wa2_s3S3
+                                                                   ww12_s3RK
+                                                                   (+# ww9_s3RX 2)
+                                                                   0
+                                                                   w3_s3RD;
+                                                               True ->
+                                                                 $wa2_s3S3
+                                                                   ww12_s3RK
+                                                                   (+# ww9_s3RX 1)
+                                                                   0
+                                                                   w3_s3RD
+                                                             };
+                                                           True ->
+                                                             $wa2_s3S3
+                                                               ww12_s3RK (+# ww9_s3RX 1) 0 w3_s3RD
+                                                         }
+                                                     } } in
+                                               case tagToEnum# (<# (ord# ww11_s3RG) 192) of _ {
+                                                 False ->
+                                                   case tagToEnum# (<=# (ord# ww11_s3RG) 195101)
+                                                   of _ {
+                                                     False -> $j1_a39c void#;
+                                                     True ->
+                                                       case ww10_s3S1 of _ {
+                                                         __DEFAULT ->
+                                                           case lvl1_r3Yr of wild10_00 { };
+                                                         0 ->
+                                                           $wa2_s3S3
+                                                             ww12_s3RK (+# ww9_s3RX 1) 1 w3_s3RD;
+                                                         1 ->
+                                                           case tagToEnum# (<# (ord# ww11_s3RG) 768)
+                                                           of _ {
+                                                             False ->
+                                                               case tagToEnum#
+                                                                      (># (ord# ww11_s3RG) 125142)
+                                                               of _ {
+                                                                 False ->
+                                                                   $wa2_s3S3
+                                                                     ww12_s3RK
+                                                                     (+# ww9_s3RX 2)
+                                                                     0
+                                                                     w3_s3RD;
+                                                                 True ->
+                                                                   $wa2_s3S3
+                                                                     ww12_s3RK
+                                                                     (+# ww9_s3RX 1)
+                                                                     0
+                                                                     w3_s3RD
+                                                               };
+                                                             True ->
+                                                               $wa2_s3S3
+                                                                 ww12_s3RK (+# ww9_s3RX 1) 0 w3_s3RD
+                                                           }
                                                        }
-                                                       }
-                                                       }
-                                                       }
-                                                       }
-                                                       }
-                                                   }
+                                                   };
+                                                 True -> $j1_a39c void#
                                                } } in
-                                         case tagToEnum# (geWord# r#_a3qR (__word 55296)) of _ {
+                                         case tagToEnum# (geWord# r#_a3pg (__word 55296)) of _ {
                                            False ->
-                                             $wa3_s3Wg
-                                               (chr# (word2Int# r#_a3qR)) (+# ww8_s3Wn 1) w2_s3Wk;
+                                             $wa3_s3RM
+                                               (chr# (word2Int# r#_a3pg)) (+# ww8_s3RT 1) w2_s3RQ;
                                            True ->
-                                             case tagToEnum# (leWord# r#_a3qR (__word 56319)) of _ {
+                                             case tagToEnum# (leWord# r#_a3pg (__word 56319)) of _ {
                                                False ->
-                                                 $wa3_s3Wg
-                                                   (chr# (word2Int# r#_a3qR))
-                                                   (+# ww8_s3Wn 1)
-                                                   w2_s3Wk;
+                                                 $wa3_s3RM
+                                                   (chr# (word2Int# r#_a3pg))
+                                                   (+# ww8_s3RT 1)
+                                                   w2_s3RQ;
                                                True ->
-                                                 case indexWord16Array# ww_s3X3 (+# ww8_s3Wn 1)
-                                                 of r#1_a3NJ { __DEFAULT ->
-                                                 $wa3_s3Wg
+                                                 case indexWord16Array# ww_s3Sz (+# ww8_s3RT 1)
+                                                 of r#1_a3M8 { __DEFAULT ->
+                                                 $wa3_s3RM
                                                    (chr#
                                                       (+#
                                                          (+#
                                                             (uncheckedIShiftL#
-                                                               (-# (word2Int# r#_a3qR) 55296) 10)
-                                                            (-# (word2Int# r#1_a3NJ) 56320))
+                                                               (-# (word2Int# r#_a3pg) 55296) 10)
+                                                            (-# (word2Int# r#1_a3M8) 56320))
                                                          65536))
-                                                   (+# ww8_s3Wn 2)
-                                                   w2_s3Wk
+                                                   (+# ww8_s3RT 2)
+                                                   w2_s3RQ
                                                  }
                                              }
                                          }
                                          };
                                        True ->
-                                         case unsafeFreezeByteArray# ww3_s3WG w2_s3Wk
+                                         case unsafeFreezeByteArray# ww3_s3Sc w2_s3RQ
                                          of _ { (# ipv10_a38H, ipv11_a38I #) ->
-                                         case ww9_s3Wr of wild5_a38K {
+                                         case ww9_s3RX of wild5_a38K {
                                            __DEFAULT ->
                                              (# ipv10_a38H, Text ipv11_a38I 0 wild5_a38K #);
                                            0 ->
@@ -381,12 +270,12 @@ $wnormalize =
                                          }
                                      };
                                    True ->
-                                     ((realloc_a37u (I# ww8_s3Wn) (I# ww9_s3Wr) (I# ww10_s3Wv))
+                                     ((realloc_a37u (I# ww8_s3RT) (I# ww9_s3RX) (I# ww10_s3S1))
                                       `cast` ...)
-                                       w2_s3Wk
+                                       w2_s3RQ
                                  }; } in
-                           $wa2_s3Wx ww5_s3WO ww6_s3WS ww7_s3WW w1_s3WD; } in
-                     $wa_s3WY ipv1_a36C (-# x#_a35L 1) ww1_s3X4 0 0 ipv4_a37g
+                           $wa2_s3S3 ww5_s3Sk ww6_s3So ww7_s3Ss w1_s3S9; } in
+                     $wa_s3Su ipv1_a36C (-# x#_a35L 1) ww1_s3SA 0 0 ipv4_a37g
                      }
                      }
                      }
@@ -397,9 +286,9 @@ $wnormalize =
 
 normalize
 normalize =
-  \ w_s3WZ w1_s3X0 ->
-    case w1_s3X0 of _ { Text ww1_s3X3 ww2_s3X4 ww3_s3X5 ->
-    $wnormalize w_s3WZ ww1_s3X3 ww2_s3X4 ww3_s3X5
+  \ w_s3Sv w1_s3Sw ->
+    case w1_s3Sw of _ { Text ww1_s3Sz ww2_s3SA ww3_s3SB ->
+    $wnormalize w_s3Sv ww1_s3Sz ww2_s3SA ww3_s3SB
     }
 
 

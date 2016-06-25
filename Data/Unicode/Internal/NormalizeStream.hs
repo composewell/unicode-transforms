@@ -68,9 +68,11 @@ decomposeCharHangul darr j c = do
 
 {-# INLINE decomposeChar #-}
 decomposeChar :: A.MArray s -> Int -> ReBuf s -> Int -> Char -> ST s (Int, Int)
+{-
 decomposeChar darr i rarr ri c | NFD.isHangul c = do
     j <- writeReorderBuffer darr i rarr ri
     decomposeCharHangul darr j c
+-}
 
 decomposeChar darray dindex rarray rindex ch = do
     -- TODO: return fully decomposed form

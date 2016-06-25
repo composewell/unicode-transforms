@@ -11,7 +11,7 @@ put a breakpoint on that (br *0xaddr).
 4) start gdb and run the following commands
 handle SIGVTALRM ignore
 file .stack-work/install/x86_64-linux/lts-5.16/7.10.3/bin/normalizefile
-br *0x408bd7 # set breakpoint
+br *0x4088de # set breakpoint
 disp/i $rip
 run benchmark/data/English.txt
 # stepi in a loop
