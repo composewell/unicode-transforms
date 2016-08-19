@@ -25,9 +25,10 @@ category:            Data,Text,Unicode
 stability:           Experimental
 github:              harendra-kumar/unicode-transforms
 
-tested-with: ghc==7.8.4, ghc==7.10.3, ghc==8.0.1
+tested-with: GHC==7.8.4, GHC==7.10.3, GHC==8.0.1
 
 extra-source-files:
+  - Changelog.md
   - NOTES.md
   - README.md
   - benchmark/data/*.txt
@@ -61,7 +62,7 @@ ghc-options:
 dependencies: base >= 4.7 && < 5
 
 library:
-  cc-options: -Wall -O2
+  cc-options: -Wall
   include-dirs: cbits
   c-sources:    cbits/utf8proc.c
 
