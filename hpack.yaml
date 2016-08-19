@@ -18,12 +18,14 @@ license:             BSD3
 license-file:        LICENSE
 author:              Harendra Kumar
 maintainer:          harendra.kumar@gmail.com
-copyright:           2016 Harendra Kumar
+copyright:
+  - 2016 Harendra Kumar
+  - 2014–2015 Antonio Nikishaev
 category:            Data,Text,Unicode
 stability:           Experimental
 github:              harendra-kumar/unicode-transforms
 
-tested-with: ghc-7.8.4, ghc-7.10.3, ghc-8.0.1
+tested-with: ghc==7.8.4, ghc==7.10.3, ghc==8.0.1
 
 extra-source-files:
   - NOTES.md
