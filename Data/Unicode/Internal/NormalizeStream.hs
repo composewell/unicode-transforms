@@ -12,8 +12,9 @@
 --
 module Data.Unicode.Internal.NormalizeStream
     (
-      stream
-    , unstreamD
+      D.DecomposeMode(..)
+    , stream
+    , unstream
     )
     where
 
@@ -33,8 +34,9 @@ import           Data.Text.Internal.Unsafe.Shift        (shiftR)
 import           GHC.ST                                 (ST (..))
 
 import qualified Data.Unicode.Properties.CombiningClass as CC
-import qualified Data.Unicode.Properties.Decompose      as NFD
+import qualified Data.Unicode.Properties.Decompose      as D
 
+-- reorder buffer
 data ReBuf = Empty | One {-# UNPACK #-} !Char | Many [Char]
 
 {-# INLINE writeReorderBuffer #-}
@@ -55,7 +57,7 @@ writeReorderBuffer marr di (Many str) = go di str
 -- {-# INLINE decomposeCharHangul #-}
 decomposeCharHangul :: A.MArray s -> Int -> Char -> ST s (Int, ReBuf)
 decomposeCharHangul marr j c = do
-    case NFD.decomposeCharHangul c of
+    case D.decomposeCharHangul c of
         Left  (l, v)    -> do
             n1 <- unsafeWrite marr j l
             n2 <- unsafeWrite marr (j + n1) v
@@ -67,25 +69,32 @@ decomposeCharHangul marr j c = do
             return (j + n1 + n2 + n3, Empty)
 
 {-# INLINE decomposeChar #-}
-decomposeChar :: A.MArray s -> Int -> ReBuf -> Char -> ST s (Int, ReBuf)
-decomposeChar marr i reBuf c | NFD.isHangul c = do
+decomposeChar
+    :: D.DecomposeMode
+    -> A.MArray s       -- destination array for decomposition
+    -> Int              -- array index
+    -> ReBuf            -- reorder buffer
+    -> Char             -- char to be decomposed
+    -> ST s (Int, ReBuf)
+decomposeChar _ marr i reBuf c | D.isHangul c = do
     j <- writeReorderBuffer marr i reBuf
     decomposeCharHangul marr j c
 
-decomposeChar marr index reBuf ch = do
+decomposeChar mode marr index reBuf ch = do
     -- TODO: return fully decomposed form
-    case NFD.isDecomposable ch of
-      NFD.FalseA -> reorder marr index reBuf ch
-      NFD.TrueA  -> decomposeAll marr index reBuf (NFD.decomposeChar ch)
+    case D.isDecomposable mode ch of
+      D.FalseA -> reorder marr index reBuf ch
+      D.TrueA  -> decomposeAll marr index reBuf (D.decomposeChar mode ch)
       _ -> reorder marr index reBuf ch
 
     where
         {-# INLINE decomposeAll #-}
         decomposeAll _ i rbuf [] = return (i, rbuf)
         decomposeAll arr i rbuf (x : xs)  =
-            case NFD.isDecomposable x of
-                NFD.TrueA  -> do
-                    (i', rbuf') <- decomposeAll arr i rbuf (NFD.decomposeChar x)
+            case D.isDecomposable mode x of
+                D.TrueA  -> do
+                    (i', rbuf') <- decomposeAll arr i rbuf
+                                                (D.decomposeChar mode x)
                     decomposeAll arr i' rbuf' xs
                 _ -> do
                     (i', rbuf') <- reorder arr i rbuf x
@@ -152,9 +161,9 @@ stream (Text arr off len) = Stream next off (betweenSize (len `shiftR` 1) len)
             n2 = A.unsafeIndex arr (i + 1)
 {-# INLINE [0] stream #-}
 
--- | /O(n)/ Convert a 'Stream Char' into a NFD normalized 'Text'.
-unstreamD :: Stream Char -> Text
-unstreamD (Stream next0 s0 len) = runText $ \done -> do
+-- | /O(n)/ Convert a 'Stream Char' into a decompose normalized 'Text'.
+unstream :: D.DecomposeMode -> Stream Char -> Text
+unstream mode (Stream next0 s0 len) = runText $ \done -> do
   -- Before encoding each char we perform a buffer realloc check assuming
   -- worst case encoding size of two 16-bit units for the char. Just add an
   -- extra space to the buffer so that we do not end up reallocating even when
@@ -176,7 +185,7 @@ unstreamD (Stream next0 s0 len) = runText $ \done -> do
                         done arr di'
                     Skip si'    -> encode si' di rbuf
                     Yield c si' -> do
-                                (di', rbuf') <- decomposeChar arr di rbuf c
+                                (di', rbuf') <- decomposeChar mode arr di rbuf c
                                 encode si' di' rbuf'
                                 -- n <- unsafeWrite arr di c
                                 -- encode si' (di + n) rbuf
@@ -190,9 +199,8 @@ unstreamD (Stream next0 s0 len) = runText $ \done -> do
             outer arr' (newlen - 1) si di rbuf
 
   outer arr0 (mlen - 1) s0 0 Empty
-{-# INLINE [0] unstreamD #-}
--- {-# RULES "STREAM stream/unstream fusion" forall s. stream (unstream s) = s #-}
+{-# INLINE [0] unstream #-}
 
 -- we can generate this from UCD
 maxDecomposeLen :: Int
-maxDecomposeLen = 10
+maxDecomposeLen = 32

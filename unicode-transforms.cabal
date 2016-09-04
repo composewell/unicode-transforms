@@ -68,13 +68,14 @@ library
       Data.Text.NormalizeNative
       Data.Unicode.Types
   other-modules:
-      Data.Unicode.Internal.Normalization
       Data.Unicode.Internal.NormalizeStream
       Data.Unicode.Properties.CombiningClass
       Data.Unicode.Properties.Decomposable
+      Data.Unicode.Properties.DecomposableK
       Data.Unicode.Properties.Decompose
       Data.Unicode.Properties.DecomposeHangul
       Data.Unicode.Properties.Decompositions
+      Data.Unicode.Properties.DecompositionsK
       Data.Unicode.UTF8Proc
   build-depends:
       base >= 4.7 && < 5

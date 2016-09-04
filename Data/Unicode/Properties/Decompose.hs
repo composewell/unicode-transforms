@@ -7,18 +7,46 @@
 -- Stability   : experimental
 --
 module Data.Unicode.Properties.Decompose
-(decomposeChar, decomposeCharHangul, DecomposeResult(..), isHangul, isDecomposable)
+    ( decomposeChar
+    , decomposeCharHangul
+    , DecomposeMode(..)
+    , DecomposeResult(..)
+    , isHangul
+    , isDecomposable
+    )
 where
 
-import           Data.BitArray                           (lookupBit)
+import           Data.BitArray                           (BitArray, lookupBit)
 import           Data.Char                               (ord)
 
-import           Data.Unicode.Properties.Decomposable    (decomposeBitmap,
-                                                          decomposeMax,
-                                                          decomposeMin)
+import qualified Data.Unicode.Properties.Decomposable    as D
+import qualified Data.Unicode.Properties.DecomposableK   as K
 import           Data.Unicode.Properties.DecomposeHangul (decomposeCharHangul,
                                                           isHangul)
-import           Data.Unicode.Properties.Decompositions  (decomposeChar)
+import qualified Data.Unicode.Properties.Decompositions  as D
+import qualified Data.Unicode.Properties.DecompositionsK as K
+
+data DecomposeMode = DecomposeNFD | DecomposeNFKD
+
+{-# INLINE decomposeChar #-}
+decomposeChar :: DecomposeMode -> Char -> [Char]
+decomposeChar DecomposeNFD  = D.decomposeChar
+decomposeChar DecomposeNFKD = K.decomposeChar
+
+{-# INLINE decomposeMin #-}
+decomposeMin :: DecomposeMode -> Int
+decomposeMin DecomposeNFD  = D.decomposeMin
+decomposeMin DecomposeNFKD = K.decomposeMin
+
+{-# INLINE decomposeMax #-}
+decomposeMax :: DecomposeMode -> Int
+decomposeMax DecomposeNFD  = D.decomposeMax
+decomposeMax DecomposeNFKD = K.decomposeMax
+
+{-# INLINE decomposeBitmap #-}
+decomposeBitmap :: DecomposeMode -> BitArray
+decomposeBitmap DecomposeNFD  = D.decomposeBitmap
+decomposeBitmap DecomposeNFKD = K.decomposeBitmap
 
 -- Hack Alert!
 -- When we return just True and False GHC refactors the code to combine two
@@ -29,10 +57,10 @@ import           Data.Unicode.Properties.Decompositions  (decomposeChar)
 data DecomposeResult = FalseA | FalseB | FalseC | TrueA
 
 {-# INLINE isDecomposable #-}
-isDecomposable :: Char -> DecomposeResult
-isDecomposable c | (ord c) <  decomposeMin = FalseA
-isDecomposable c | (ord c) <= decomposeMax =
-    case lookupBit decomposeBitmap (ord c) of
+isDecomposable :: DecomposeMode -> Char -> DecomposeResult
+isDecomposable mode c | (ord c) <  decomposeMin mode = FalseA
+isDecomposable mode c | (ord c) <= decomposeMax mode =
+    case lookupBit (decomposeBitmap mode) (ord c) of
       True -> TrueA
       False -> FalseB
-isDecomposable _ = FalseC
+isDecomposable _ _ = FalseC

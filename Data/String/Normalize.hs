@@ -19,7 +19,8 @@ module Data.String.Normalize
 
 import           Data.Text                             (unpack)
 import           Data.Text.Internal.Fusion.Common      (streamList)
-import           Data.Unicode.Internal.NormalizeStream (unstreamD)
+import           Data.Unicode.Internal.NormalizeStream ( DecomposeMode(..)
+                                                       , unstream)
 import           Data.Unicode.Types                    (NormalizationMode (..))
 
 -- | Perform Unicode normalization on a @String@ according to the specified
@@ -27,4 +28,5 @@ import           Data.Unicode.Types                    (NormalizationMode (..))
 normalize :: NormalizationMode -> String -> String
 normalize mode =
     case mode of
-          NFD  -> unpack . unstreamD . streamList
+      NFD  -> unpack . (unstream DecomposeNFD)  . streamList
+      NFKD -> unpack . (unstream DecomposeNFKD) . streamList
