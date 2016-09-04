@@ -13,8 +13,7 @@
 module Data.Unicode.Internal.NormalizeStream
     (
       stream
-    , unstream
---    , decomposeX
+    , unstreamD
     )
     where
 
@@ -153,9 +152,9 @@ stream (Text arr off len) = Stream next off (betweenSize (len `shiftR` 1) len)
             n2 = A.unsafeIndex arr (i + 1)
 {-# INLINE [0] stream #-}
 
--- | /O(n)/ Convert a 'Stream Char' into a normalized 'Text'.
-unstream :: Stream Char -> Text
-unstream (Stream next0 s0 len) = runText $ \done -> do
+-- | /O(n)/ Convert a 'Stream Char' into a NFD normalized 'Text'.
+unstreamD :: Stream Char -> Text
+unstreamD (Stream next0 s0 len) = runText $ \done -> do
   -- Before encoding each char we perform a buffer realloc check assuming
   -- worst case encoding size of two 16-bit units for the char. Just add an
   -- extra space to the buffer so that we do not end up reallocating even when
@@ -191,11 +190,9 @@ unstream (Stream next0 s0 len) = runText $ \done -> do
             outer arr' (newlen - 1) si di rbuf
 
   outer arr0 (mlen - 1) s0 0 Empty
-{-# INLINE [0] unstream #-}
+{-# INLINE [0] unstreamD #-}
 -- {-# RULES "STREAM stream/unstream fusion" forall s. stream (unstream s) = s #-}
 
 -- we can generate this from UCD
 maxDecomposeLen :: Int
 maxDecomposeLen = 10
-
--- decomposeX = unstream . stream

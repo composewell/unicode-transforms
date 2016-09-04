@@ -19,8 +19,7 @@ module Data.Text.NormalizeNative
     ) where
 
 import           Data.Text                             (Text)
--- import           Data.Text.Internal.Fusion             (stream)
-import           Data.Unicode.Internal.NormalizeStream (stream, unstream)
+import           Data.Unicode.Internal.NormalizeStream (stream, unstreamD)
 import           Data.Unicode.Types                    (NormalizationMode (..))
 
 -- | Perform Unicode normalization on @Text@ according to the specified
@@ -28,4 +27,4 @@ import           Data.Unicode.Types                    (NormalizationMode (..))
 normalize :: NormalizationMode -> Text -> Text
 normalize mode =
     case mode of
-          NFD  -> unstream . stream
+        NFD  -> unstreamD . stream
