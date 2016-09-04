@@ -34,20 +34,36 @@ import qualified Data.Text.ICU             as TI
 
 textICUFuncs :: [(String, Text -> Text)]
 textICUFuncs =
-    [ ("NFD", TI.normalize TI.NFD) ]
+    [ ("NFD", TI.normalize TI.NFD)
+    , ("NFKD", TI.normalize TI.NFKD)
+    , ("NFC", TI.normalize TI.NFC)
+    , ("NFKC", TI.normalize TI.NFKC)
+    ]
 #endif
 
 utf8ProcFuncs :: [(String, Text -> Text)]
 utf8ProcFuncs =
-    [ ("NFD", UTF8Proc.normalize UTF8Proc.NFD) ]
+    [ ("NFD", UTF8Proc.normalize UTF8Proc.NFD)
+    , ("NFKD", UTF8Proc.normalize UTF8Proc.NFKD)
+    , ("NFC", UTF8Proc.normalize UTF8Proc.NFC)
+    , ("NFKC", UTF8Proc.normalize UTF8Proc.NFKC)
+    ]
 
 unicodeTransformTextFuncs :: [(String, Text -> Text)]
 unicodeTransformTextFuncs =
-    [ ("NFD", UTText.normalize UTText.NFD) ]
+    [ ("NFD", UTText.normalize UTText.NFD)
+    , ("NFKD", UTText.normalize UTText.NFKD)
+    , ("NFC", UTText.normalize UTText.NFC)
+    , ("NFKC", UTText.normalize UTText.NFKC)
+    ]
 
 unicodeTransformFuncs :: [(String, String -> String)]
 unicodeTransformFuncs =
-    [ ("NFD", UT.normalize UT.NFD) ]
+    [ ("NFD", UT.normalize UT.NFD)
+    , ("NFKD", UT.normalize UT.NFKD)
+    , ("NFC", UT.normalize UT.NFC)
+    , ("NFKC", UT.normalize UT.NFKC)
+    ]
 
 dataDir :: Path Rel Dir
 dataDir = $(mkRelDir "benchmark") </> $(mkRelDir "data")
