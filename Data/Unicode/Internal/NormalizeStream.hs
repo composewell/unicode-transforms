@@ -100,7 +100,11 @@ decomposeChar mode marr index reBuf ch = do
                     (i', rbuf') <- reorder arr i rbuf x
                     decomposeAll arr i' rbuf' xs
 
-        -- TODO: how to sort when the characters have same combining classes
+        -- Unicode 9.0.0: 3.11
+        -- D108 Reorderable pair: Two adjacent characters A and B in a coded
+        -- character sequence <A,B> are a Reorderable Pair if and only if
+        -- ccc(A) > ccc(B) > 0.
+        --
         -- (array) (array index) (reorder buffer) (input char)
         {-# INLINE reorder #-}
         reorder _ i Empty c = return (i, One c)
