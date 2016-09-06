@@ -356,33 +356,44 @@ composeChar
     -- ^ index, starter, reorder buf, jamobuf
 composeChar mode marr index st rbuf jbuf ch | H.isHangul ch || H.isJamo ch = do
     j <- writeStarterRbuf mode marr index st rbuf
-    (k, jbuf') <- composeCharHangul marr j jbuf ch
+    (k, jbuf') <- if H.isJamo ch then
+        composeCharJamo marr j jbuf ch
+    else
+        composeCharHangul marr j jbuf ch
     return (k, Nothing, Empty, jbuf')
     where
-        composeCharHangul arr i JamoEmpty c =
+        composeCharJamo arr i JamoEmpty c =
             case H.jamoLIndex c of
                 Just li -> return (i, JamoLIndex li)
                 Nothing -> do
                     n <- unsafeWrite arr i c
                     return (i + n, JamoEmpty)
 
-        composeCharHangul arr i jb@(JamoLIndex li) c =
+        composeCharJamo arr i jb@(JamoLIndex li) c =
             case H.jamoVIndex c of
                 Just vi -> do
                     let lvi = li * H.jamoNCount + vi * H.jamoTCount
                     return (i, JamoLV (chr (H.hangulFirst + lvi)))
                 Nothing -> do
                     ix <- writeJamoBuf arr i jb
-                    composeCharHangul arr ix JamoEmpty c
+                    composeCharJamo arr ix JamoEmpty c
 
-        composeCharHangul arr i jb@(JamoLV lv) c =
+        composeCharJamo arr i jb@(JamoLV lv) c =
             case H.jamoTIndex c of
                 Just ti -> do
                     n <- unsafeWrite arr i (chr ((ord lv) + ti))
                     return (i + n, JamoEmpty)
                 Nothing -> do
                     ix <- writeJamoBuf arr i jb
-                    composeCharHangul arr ix JamoEmpty c
+                    composeCharJamo arr ix JamoEmpty c
+
+        composeCharHangul arr i jb c = do
+            ix <- writeJamoBuf arr i jb
+            case H.isHangulLV c of
+                True -> return (ix, JamoLV c)
+                False -> do
+                    n <- unsafeWrite arr ix c
+                    return (ix + n, JamoEmpty)
 
 -------------------------------------------------------------------------------
 -- Composition of characters other than Hangul

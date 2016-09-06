@@ -11,6 +11,7 @@ module Data.Unicode.Properties.DecomposeHangul
     (decomposeCharHangul
     , hangulFirst
     , isHangul
+    , isHangulLV
     , isJamo
     , jamoLFirst
     , jamoLIndex
@@ -60,6 +61,12 @@ hangulLast = hangulFirst + jamoLCount * jamoVCount * jamoTCount - 1
 isHangul :: Char -> Bool
 isHangul c = n >= hangulFirst && n <= hangulLast
     where n = ord c
+
+isHangulLV :: Char -> Bool
+isHangulLV c = ti == 0
+    where
+        i = (ord c) - hangulFirst
+        !(tn, ti) = i  `quotRem` jamoTCount
 
 isJamo :: Char -> Bool
 isJamo c = n >= jamoLFirst && n <= jamoLast
