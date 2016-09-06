@@ -9,10 +9,14 @@
 --
 module Data.Unicode.Properties.DecomposeHangul
     (decomposeCharHangul
+    , hangulFirst
     , isHangul
+    , isJamo
     , jamoLFirst
     , jamoLIndex
+    , jamoNCount
     , jamoVIndex
+    , jamoTCount
     , jamoTIndex
     )
 where
@@ -41,6 +45,13 @@ jamoTFirst, jamoTCount :: Int
 jamoTFirst  = 0x11a7
 jamoTCount = 28
 
+jamoLast :: Int
+jamoLast = jamoTFirst + jamoTCount - 1
+
+-- VCount * TCount
+jamoNCount :: Int
+jamoNCount = 588
+
 -- hangul
 hangulFirst, hangulLast :: Int
 hangulFirst = 0xac00
@@ -48,6 +59,10 @@ hangulLast = hangulFirst + jamoLCount * jamoVCount * jamoTCount - 1
 
 isHangul :: Char -> Bool
 isHangul c = n >= hangulFirst && n <= hangulLast
+    where n = ord c
+
+isJamo :: Char -> Bool
+isJamo c = n >= jamoLFirst && n <= jamoLast
     where n = ord c
 
 -- if it is a jamo L char return the index
