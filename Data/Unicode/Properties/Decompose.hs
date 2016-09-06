@@ -12,6 +12,7 @@ module Data.Unicode.Properties.Decompose
     , DecomposeMode(..)
     , DecomposeResult(..)
     , isHangul
+    , jamoLFirst
     , isDecomposable
     )
 where
@@ -21,8 +22,9 @@ import           Data.Char                               (ord)
 
 import qualified Data.Unicode.Properties.Decomposable    as D
 import qualified Data.Unicode.Properties.DecomposableK   as K
-import           Data.Unicode.Properties.DecomposeHangul (decomposeCharHangul,
-                                                          isHangul)
+import           Data.Unicode.Properties.DecomposeHangul ( decomposeCharHangul
+                                                         , jamoLFirst
+                                                         , isHangul)
 import qualified Data.Unicode.Properties.Decompositions  as D
 import qualified Data.Unicode.Properties.DecompositionsK as K
 

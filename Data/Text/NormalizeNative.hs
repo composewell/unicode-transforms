@@ -21,7 +21,8 @@ module Data.Text.NormalizeNative
 import           Data.Text                             (Text)
 import           Data.Unicode.Internal.NormalizeStream ( DecomposeMode(..)
                                                        , stream
-                                                       , unstream)
+                                                       , unstream
+                                                       , unstreamC)
 import           Data.Unicode.Types                    (NormalizationMode (..))
 
 -- | Perform Unicode normalization on @Text@ according to the specified
@@ -29,5 +30,7 @@ import           Data.Unicode.Types                    (NormalizationMode (..))
 normalize :: NormalizationMode -> Text -> Text
 normalize mode =
     case mode of
-      NFD  -> (unstream DecomposeNFD)  . stream
-      NFKD -> (unstream DecomposeNFKD) . stream
+      NFD  -> (unstream DecomposeNFD)   . stream
+      NFKD -> (unstream DecomposeNFKD)  . stream
+      NFC  -> (unstreamC DecomposeNFD)  . stream
+      NFKC -> (unstreamC DecomposeNFKD) . stream

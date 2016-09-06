@@ -211,14 +211,14 @@ genCompositions dtype props file = unlines
             , "(composePair)"
             , "where"
             , ""
-            , "-- Note: this is a partial function"
             , "{-# NOINLINE composePair #-}"
             , "composePair :: Char -> Char -> Maybe Char"
             , concat $ map (genComposePair "composePair") decomps
+            , "composePair _ _ = " <> "Nothing" <> "\n"
             ]
     where
         genComposePair name (c, [d1, d2]) =
-            name <> " " <> show d1 <> " " <> show d2 <> " = " <> show c <> "\n"
+            name <> " " <> show d1 <> " " <> show d2 <> " = Just " <> show c <> "\n"
         genComposePair _ _ = error "Bug: decomp length is not 2"
 
         decomps =   filter ((flip S.notMember) exclusions . fst)

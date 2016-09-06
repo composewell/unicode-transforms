@@ -8,13 +8,23 @@
 -- Stability   : experimental
 --
 module Data.Unicode.Properties.DecomposeHangul
-(decomposeCharHangul, isHangul)
+    (decomposeCharHangul
+    , isHangul
+    , jamoLFirst
+    , jamoLIndex
+    , jamoVIndex
+    , jamoTIndex
+    )
 where
 
 import           Data.Char (ord)
 import           GHC.Base  (unsafeChr)
 
 -- Hangul characters can be decomposed algorithmically instead of via mappings
+
+-------------------------------------------------------------------------------
+-- General utilities used by decomposition as well as composition
+-------------------------------------------------------------------------------
 
 -- jamo leading
 jamoLFirst, jamoLCount :: Int
@@ -39,6 +49,29 @@ hangulLast = hangulFirst + jamoLCount * jamoVCount * jamoTCount - 1
 isHangul :: Char -> Bool
 isHangul c = n >= hangulFirst && n <= hangulLast
     where n = ord c
+
+-- if it is a jamo L char return the index
+jamoLIndex :: Char -> Maybe Int
+jamoLIndex c
+  | index >= 0 && index < jamoLCount = Just index
+  | otherwise = Nothing
+    where index = ord c - jamoLFirst
+
+jamoVIndex :: Char -> Maybe Int
+jamoVIndex c
+  | index >= 0 && index < jamoVCount = Just index
+  | otherwise = Nothing
+    where index = ord c - jamoVFirst
+
+jamoTIndex :: Char -> Maybe Int
+jamoTIndex c
+  | index >= 0 && index < jamoTCount = Just index
+  | otherwise = Nothing
+    where index = ord c - jamoTFirst
+
+-------------------------------------------------------------------------------
+-- Hangul decomposition
+-------------------------------------------------------------------------------
 
 {-# INLINE decomposeCharHangul #-}
 decomposeCharHangul :: Char -> Either (Char, Char) (Char, Char, Char)
