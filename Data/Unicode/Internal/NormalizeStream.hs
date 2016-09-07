@@ -416,6 +416,9 @@ composeChar mode marr index starter reBuf jbuf ch = do
                                                 (D.decomposeChar mode x)
                     decomposeAll arr i' st' rbuf' jb' xs
                 _ -> do
+                    -- XXX this recursive call here hurts performance
+                    -- We can make the hangul composition a separate function
+                    -- and call that or reorder here based on the type fo char
                     (i', st', rbuf', jb') <- composeChar mode arr i st rbuf jb x
                     decomposeAll arr i' st' rbuf' jb' xs
 
