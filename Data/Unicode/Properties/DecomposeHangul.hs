@@ -66,7 +66,7 @@ isHangulLV :: Char -> Bool
 isHangulLV c = ti == 0
     where
         i = (ord c) - hangulFirst
-        !(tn, ti) = i  `quotRem` jamoTCount
+        !(_, ti) = i  `quotRem` jamoTCount
 
 isJamo :: Char -> Bool
 isJamo c = n >= jamoLFirst && n <= jamoLast
@@ -85,9 +85,14 @@ jamoVIndex c
   | otherwise = Nothing
     where index = ord c - jamoVFirst
 
+-- Note that index 0 is not a valid index for a trailing consonant. Index 0
+-- means no T, only LV syllable.
+-- See Unicode 9.0.0: 3.12 (Hangul Syllable Decomposition)
+-- TBase is set to one less than the beginning of the range of trailing
+-- consonants, which starts at U+11A8.
 jamoTIndex :: Char -> Maybe Int
 jamoTIndex c
-  | index >= 0 && index < jamoTCount = Just index
+  | index > 0 && index < jamoTCount = Just index
   | otherwise = Nothing
     where index = ord c - jamoTFirst
 
