@@ -71,7 +71,6 @@ library
       Data.Unicode.Internal.NormalizeStream
       Data.Unicode.Properties.CombiningClass
       Data.Unicode.Properties.Compositions
-      Data.Unicode.Properties.CompositionsK
       Data.Unicode.Properties.Decomposable
       Data.Unicode.Properties.DecomposableK
       Data.Unicode.Properties.Decompose

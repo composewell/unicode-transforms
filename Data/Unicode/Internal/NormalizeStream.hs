@@ -37,7 +37,6 @@ import           GHC.ST                                 (ST (..))
 
 import qualified Data.Unicode.Properties.CombiningClass  as CC
 import qualified Data.Unicode.Properties.Compositions    as C
--- import qualified Data.Unicode.Properties.CompositionsK  as KC
 import qualified Data.Unicode.Properties.Decompose       as D
 import qualified Data.Unicode.Properties.DecomposeHangul as H
 
@@ -116,6 +115,11 @@ decomposeChar mode marr index reBuf ch = do
                                                 (D.decomposeChar mode x)
                     decomposeAll arr i' rbuf' xs
                 _ -> do
+                    -- XXX calling reorder is wrong if decomposition results in
+                    -- a further decomposable Hangul char. In that case we will
+                    -- not go through the Hangul decompose for that char.
+                    -- To be strictly correct we have to call decomposeChar
+                    -- recursively here.
                     (i', rbuf') <- reorder arr i rbuf x
                     decomposeAll arr i' rbuf' xs
 
@@ -232,43 +236,36 @@ maxDecomposeLen = 32
 -- Composition
 -------------------------------------------------------------------------------
 
-composePair :: D.DecomposeMode -> Char -> Char -> Maybe Char
-composePair D.DecomposeNFD = C.composePair
---composePair D.DecomposeNFKD = KC.composePair
-composePair D.DecomposeNFKD = undefined
-
 composeAndWrite
-    :: D.DecomposeMode
-    -> A.MArray s
+    :: A.MArray s
     -> Int
     -> Char
     -> ReBuf
     -> Char
     -> ST s (Int, Char) -- return new index, new starter
-composeAndWrite _mode arr di st1 Empty st2 = do
+composeAndWrite arr di st1 Empty st2 = do
     n <- unsafeWrite arr di st1
     return (di + n, st2)
 
-composeAndWrite mode arr di st1 (One c) st2 =
-    composeAndWrite' mode arr di st1 [c] st2
+composeAndWrite arr di st1 (One c) st2 =
+    composeAndWrite' arr di st1 [c] st2
 
-composeAndWrite mode arr di st1 (Many str) st2 =
-    composeAndWrite' mode arr di st1 str st2
+composeAndWrite arr di st1 (Many str) st2 =
+    composeAndWrite' arr di st1 str st2
 
 composeAndWrite'
-    :: D.DecomposeMode
-    -> A.MArray s
+    :: A.MArray s
     -> Int
     -> Char
     -> [Char]
     -> Char
     -> ST s (Int, Char)
-composeAndWrite' mode arr di st1 str st2 = go di st1 [] 0 str
+composeAndWrite' arr di st1 str st2 = go di st1 [] 0 str
     where
         -- arguments: index, starter, uncombined chars,
         -- cc of prev uncombined char, unprocessed str
         go i st [] _ [] =
-                case composePair mode st st2 of
+                case C.composePair st st2 of
                     Just x  -> return (i, x)
                     Nothing -> do
                         n <- unsafeWrite arr i st
@@ -279,7 +276,7 @@ composeAndWrite' mode arr di st1 str st2 = go di st1 [] 0 str
             return (j, st2)
 
         go i st [] _ (c : cs) = do
-            case composePair mode st c of
+            case C.composePair st c of
                 Just x  -> go i x [] 0 cs
                 Nothing -> do
                     go i st [c] (CC.getCombiningClass c) cs
@@ -287,24 +284,23 @@ composeAndWrite' mode arr di st1 str st2 = go di st1 [] 0 str
         go i st uncs cc (c : cs) = do
             let ccc = CC.getCombiningClass c
             if ccc > cc then
-                case composePair mode st c of
+                case C.composePair st c of
                     Just x  -> go i x uncs cc cs
                     Nothing -> do
                         go i st (uncs ++ [c]) ccc cs
             else go i st (uncs ++ [c]) ccc cs
 
-writeStarterRbuf :: D.DecomposeMode
-                 -> A.MArray s
+writeStarterRbuf :: A.MArray s
                  -> Int
                  -> Maybe Char
                  -> ReBuf
                  -> ST s Int
-writeStarterRbuf mode marr di st rbuf =
+writeStarterRbuf marr di st rbuf =
     case st of
         Nothing -> writeReorderBuffer marr di rbuf
         Just starter ->
             -- XXX null char hack
-            composeAndWrite mode marr di starter rbuf '\0' >>= (return . fst)
+            composeAndWrite marr di starter rbuf '\0' >>= (return . fst)
 
 -------------------------------------------------------------------------------
 -- Composition of Hangul Jamo characters, done algorithmically
@@ -354,8 +350,8 @@ composeChar
     -> Char             -- char to be decomposed
     -> ST s (Int, Maybe Char, ReBuf, JamoBuf)
     -- ^ index, starter, reorder buf, jamobuf
-composeChar mode marr index st rbuf jbuf ch | H.isHangul ch || H.isJamo ch = do
-    j <- writeStarterRbuf mode marr index st rbuf
+composeChar _ marr index st rbuf jbuf ch | H.isHangul ch || H.isJamo ch = do
+    j <- writeStarterRbuf marr index st rbuf
     (k, jbuf') <- if H.isJamo ch then
         composeCharJamo marr j jbuf ch
     else
@@ -401,25 +397,27 @@ composeChar mode marr index st rbuf jbuf ch | H.isHangul ch || H.isJamo ch = do
 
 composeChar mode marr index starter reBuf jbuf ch = do
     index' <- writeJamoBuf marr index jbuf
-    -- TODO: return fully decomposed form
-    (i, st, rbuf) <- case D.isDecomposable mode ch of
-      D.FalseA -> reorder marr index' starter reBuf ch
-      D.TrueA  -> decomposeAll marr index' starter reBuf (D.decomposeChar mode ch)
-      _ -> reorder marr index' starter reBuf ch
-    return (i, st, rbuf, JamoEmpty)
-
+    case D.isDecomposable mode ch of
+        D.FalseA -> do
+            (i, st, rbuf) <- reorder marr index' starter reBuf ch
+            return (i, st, rbuf, JamoEmpty)
+        D.TrueA  -> do
+            decomposeAll marr index' starter reBuf jbuf (D.decomposeChar mode ch)
+        _ -> do
+            (i, st, rbuf) <- reorder marr index' starter reBuf ch
+            return (i, st, rbuf, JamoEmpty)
     where
         {-# INLINE decomposeAll #-}
-        decomposeAll _ i st rbuf [] = return (i, st, rbuf)
-        decomposeAll arr i st rbuf (x : xs)  =
+        decomposeAll _ i st rbuf jb [] = return (i, st, rbuf, jb)
+        decomposeAll arr i st rbuf jb (x : xs)  =
             case D.isDecomposable mode x of
                 D.TrueA  -> do
-                    (i', st', rbuf') <- decomposeAll arr i st rbuf
+                    (i', st', rbuf', jb') <- decomposeAll arr i st rbuf jb
                                                 (D.decomposeChar mode x)
-                    decomposeAll arr i' st' rbuf' xs
+                    decomposeAll arr i' st' rbuf' jb' xs
                 _ -> do
-                    (i', st', rbuf') <- reorder arr i st rbuf x
-                    decomposeAll arr i' st' rbuf' xs
+                    (i', st', rbuf', jb') <- composeChar mode arr i st rbuf jb x
+                    decomposeAll arr i' st' rbuf' jb' xs
 
         -- Unicode 9.0.0: 3.11
         -- D108 Reorderable pair: Two adjacent characters A and B in a coded
@@ -445,8 +443,8 @@ composeChar mode marr index starter reBuf jbuf ch = do
         -- does it combine with the previous starter?
         -- if no then flush and replace the last starter
         reorder arr i (Just st) (One c0) c | not (CC.isCombining c) = do
-            case composePair mode st c0 of
-                Just x  -> case composePair mode x c of
+            case C.composePair st c0 of
+                Just x  -> case C.composePair x c of
                     Just y -> return (i, Just y, Empty)
                     Nothing -> do
                         n <- unsafeWrite arr i x
@@ -460,21 +458,21 @@ composeChar mode marr index starter reBuf jbuf ch = do
                     -- starter1 starter2 starter3
                     False -> do
                         n1 <- unsafeWrite arr i st
-                        case composePair mode c0 c of
+                        case C.composePair c0 c of
                             Just y -> return (i + n1, Just y, Empty)
                             Nothing -> do
                                 n2 <- unsafeWrite arr (i + n1) c0
                                 return (i + n1 + n2, Just c, Empty)
 
         reorder arr i Nothing (One c0) c | not (CC.isCombining c) =
-            case composePair mode c0 c of
+            case C.composePair c0 c of
                 Just x  -> return (i, Just x, Empty)
                 Nothing -> do
                     n <- unsafeWrite arr i c0
                     return (i + n, Just c, Empty)
 
         reorder arr i (Just st) (One c0) c | not (CC.isCombining c0) = do
-            case composePair mode st c0 of
+            case C.composePair st c0 of
                 Just x  -> return (i, Just x, One c)
                 Nothing -> do
                     n <- unsafeWrite arr i st
@@ -500,7 +498,7 @@ composeChar mode marr index starter reBuf jbuf ch = do
 
         -- input char is a starter, flush the reorder buffer
         reorder arr i (Just st) rbuf c | not (CC.isCombining c) = do
-            (j, st2) <- composeAndWrite mode arr i st rbuf c
+            (j, st2) <- composeAndWrite arr i st rbuf c
             return (j, Just st2, Empty)
 
         reorder arr i Nothing rbuf c | not (CC.isCombining c) = do
@@ -538,7 +536,7 @@ unstreamC mode (Stream next0 s0 len) = runText $ \done -> do
                     Done -> do
                         -- Flush any leftover buffers, only one of rbuf/jbuf
                         -- will have contents
-                        di'  <- writeStarterRbuf mode arr di st rbuf
+                        di'  <- writeStarterRbuf arr di st rbuf
                         di'' <- writeJamoBuf arr di' jbuf
                         done arr di''
                     Skip si'    -> encode si' di st rbuf jbuf

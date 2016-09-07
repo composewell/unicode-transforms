@@ -78,7 +78,7 @@ checkAllTestCases lineno line = do
         c1 : c2 : c3 : c4 : c5 : _ -> do
             let cps = map cpToText [c1, c2, c3, c4, c5]
             mapM_ (checkOneTestCase cps)
-                  [checkNFD, checkNFKD, checkNFC]
+                  [checkNFD, checkNFKD, checkNFC, checkNFKC]
         _ -> error $ "Unrecognized line: " ++ line
     where
         cpToText xs = T.pack $ map (chr . read . ("0x" ++)) (words xs)
