@@ -107,13 +107,35 @@ executable normalizefile
       Benchmark
   default-language: Haskell2010
 
-test-suite test
-  default-language: Haskell2010
-  ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs -O0
+test-suite quickcheck
   type: exitcode-stdio-1.0
+  main-is: Properties.hs
   hs-source-dirs:
       test
+  ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs -O0
+  build-depends:
+      base >= 4.7 && < 5
+    , deepseq >= 1.1.0.0
+    , QuickCheck
+    , text
+    , unicode-transforms
+  if flag(bench-icu)
+    cpp-options: -DHAS_ICU
+    build-depends:
+        text-icu >= 0.6.2.1
+  other-modules:
+      NormalizationTest
+      QuickCheckUtils
+      Spec
+      Tests
+  default-language: Haskell2010
+
+test-suite ucd
+  type: exitcode-stdio-1.0
   main-is: NormalizationTest.hs
+  hs-source-dirs:
+      test
+  ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs -O0
   build-depends:
       base >= 4.7 && < 5
     , getopt-generics
@@ -125,6 +147,7 @@ test-suite test
       QuickCheckUtils
       Spec
       Tests
+  default-language: Haskell2010
 
 benchmark bench
   type: exitcode-stdio-1.0

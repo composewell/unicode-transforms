@@ -1,14 +1,31 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-module Properties (tests) where
+module Main (main) where
 
 import           Data.Text                            (Text)
-import qualified Data.Text                            as T
 import qualified Data.Text.Normalize                  as T
-import           Data.Unicode.Normalize               (NormalizationMode (..))
+import           Data.Text.Normalize                  (NormalizationMode (..))
 import           QuickCheckUtils                      ()
-import           Test.Framework                       (Test, testGroup)
-import           Test.Framework.Providers.QuickCheck2 (testProperty)
+import           Test.QuickCheck
+
+#ifdef HAS_ICU
+import qualified Data.Text.ICU                        as ICU
+
+toICUMode :: NormalizationMode -> ICU.NormalizationMode
+toICUMode mode =
+    case mode of
+       NFD  -> ICU.NFD
+       NFKD -> ICU.NFKD
+       NFC  -> ICU.NFC
+       NFKC -> ICU.NFKC
+
+t_normalizeCompareICU :: NormalizationMode -> Text -> Bool
+t_normalizeCompareICU mode t =
+    T.normalize mode t == ICU.normalize (toICUMode mode) t
+
+#else
+import qualified Data.Text                            as T
 
 -- WARNING! These tests do not check the correctness of the output they
 -- only check whether a non empty output is produced.
@@ -23,9 +40,14 @@ t_nonEmpty f t
 
 t_normalize :: NormalizationMode -> Text -> Bool
 t_normalize mode = t_nonEmpty $ T.normalize mode
+#endif
 
-tests :: Test
-tests =
-  testGroup "Properties" [
-    testProperty "t_normalize" t_normalize
-  ]
+main :: IO ()
+main = do
+#ifdef HAS_ICU
+    putStrLn "Comparing random strings with ICU..."
+    quickCheckWith stdArgs { maxSuccess = 10000 } t_normalizeCompareICU
+#else
+    putStrLn "Checking non-empty results for random strings..."
+    quickCheckWith stdArgs { maxSuccess = 10000 } t_normalize
+#endif

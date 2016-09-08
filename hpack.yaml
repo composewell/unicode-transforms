@@ -109,7 +109,7 @@ executables:
       - unicode-transforms
 
 tests:
-  test:
+  ucd:
     ghc-options: -O0
     source-dirs: test
     main:        NormalizationTest.hs
@@ -118,6 +118,20 @@ tests:
       - split
       - text
       - unicode-transforms
+  quickcheck:
+    ghc-options: -O0
+    source-dirs: test
+    main:        Properties.hs
+    dependencies:
+      - deepseq >= 1.1.0.0
+      - QuickCheck
+      - text
+      - unicode-transforms
+    when:
+      - condition: flag(bench-icu)
+        cpp-options: -DHAS_ICU
+        dependencies:
+          - text-icu >= 0.6.2.1
 
 benchmarks:
   bench:
