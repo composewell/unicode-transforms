@@ -1,5 +1,5 @@
 -- |
--- Module      : Data.Text.Normalize
+-- Module      : Data.Text.NormalizeUTF8Proc
 -- Copyright   : (c) 2016 Harendra Kumar
 --
 -- License     : BSD-style
@@ -9,7 +9,7 @@
 --
 -- Unicode normalization for @Text@ data type.
 --
-module Data.Text.Normalize
+module Data.Text.NormalizeUTF8Proc
     (
     -- * Normalization Modes
       NormalizationMode(..)

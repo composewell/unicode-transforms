@@ -64,7 +64,7 @@ library
   exposed-modules:
       Data.ByteString.UTF8.Normalize
       Data.String.Normalize
-      Data.Text.Normalize
+      Data.Text.NormalizeUTF8Proc
       Data.Text.NormalizeNative
       Data.Unicode.Types
   other-modules:
