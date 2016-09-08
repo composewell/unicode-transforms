@@ -5,3 +5,5 @@
 @Extra test cases not in the unicode standard test suite
 AC00 11A7;AC00 11A7;1100 1161 11A7;AC00 11A7;1100 1161 11A7; # 11A7 is not a valid T and should not be combined with LV AC00 to give AC00 as NFC.
 AC00 11A8;AC01;1100 1161 11A8;AC01;1100 1161 11A8; # Combine precomposed LV and a T i.e <LV,T> sequence.
+1100 11A8;1100 11A8;1100 11A8;1100 11A8;1100 11A8; # Invalid <L,T> sequence
+2FA1E;2FA1E;2FA1E;2FA1E;2FA1E; # Beyond decomposable max
