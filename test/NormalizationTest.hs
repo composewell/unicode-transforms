@@ -11,17 +11,17 @@
 -- Portability : GHC
 --
 
-import           Control.Monad       (when)
-import           Data.Char           (chr, isSpace, ord, toUpper)
+import Control.Monad (when)
+import Data.Char (chr, isSpace, ord, toUpper)
 #if MIN_VERSION_base(4,8,0)
-import           Data.Function       ((&))
+import Data.Function ((&))
 #endif
-import           Data.List           (intercalate, isPrefixOf)
-import           Data.List.Split     (splitOn)
-import           Data.Text           (Text)
-import qualified Data.Text           as T
-import           Data.Text.NormalizeNative (NormalizationMode (..), normalize)
-import           Text.Printf         (printf)
+import Data.List (intercalate, isPrefixOf)
+import Data.List.Split (splitOn)
+import Data.Text (Text)
+import qualified Data.Text as T
+import Data.Text.NormalizeNative (NormalizationMode(..), normalize)
+import Text.Printf (printf)
 
 #if !MIN_VERSION_base(4,8,0)
 (&) :: a -> (a -> b) -> b

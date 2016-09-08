@@ -17,9 +17,9 @@ module Data.ByteString.UTF8.Normalize
     , normalize
     ) where
 
-import           Data.ByteString     (ByteString)
-import           Data.Text.Encoding  (decodeUtf8, encodeUtf8)
-import           Data.Unicode.Types  (NormalizationMode (..))
+import Data.ByteString (ByteString)
+import Data.Text.Encoding (decodeUtf8, encodeUtf8)
+import Data.Unicode.Types (NormalizationMode(..))
 import qualified Data.Text.NormalizeNative as T
 
 -- This is now simply a wrapper over Text normalization
