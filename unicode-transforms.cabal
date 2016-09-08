@@ -66,9 +66,9 @@ library
       Data.String.Normalize
       Data.Text.Normalize
       Data.Unicode.Types
-  other-modules:
       Data.Unicode.Internal.NormalizeStream
       Data.Unicode.Properties.CombiningClass
+  other-modules:
       Data.Unicode.Properties.Compositions
       Data.Unicode.Properties.Decomposable
       Data.Unicode.Properties.DecomposableK
@@ -97,6 +97,22 @@ executable normalizefile
     , path-io
     , text
     , unicode-transforms
+  default-language: Haskell2010
+
+test-suite extras
+  type: exitcode-stdio-1.0
+  main-is: Extra.hs
+  hs-source-dirs:
+      test
+  ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs -O0
+  build-depends:
+      base >= 4.7 && < 5
+    , deepseq >= 1.1.0.0
+    , QuickCheck
+    , text
+    , unicode-transforms
+  other-modules:
+      QuickCheckUtils
   default-language: Haskell2010
 
 test-suite quickcheck

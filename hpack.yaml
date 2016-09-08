@@ -74,9 +74,9 @@ library:
     - Data.String.Normalize
     - Data.Text.Normalize
     - Data.Unicode.Types
-  other-modules:
     - Data.Unicode.Internal.NormalizeStream
     - Data.Unicode.Properties.CombiningClass
+  other-modules:
     - Data.Unicode.Properties.Compositions
     - Data.Unicode.Properties.Decomposable
     - Data.Unicode.Properties.DecomposableK
@@ -130,6 +130,16 @@ tests:
         cpp-options: -DHAS_ICU
         dependencies:
           - text-icu >= 0.6.2.1
+  extras:
+    ghc-options: -O0
+    source-dirs: test
+    main:        Extra.hs
+    other-modules: QuickCheckUtils
+    dependencies:
+      - deepseq >= 1.1.0.0
+      - QuickCheck
+      - text
+      - unicode-transforms
 
 benchmarks:
   bench:
