@@ -62,10 +62,6 @@ ghc-options:
 dependencies: base >= 4.7 && < 5
 
 library:
-  cc-options: -Wall
-  include-dirs: cbits
-  c-sources:    cbits/utf8proc.c
-
   ghc-options: -O2 -funbox-strict-fields
   when:
     - condition: flag(has-llvm)
@@ -75,7 +71,6 @@ library:
   exposed-modules:
     - Data.ByteString.UTF8.Normalize
     - Data.String.Normalize
-    - Data.Text.NormalizeUTF8Proc
     - Data.Text.NormalizeNative
     - Data.Unicode.Types
   other-modules:
@@ -88,7 +83,6 @@ library:
     - Data.Unicode.Properties.DecomposeHangul
     - Data.Unicode.Properties.Decompositions
     - Data.Unicode.Properties.DecompositionsK
-    - Data.Unicode.UTF8Proc
   dependencies:
     - bitarray
     - bytestring
@@ -100,6 +94,7 @@ executables:
     ghc-options: -O2 -funbox-strict-fields
     source-dirs: benchmark
     main:        NormalizeFile.hs
+    other-modules: []
     dependencies:
       - deepseq >= 1.1.0.0
       - filepath
@@ -113,6 +108,7 @@ tests:
     ghc-options: -O0
     source-dirs: test
     main:        NormalizationTest.hs
+    other-modules: []
     dependencies:
       - getopt-generics
       - split
@@ -122,6 +118,7 @@ tests:
     ghc-options: -O0
     source-dirs: test
     main:        Properties.hs
+    other-modules: QuickCheckUtils
     dependencies:
       - deepseq >= 1.1.0.0
       - QuickCheck
@@ -142,9 +139,22 @@ benchmarks:
         dependencies:
           - text-icu >= 0.6.2.1
 
-    source-dirs: benchmark
+    source-dirs: 
+      - benchmark
+      - .
     main:        Benchmark.hs
+
+    # utf8proc implementation for comparisons only
+    cc-options: -Wall
+    include-dirs: cbits
+    c-sources:    cbits/utf8proc.c
+    exposed-modules:
+      - Data.Text.NormalizeUTF8Proc
+    other-modules:
+      - Data.Unicode.UTF8Proc
+
     dependencies:
+      - bitarray
       - criterion >= 0.4.0
       - deepseq >= 1.1.0.0
       - filepath
