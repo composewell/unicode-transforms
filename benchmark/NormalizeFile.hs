@@ -12,7 +12,7 @@
 import           Control.DeepSeq        (deepseq)
 import           System.Environment     (getArgs)
 
-import qualified Data.Text.NormalizeNative as UT
+import qualified Data.Text.Normalize as UT
 import Data.Text (pack, Text)
 
 -- Truncate or expand all datasets to this size to provide a normalized

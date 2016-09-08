@@ -3,10 +3,10 @@
 
 module QuickCheckUtils () where
 
-import           Control.DeepSeq           (NFData (..))
-import qualified Data.Text                 as T
-import           Data.Text.NormalizeNative (NormalizationMode (..))
-import           Test.QuickCheck           (Arbitrary (..), elements)
+import Control.DeepSeq (NFData(..))
+import qualified Data.Text as T
+import Data.Text.Normalize (NormalizationMode(..))
+import Test.QuickCheck (Arbitrary(..), elements)
 
 instance NFData Ordering where
     rnf !_  = ()

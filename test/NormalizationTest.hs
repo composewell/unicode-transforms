@@ -20,7 +20,7 @@ import Data.List (intercalate, isPrefixOf)
 import Data.List.Split (splitOn)
 import Data.Text (Text)
 import qualified Data.Text as T
-import Data.Text.NormalizeNative (NormalizationMode(..), normalize)
+import Data.Text.Normalize (NormalizationMode(..), normalize)
 import Text.Printf (printf)
 
 #if !MIN_VERSION_base(4,8,0)

@@ -63,7 +63,7 @@ library
   exposed-modules:
       Data.ByteString.UTF8.Normalize
       Data.String.Normalize
-      Data.Text.NormalizeNative
+      Data.Text.Normalize
       Data.Unicode.Types
   other-modules:
       Data.Unicode.Internal.NormalizeStream

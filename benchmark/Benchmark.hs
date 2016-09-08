@@ -21,7 +21,7 @@ import           Data.Bifunctor            (second)
 import           Data.Text                 (Text)
 import qualified Data.Text                 as T
 import qualified Data.Text.NormalizeUTF8Proc as UTF8Proc
-import qualified Data.Text.NormalizeNative as UTText
+import qualified Data.Text.Normalize       as UTText
 import qualified Data.String.Normalize     as UT
 import           Options.Applicative.Extra (execParser)
 import           Path                      (Dir, Path, Rel, mkRelDir,

@@ -1,6 +1,6 @@
 -- {-# OPTIONS_GHC -funfolding-fun-discount=90 #-}
 -- |
--- Module      : Data.Unicode.Normalize
+-- Module      : Data.Text.Normalize
 -- Copyright   : (c) 2016 Harendra Kumar
 --
 -- License     : BSD-style
@@ -10,7 +10,7 @@
 --
 -- Unicode normalization for @Text@ data type.
 --
-module Data.Text.NormalizeNative
+module Data.Text.Normalize
     (
     -- * Normalization Modes
       NormalizationMode(..)
