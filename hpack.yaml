@@ -32,8 +32,8 @@ extra-source-files:
   - NOTES.md
   - README.md
   - benchmark/data/*.txt
-  - cbits/*.h
-  - cbits/XQillaExport.hpp
+  - utf8proc/cbits/*.h
+  - utf8proc/cbits/XQillaExport.hpp
   - stack.yaml
   - stack-7.8.yaml
   - stack-7.10.yaml
@@ -141,13 +141,13 @@ benchmarks:
 
     source-dirs: 
       - benchmark
-      - .
+      - utf8proc
     main:        Benchmark.hs
 
     # utf8proc implementation for comparisons only
     cc-options: -Wall
-    include-dirs: cbits
-    c-sources:    cbits/utf8proc.c
+    include-dirs: utf8proc/cbits
+    c-sources:    utf8proc/cbits/utf8proc.c
     exposed-modules:
       - Data.Text.NormalizeUTF8Proc
     other-modules:

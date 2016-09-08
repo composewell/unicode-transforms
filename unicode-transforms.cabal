@@ -28,9 +28,6 @@ extra-source-files:
     benchmark/data/Japanese.txt
     benchmark/data/Korean.txt
     benchmark/data/Vietnamese.txt
-    cbits/utf8proc.h
-    cbits/utf8proc_data.h
-    cbits/XQillaExport.hpp
     Changelog.md
     NOTES.md
     README.md
@@ -137,13 +134,13 @@ benchmark bench
   main-is: Benchmark.hs
   hs-source-dirs:
       benchmark
-    , .
+    , utf8proc
   ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs -O2 -funbox-strict-fields
   cc-options: -Wall
   include-dirs:
-      cbits
+      utf8proc/cbits
   c-sources:
-      cbits/utf8proc.c
+      utf8proc/cbits/utf8proc.c
   build-depends:
       base >= 4.7 && < 5
     , bitarray
