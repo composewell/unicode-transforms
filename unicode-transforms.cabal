@@ -126,8 +126,6 @@ test-suite quickcheck
   other-modules:
       NormalizationTest
       QuickCheckUtils
-      Spec
-      Tests
   default-language: Haskell2010
 
 test-suite ucd
@@ -145,8 +143,6 @@ test-suite ucd
   other-modules:
       Properties
       QuickCheckUtils
-      Spec
-      Tests
   default-language: Haskell2010
 
 benchmark bench
