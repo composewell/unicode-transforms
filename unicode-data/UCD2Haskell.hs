@@ -95,14 +95,17 @@ genRangeCheck testBit ordList =
       <> show (minimum ordList) <> " || (ord c) > "
       <> show (maximum ordList) <> " = False"
 
-genBitmap :: String -> [Int] -> String
-genBitmap prefix ordList = unlines
+genMinMax :: String -> [Int] -> String
+genMinMax prefix ordList = unlines
     [ ""
     , prefix <> "Min, " <> prefix <> "Max :: Int"
     , prefix <> "Min = " <> show (minimum ordList)
     , prefix <> "Max = " <> show (maximum ordList)
-    , ""
-    , "bitList :: [(Int, Bool)]"
+    ]
+
+genBitmap :: String -> [Int] -> String
+genBitmap prefix ordList = unlines
+    [ "bitList :: [(Int, Bool)]"
     , "bitList = " ++ (show $ map (,True) ordList)
     , ""
     , prefix <> "Bitmap :: BitArray"
@@ -160,6 +163,7 @@ genDecomposable dtype props file = unlines
             , ""
             , "import Data.BitArray (BitArray, bitArray)"
             , ""
+            , genMinMax "decompose" ordList
             , genBitmap "decompose" ordList
             ]
     where
