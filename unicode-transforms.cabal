@@ -45,12 +45,12 @@ source-repository head
   type: git
   location: https://github.com/harendra-kumar/unicode-transforms
 
-flag bench-icu
+flag has-icu
   description: Use text-icu for benchmark comparison
   manual: True
   default: False
 
-flag llvm
+flag has-llvm
   description: Use llvm backend for compilation
   manual: True
   default: False
@@ -83,7 +83,7 @@ library
     , bitarray
     , bytestring
     , text
-  if flag(llvm)
+  if flag(has-llvm)
     ghc-options: -fllvm
   include-dirs:
       cbits
@@ -119,7 +119,7 @@ test-suite quickcheck
     , QuickCheck
     , text
     , unicode-transforms
-  if flag(bench-icu)
+  if flag(has-icu)
     cpp-options: -DHAS_ICU
     build-depends:
         text-icu >= 0.6.2.1
@@ -165,7 +165,7 @@ benchmark bench
     , path-io
     , text
     , unicode-transforms
-  if flag(bench-icu)
+  if flag(has-icu)
     cpp-options: -DBENCH_ICU
     build-depends:
         text-icu >= 0.6.2.1

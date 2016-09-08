@@ -42,11 +42,11 @@ extra-source-files:
   - unicode-data/ucd/NormalizationTest.txt
 
 flags:
-  llvm:
+  has-llvm:
     description: Use llvm backend for compilation
     default: False
     manual: True
-  bench-icu:
+  has-icu:
     description: Use text-icu for benchmark comparison
     default: False
     manual: True
@@ -68,7 +68,7 @@ library:
 
   ghc-options: -O2 -funbox-strict-fields
   when:
-    - condition: flag(llvm)
+    - condition: flag(has-llvm)
       ghc-options: -fllvm
 
   source-dirs: .
@@ -128,7 +128,7 @@ tests:
       - text
       - unicode-transforms
     when:
-      - condition: flag(bench-icu)
+      - condition: flag(has-icu)
         cpp-options: -DHAS_ICU
         dependencies:
           - text-icu >= 0.6.2.1
@@ -137,7 +137,7 @@ benchmarks:
   bench:
     ghc-options: -O2 -funbox-strict-fields
     when:
-      - condition: flag(bench-icu)
+      - condition: flag(has-icu)
         cpp-options: -DBENCH_ICU
         dependencies:
           - text-icu >= 0.6.2.1
