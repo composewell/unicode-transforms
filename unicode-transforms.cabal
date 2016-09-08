@@ -35,8 +35,12 @@ extra-source-files:
     stack-7.8.yaml
     stack-8.0.yaml
     stack.yaml
+    unicode-data/extra/NormalizationTest.txt
     unicode-data/README.md
     unicode-data/ucd/NormalizationTest.txt
+    utf8proc/cbits/utf8proc.h
+    utf8proc/cbits/utf8proc_data.h
+    utf8proc/cbits/XQillaExport.hpp
 
 source-repository head
   type: git
