@@ -22,24 +22,26 @@ before_install:
 install:
  - cabal --version
  - echo "$(ghc --version) [$(ghc --print-project-git-commit-id 2> /dev/null || echo '?')]"
+ - free -h
  - travis_retry cabal update
  - cabal install --only-dependencies --enable-tests
 
 script:
  - case "$CABALVER" in
     "1.18") cabal configure --enable-tests --enable-library-coverage -v2 -f no-opt ;;
-    *)      cabal configure --enable-tests --enable-coverage -v2 -f no-opt ;;
+    *)      cabal configure --enable-tests -v2 -f no-opt ;;
    esac
  - cabal build
  - cabal test --show-details=always
  - cabal sdist
 
 after_script:
- - cabal install hpc-coveralls
- - export PATH=~/.cabal/bin:$PATH
- - hpc-coveralls --coverage-mode=StrictlyFullLines
-                 --exclude-dir=test
-                 tests
+  - if test "$CABALVER" = "1.18"
+    then
+      cabal install hpc-coveralls
+      export PATH=~/.cabal/bin:$PATH
+      hpc-coveralls --coverage-mode=StrictlyFullLines --exclude-dir=test tests
+    fi
 
 notifications:
   email: false
