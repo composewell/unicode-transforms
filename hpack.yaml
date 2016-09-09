@@ -48,7 +48,7 @@ flags:
     default: False
     manual: True
   has-icu:
-    description: Use text-icu for benchmark comparison
+    description: Use text-icu for benchmark and test comparisons
     default: False
     manual: True
 
@@ -58,7 +58,6 @@ ghc-options:
   - -fwarn-incomplete-record-updates
   - -fwarn-incomplete-uni-patterns
   - -fwarn-tabs
-
 
 dependencies: base >= 4.7 && < 5
 
