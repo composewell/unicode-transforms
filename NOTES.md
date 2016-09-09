@@ -1,30 +1,15 @@
-# Missing Features
-
-List of unicode transforms that are not available in this package.
+# Unicode related packages
 
 ## Casemapping and Casefolding
 The `text` package already provides proper unicode casemapping and casefolding
-operations. This package does not aim to expose these though the implementation
-is available.
+operations.
 
-## Available in utf8proc but not exposed
-The following additional features are available but not exposed via an API. If
-you need any of those they can be exposed quickly, please raise an issue or
-send a pull request.
+## Additional features in text-icu
 
-* Boundary Analysis (No locale specific handling)
-* NLF sequence conversion
-* Stripping certain character classes
-* Lumping certain characters
+The Haskell package `text-icu` is a full featured implementation of unicode
+operations via bindings to the C++ `icu` libraries.
 
-## Available only in text-icu
-
-`text-icu` is a full featured implementation of unicode operations via bindings
-to the `icu` libraries. If you do not mind a dependency on the `icu` libraries
-(separately installed) or need a comprehensive set of unicode operations then
-`text-icu` will be a better choice.
-
-The following features provided by `text-icu` are missing in this package:
+`text-icu` provides the following additional features:
 * Normalization checks
 * FCD normalization for collation
 * String collation
@@ -35,7 +20,8 @@ The following features provided by `text-icu` are missing in this package:
 
 Unicode functionality in Haskell is fragmented across various packages.  The
 most comprehensive functionality is provided by `text-icu` which is based on
-the `icu` C++ libraries.
+the `icu` C++ libraries. All related packages are listed here, they may or may
+not be up to date or useful.
 
 * [text-icu](https://stackage.org/lts/package/text-icu)
 
@@ -58,24 +44,6 @@ the `icu` C++ libraries.
 ### Text (UTF16)
 * [text](https://www.stackage.org/lts/package/text) An efficient packed Unicode text type
 * [text-normal](https://hackage.haskell.org/package/text-normal) Data types for Unicode-normalized text - depends on text-icu
-
-# Thoughts on package structuring
-
-In my opinion, it will be good to consolidate all native haskell packages into
-a standard module structure under a minimum number of packages and evolve
-those. The following structure in three layers should be enough to cover
-unicode handling:
-
-1. **_unicode-properties_**: A single package for character database with
-scripts to update it based on unicode standard database updates.
-2. **_unicode-transforms_**: A lightweight native Haskell package for basic unicode
-string transforms (normalization, case folding etc.) based on unicode-chars.
-Not a replacement for text-icu.
-3. **_utf8-string_**: A single UTF8 bytestring package including a normalized
-string representation like text-normal
-4. **_text_**: Existing text package (UTF16 representation). Include normalized
-text (text-normal) in the text package based on the native Haskell
-unicode-transforms package
 
 # Unicode resources
 
