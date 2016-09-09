@@ -51,6 +51,10 @@ flags:
     description: Use text-icu for benchmark and test comparisons
     default: False
     manual: True
+  no-opt:
+    description: Disable optimization to compile with lower memory (for CI)
+    default: False
+    manual: True
 
 ghc-options:
   - -Wall
@@ -62,7 +66,12 @@ ghc-options:
 dependencies: base >= 4.7 && < 5
 
 library:
-  ghc-options: -O2 -funbox-strict-fields
+  when:
+    - condition: flag(no-opt)
+      then:
+        ghc-options: -O0
+      else:
+        ghc-options: -O2 -funbox-strict-fields
   when:
     - condition: flag(has-llvm)
       ghc-options: -fllvm

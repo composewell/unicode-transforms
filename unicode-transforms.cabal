@@ -56,11 +56,16 @@ flag has-llvm
   manual: True
   default: False
 
+flag no-opt
+  description: Disable optimization to compile with lower memory (for CI)
+  manual: True
+  default: False
+
 library
   hs-source-dirs:
       .
   default-language: Haskell2010
-  ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs -O2 -funbox-strict-fields
+  ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
   exposed-modules:
       Data.ByteString.UTF8.Normalize
       Data.String.Normalize
