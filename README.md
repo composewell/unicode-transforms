@@ -1,4 +1,8 @@
 # Unicode Transforms
+
+[![Build Status](https://travis-ci.org/harendra-kumar/unicode-transforms.svg?branch=master)](https://travis-ci.org/harendra-kumar/unicode-transforms)
+[![Coverage Status](https://coveralls.io/repos/harendra-kumar/unicode-transforms/badge.svg?branch=master&service=github)](https://coveralls.io/github/harendra-kumar/unicode-tranforms?branch=master)
+
 This is a lightweight Haskell library supporting commonly used unicode
 transformations (currently only normalizations) on `ByteStrings` (UTF-8) and
 `Text`.
