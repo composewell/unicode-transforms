@@ -27,8 +27,8 @@ install:
 
 script:
  - case "$CABALVER" in
-    "1.18") cabal configure --enable-tests --enable-library-coverage -v2 ;;
-    *)      cabal configure --enable-tests --enable-coverage -v2 ;;
+    "1.18") cabal configure --enable-tests --enable-library-coverage -v2 -f no-opt ;;
+    *)      cabal configure --enable-tests --enable-coverage -v2 -f no-opt ;;
    esac
  - cabal build
  - cabal test --show-details=always
@@ -38,7 +38,7 @@ after_script:
  - cabal install hpc-coveralls
  - export PATH=~/.cabal/bin:$PATH
  - hpc-coveralls --coverage-mode=StrictlyFullLines
-                 --exclude-dir=tests
+                 --exclude-dir=test
                  tests
 
 notifications:
