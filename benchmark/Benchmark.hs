@@ -21,7 +21,6 @@ import           Data.Bifunctor            (second)
 import           Data.Text                 (Text)
 import qualified Data.Text                 as T
 import qualified Data.Text.Normalize       as UTText
-import qualified Data.String.Normalize     as UT
 import           Options.Applicative.Extra (execParser)
 import           Path                      (Dir, Path, Rel, mkRelDir,
                                             toFilePath, (</>))
@@ -46,14 +45,6 @@ unicodeTransformTextFuncs =
     , ("NFKD", UTText.normalize UTText.NFKD)
     , ("NFC", UTText.normalize UTText.NFC)
     , ("NFKC", UTText.normalize UTText.NFKC)
-    ]
-
-unicodeTransformFuncs :: [(String, String -> String)]
-unicodeTransformFuncs =
-    [ ("NFD", UT.normalize UT.NFD)
-    , ("NFKD", UT.normalize UT.NFKD)
-    , ("NFC", UT.normalize UT.NFC)
-    , ("NFKC", UT.normalize UT.NFKC)
     ]
 
 dataDir :: Path Rel Dir
@@ -88,9 +79,7 @@ main = do
               $ makeBench <$> textICUFuncs <*> (map txtInput dataFiles)
         ,
 #endif
-          bgroup "unicode-transforms-string"
-            $ makeBench <$> unicodeTransformFuncs <*> (map strInput dataFiles)
-        , bgroup "unicode-transforms-text"
+          bgroup "unicode-transforms-text"
             $ makeBench <$> unicodeTransformTextFuncs
                         <*> (map txtInput dataFiles)
         ]
