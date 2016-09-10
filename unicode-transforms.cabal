@@ -36,7 +36,10 @@ extra-source-files:
     stack.yaml
     unicode-data/extra/NormalizationTest.txt
     unicode-data/README.md
+    unicode-data/stack.yaml
     unicode-data/ucd/NormalizationTest.txt
+    unicode-data/ucd2haskell.cabal
+    unicode-data/UCD2Haskell.hs
 
 source-repository head
   type: git

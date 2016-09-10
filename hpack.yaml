@@ -29,6 +29,9 @@ extra-source-files:
   - unicode-data/README.md
   - unicode-data/ucd/NormalizationTest.txt
   - unicode-data/extra/NormalizationTest.txt
+  - unicode-data/stack.yaml
+  - unicode-data/ucd2haskell.cabal
+  - unicode-data/UCD2Haskell.hs
 
 flags:
   has-llvm:
