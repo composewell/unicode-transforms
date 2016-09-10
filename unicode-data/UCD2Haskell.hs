@@ -25,7 +25,6 @@ import           Data.Binary          as Bin
 import qualified Data.ByteString.Lazy as L
 import           Data.Char            (chr)
 import           Data.Char            (ord)
--- import           Data.List.Sequences  (splitSeq)
 import           Data.Map             ((!))
 import qualified Data.Map             as M
 import           Data.Monoid          ((<>))
@@ -189,16 +188,7 @@ genDecompositions dtype props file = unlines
             , "decomposeChar :: Char -> [Char]"
             , concat $ map (genDecomposeDef "decomposeChar") decomps
             ]
-
-{-
-    putStrLn $ unlines . map showRange
-             $ splitSeq splitter
-             $ map (fst) (decompositions dtype props)
--}
     where
-        -- splitter a b = ord b <= (ord a + 1024)
-        -- showRange xs = show (head xs) ++ ".." ++ show (last xs) ++ " : " ++ show (length xs)
-
         decomps = filter (not . isHangul . fst) (decompositions dtype props)
         genDecomposeDef name (c, d) =
             name <> " " <> show c <> " = " <> show d <> "\n"

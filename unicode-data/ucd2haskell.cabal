@@ -38,7 +38,6 @@ executable ucd2haskell
       Data.Unicode.Properties.DecomposeHangul
   build-depends:
       base >= 4 && < 5
-    , data-list-sequences
     , getopt-generics
     , tagsoup
     , split
