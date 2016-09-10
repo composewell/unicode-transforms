@@ -3,7 +3,7 @@
 -- see: https://github.com/sol/hpack
 
 name:                unicode-transforms
-version:             0.1.0.0
+version:             0.2.0
 synopsis:            Unicode normalization
 description:         Fast Unicode normalization in Haskell (NFC/NFD/NFKC/NFKD).
 homepage:            http://github.com/harendra-kumar/unicode-transforms
@@ -31,7 +31,6 @@ extra-source-files:
     Changelog.md
     NOTES.md
     README.md
-    stack-7.10.yaml
     stack-7.8.yaml
     stack-8.0.yaml
     stack.yaml
