@@ -20,7 +20,6 @@ import           Criterion.Main.Options    (describe)
 import           Data.Bifunctor            (second)
 import           Data.Text                 (Text)
 import qualified Data.Text                 as T
-import qualified Data.Text.NormalizeUTF8Proc as UTF8Proc
 import qualified Data.Text.Normalize       as UTText
 import qualified Data.String.Normalize     as UT
 import           Options.Applicative.Extra (execParser)
@@ -40,14 +39,6 @@ textICUFuncs =
     , ("NFKC", TI.normalize TI.NFKC)
     ]
 #endif
-
-utf8ProcFuncs :: [(String, Text -> Text)]
-utf8ProcFuncs =
-    [ ("NFD", UTF8Proc.normalize UTF8Proc.NFD)
-    , ("NFKD", UTF8Proc.normalize UTF8Proc.NFKD)
-    , ("NFC", UTF8Proc.normalize UTF8Proc.NFC)
-    , ("NFKC", UTF8Proc.normalize UTF8Proc.NFKC)
-    ]
 
 unicodeTransformTextFuncs :: [(String, Text -> Text)]
 unicodeTransformTextFuncs =
@@ -97,9 +88,7 @@ main = do
               $ makeBench <$> textICUFuncs <*> (map txtInput dataFiles)
         ,
 #endif
-          bgroup "utf8proc"
-            $ makeBench <$> utf8ProcFuncs <*> (map txtInput dataFiles)
-        , bgroup "unicode-transforms-string"
+          bgroup "unicode-transforms-string"
             $ makeBench <$> unicodeTransformFuncs <*> (map strInput dataFiles)
         , bgroup "unicode-transforms-text"
             $ makeBench <$> unicodeTransformTextFuncs

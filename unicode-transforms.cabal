@@ -37,9 +37,6 @@ extra-source-files:
     unicode-data/extra/NormalizationTest.txt
     unicode-data/README.md
     unicode-data/ucd/NormalizationTest.txt
-    utf8proc/cbits/utf8proc.h
-    utf8proc/cbits/utf8proc_data.h
-    utf8proc/cbits/XQillaExport.hpp
 
 source-repository head
   type: git
@@ -165,13 +162,7 @@ benchmark bench
   main-is: Benchmark.hs
   hs-source-dirs:
       benchmark
-    , utf8proc
   ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
-  cc-options: -Wall
-  include-dirs:
-      utf8proc/cbits
-  c-sources:
-      utf8proc/cbits/utf8proc.c
   build-depends:
       base >= 4.7 && < 5
     , bitarray
@@ -194,5 +185,5 @@ benchmark bench
     build-depends:
         text-icu >= 0.6.2.1
   other-modules:
-      Data.Unicode.UTF8Proc
+      NormalizeFile
   default-language: Haskell2010
