@@ -64,12 +64,11 @@ library
   ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
   exposed-modules:
       Data.ByteString.UTF8.Normalize
-      Data.String.Normalize
       Data.Text.Normalize
       Data.Unicode.Types
+  other-modules:
       Data.Unicode.Internal.NormalizeStream
       Data.Unicode.Properties.CombiningClass
-  other-modules:
       Data.Unicode.Properties.Compositions
       Data.Unicode.Properties.Decomposable
       Data.Unicode.Properties.DecomposableK

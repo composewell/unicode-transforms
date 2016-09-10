@@ -1,8 +1,6 @@
 module Main (main) where
 
-import Control.Exception.Base (assert)
 import Data.Text.Normalize (NormalizationMode(..))
-import Data.Unicode.Properties.CombiningClass (getCombiningClass)
 import QuickCheckUtils ()
 import Test.QuickCheck
 
@@ -27,11 +25,7 @@ t_show mode =
 
 main :: IO ()
 main = do
-    assert (getCombiningClass '\0' == 0 &&
-            getCombiningClass '\125143' == 0)
-           (putStrLn "Test out of range combining class")
-
-    -- test mode instances
+    -- test "NormalizationMode" instances
     quickCheck t_eq
     quickCheck t_enum
     quickCheck t_show

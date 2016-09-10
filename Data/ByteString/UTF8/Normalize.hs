@@ -10,6 +10,7 @@
 -- Unicode normalization for @ByteString@ data type.
 --
 module Data.ByteString.UTF8.Normalize
+    {-# DEPRECATED "Convert ByteString to Text and then normalize" #-}
     (
     -- * Normalization Modes
       NormalizationMode(..)
