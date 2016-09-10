@@ -34,15 +34,15 @@ extra-source-files:
 
 flags:
   has-llvm:
-    description: Use llvm backend for compilation
+    description: Use llvm backend (faster) for compilation
     default: False
     manual: True
   has-icu:
     description: Use text-icu for benchmark and test comparisons
     default: False
     manual: True
-  no-opt:
-    description: Disable optimization to compile with lower memory (for CI)
+  dev:
+    description: Developer build
     default: False
     manual: True
 
@@ -53,19 +53,18 @@ ghc-options:
   - -fwarn-incomplete-uni-patterns
   - -fwarn-tabs
 
+when:
+  - condition: flag(dev)
+    then:
+      ghc-options: -O0
+    else:
+      ghc-options: -O2 -funbox-strict-fields
+  - condition: flag(has-llvm)
+    ghc-options: -fllvm
+
 dependencies: base >= 4.7 && < 5
 
 library:
-  when:
-    - condition: flag(no-opt)
-      then:
-        ghc-options: -O0
-      else:
-        ghc-options: -O2 -funbox-strict-fields
-  when:
-    - condition: flag(has-llvm)
-      ghc-options: -fllvm
-
   source-dirs: .
   exposed-modules:
     - Data.ByteString.UTF8.Normalize
@@ -88,23 +87,22 @@ library:
     - text
 
 # developer mode only
-executables:
-  normalizefile:
-    ghc-options: -O2 -funbox-strict-fields
-    source-dirs: benchmark
-    main:        NormalizeFile.hs
-    other-modules: []
-    dependencies:
-      - deepseq >= 1.1.0.0
-      - filepath
-      - path
-      - path-io
-      - text
-      - unicode-transforms
+# Simple program to generate perf stats
+#executables:
+#  normalizefile:
+#    source-dirs: benchmark
+#    main:        NormalizeFile.hs
+#    other-modules: []
+#    dependencies:
+#      - deepseq >= 1.1.0.0
+#      - filepath
+#      - path
+#      - path-io
+#      - text
+#      - unicode-transforms
 
 tests:
   ucd:
-    ghc-options: -O0
     source-dirs: test
     main:        NormalizationTest.hs
     other-modules: []
@@ -114,7 +112,6 @@ tests:
       - text
       - unicode-transforms
   quickcheck:
-    ghc-options: -O0
     source-dirs: test
     main:        Properties.hs
     other-modules: QuickCheckUtils
@@ -129,7 +126,6 @@ tests:
         dependencies:
           - text-icu >= 0.6.2.1
   extras:
-    ghc-options: -O0
     source-dirs: test
     main:        Extra.hs
     other-modules: QuickCheckUtils
@@ -141,7 +137,6 @@ tests:
 
 benchmarks:
   bench:
-    ghc-options: -O2 -funbox-strict-fields
     when:
       - condition: flag(has-icu)
         cpp-options: -DBENCH_ICU

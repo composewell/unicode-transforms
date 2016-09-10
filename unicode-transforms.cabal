@@ -45,18 +45,18 @@ source-repository head
   type: git
   location: https://github.com/harendra-kumar/unicode-transforms
 
+flag dev
+  description: Developer build
+  manual: True
+  default: False
+
 flag has-icu
   description: Use text-icu for benchmark and test comparisons
   manual: True
   default: False
 
 flag has-llvm
-  description: Use llvm backend for compilation
-  manual: True
-  default: False
-
-flag no-opt
-  description: Disable optimization to compile with lower memory (for CI)
+  description: Use llvm backend (faster) for compilation
   manual: True
   default: False
 
@@ -85,36 +85,31 @@ library
     , bitarray
     , bytestring
     , text
+  if flag(dev)
+    ghc-options: -O0
+  else
+    ghc-options: -O2 -funbox-strict-fields
   if flag(has-llvm)
     ghc-options: -fllvm
-
-executable normalizefile
-  main-is: NormalizeFile.hs
-  hs-source-dirs:
-      benchmark
-  ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs -O2 -funbox-strict-fields
-  build-depends:
-      base >= 4.7 && < 5
-    , deepseq >= 1.1.0.0
-    , filepath
-    , path
-    , path-io
-    , text
-    , unicode-transforms
-  default-language: Haskell2010
 
 test-suite extras
   type: exitcode-stdio-1.0
   main-is: Extra.hs
   hs-source-dirs:
       test
-  ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs -O0
+  ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
   build-depends:
       base >= 4.7 && < 5
     , deepseq >= 1.1.0.0
     , QuickCheck
     , text
     , unicode-transforms
+  if flag(dev)
+    ghc-options: -O0
+  else
+    ghc-options: -O2 -funbox-strict-fields
+  if flag(has-llvm)
+    ghc-options: -fllvm
   other-modules:
       QuickCheckUtils
   default-language: Haskell2010
@@ -124,13 +119,19 @@ test-suite quickcheck
   main-is: Properties.hs
   hs-source-dirs:
       test
-  ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs -O0
+  ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
   build-depends:
       base >= 4.7 && < 5
     , deepseq >= 1.1.0.0
     , QuickCheck
     , text
     , unicode-transforms
+  if flag(dev)
+    ghc-options: -O0
+  else
+    ghc-options: -O2 -funbox-strict-fields
+  if flag(has-llvm)
+    ghc-options: -fllvm
   if flag(has-icu)
     cpp-options: -DHAS_ICU
     build-depends:
@@ -144,13 +145,19 @@ test-suite ucd
   main-is: NormalizationTest.hs
   hs-source-dirs:
       test
-  ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs -O0
+  ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
   build-depends:
       base >= 4.7 && < 5
     , getopt-generics
     , split
     , text
     , unicode-transforms
+  if flag(dev)
+    ghc-options: -O0
+  else
+    ghc-options: -O2 -funbox-strict-fields
+  if flag(has-llvm)
+    ghc-options: -fllvm
   default-language: Haskell2010
 
 benchmark bench
@@ -159,7 +166,7 @@ benchmark bench
   hs-source-dirs:
       benchmark
     , utf8proc
-  ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs -O2 -funbox-strict-fields
+  ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
   cc-options: -Wall
   include-dirs:
       utf8proc/cbits
@@ -176,6 +183,12 @@ benchmark bench
     , path-io
     , text
     , unicode-transforms
+  if flag(dev)
+    ghc-options: -O0
+  else
+    ghc-options: -O2 -funbox-strict-fields
+  if flag(has-llvm)
+    ghc-options: -fllvm
   if flag(has-icu)
     cpp-options: -DBENCH_ICU
     build-depends:
