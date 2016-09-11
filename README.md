@@ -4,9 +4,27 @@
 [![Build Status](https://travis-ci.org/harendra-kumar/unicode-transforms.svg?branch=master)](https://travis-ci.org/harendra-kumar/unicode-transforms)
 [![Coverage Status](https://coveralls.io/repos/harendra-kumar/unicode-transforms/badge.svg?branch=master&service=github)](https://coveralls.io/github/harendra-kumar/unicode-transforms?branch=master)
 
-Pure Haskell Unicode 8.0 normalization (NFC, NFKC, NFD, NFKD).
+Fast Unicode 8.0 normalization in Haskell (NFC, NFKC, NFD, NFKD).
 
-## Unicode Related Stuff
+## What is normalization?
+
+Unicode characters with adornments (e.g. Á) can be represented in two different
+forms, as a single composed character (U+00C1 = Á) or as multiple decomposed
+characters (U+0041(A) U+0301( ́ ) = Á). They are differently encoded byte
+sequences but for humans they have exactly the same visual appearance.
+
+A regular byte comparison may tell that two strings are different even though
+they might be equivalent. We need to convert both the strings in a
+[`normalized`](http://unicode.org/reports/tr15/) form using the [Unicode
+Character Database](http://www.unicode.org/Public/UCD/latest/) before we can
+compare them for equivalence. For example:
+```
+>> import Data.Text.Normalize
+>> normalize NFC "\193" == normalize NFC "\65\769"
+True
+```
+
+## More Unicode Related Stuff
 See NOTES.md.
 
 ## Contributing
