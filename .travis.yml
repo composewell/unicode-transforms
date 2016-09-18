@@ -2,13 +2,18 @@ notifications:
   email: false
 
 language: c
-sudo: false
-cache:
-  directories:
-  - $HOME/.cabal
-  - $HOME/.ghc
-  - $HOME/.local
-  - $HOME/.stack
+
+# Sometimes the build gets stuck on the container machines when compiling a big
+# file in this package. Perhaps due to lack of resources. So use the VMs
+# instead.
+sudo: required
+#sudo: false
+#cache:
+#  directories:
+#  - $HOME/.cabal
+#  - $HOME/.ghc
+#  - $HOME/.local
+#  - $HOME/.stack
 
 matrix:
   include:
@@ -64,13 +69,14 @@ script:
     add_path CABALVER cabal
 
   - env -i
+      LC_ALL=C.UTF-8
       PATH=$PATH
       BUILD=$BUILD
       RESOLVER=$RESOLVER
       GHCVER=$GHCVER
       CABALVER=$CABALVER
       GHC_OPTIONS="$GHC_OPTIONS"
-      $(test "$COVERALLS" && echo COVERALLS_OPTIONS=\""$COVERALLS_OPTIONS"\")
+      $(test -n "$COVERALLS" && echo "COVERALLS_OPTIONS=\"$COVERALLS_OPTIONS\"")
       $(cabal_env CABAL_REINIT_CONFIG=y)
       $(cabal_env CABAL_TEST_INSTALL=y)
       $(cabal_env CABAL_NO_SANDBOX=y)
