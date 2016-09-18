@@ -54,9 +54,10 @@ script:
     # Customizable options
     PACKAGE_TEST_VER="23c3e50a8d55804d60435c946192990ffb856336"
     GHC_OPTIONS="-O0 -Werror"
-    COVERALLS_OPTIONS="--coverage-mode=StrictlyFullLines \
-                       --exclude-dir=test \
-                       ucd quickcheck extras"
+    test -n "$COVERALLS" && \
+      COVERALLS_OPTIONS="--coverage-mode=StrictlyFullLines \
+                         --exclude-dir=test \
+                         ucd quickcheck extras"
 
     # Usually no changes should be needed after this
     add_path()  { eval "test -n \"\$$1\"" && eval "PATH=/opt/$2/\"\$$1\"/bin:$PATH"; true; }
@@ -76,7 +77,7 @@ script:
       GHCVER=$GHCVER
       CABALVER=$CABALVER
       GHC_OPTIONS="$GHC_OPTIONS"
-      $(test -n "$COVERALLS" && echo "COVERALLS_OPTIONS=\"$COVERALLS_OPTIONS\"")
+      COVERALLS_OPTIONS="$COVERALLS_OPTIONS"
       $(cabal_env CABAL_REINIT_CONFIG=y)
       $(cabal_env CABAL_TEST_INSTALL=y)
       $(cabal_env CABAL_NO_SANDBOX=y)
