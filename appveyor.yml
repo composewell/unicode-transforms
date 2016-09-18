@@ -1,5 +1,9 @@
 # short paths == fewer problems
 
+# criterion does not support 32-bit on Windows
+# TODO disable benchmarking to test on 32-bit
+platform: x64
+
 clone_folder: "c:\\pkg"
 environment:
   global:
@@ -11,7 +15,8 @@ environment:
     LOCAL_BIN: "%APPDATA%\\local\\bin"
     PATH: "%PATH%;%APPDATA%\\local\\bin"
     CABAL_REINIT_CONFIG: "y"
-    PACKAGE_TEST_VER: "23c3e50a8d55804d60435c946192990ffb856336"
+    TEST_INSTALL: "y"
+    PACKAGE_TEST_VER: "d049f2b70aca1566d39831d6d91375af53c0fe35"
 
 cache:
   - "%STACK_ROOT%" # stack root
@@ -24,7 +29,7 @@ build: off
 
 before_test:
 - if not exist %LOCAL_BIN% mkdir %LOCAL_BIN%
-- where stack.exe || curl -sSkL -ostack.zip http://www.stackage.org/stack/windows-i386 && 7z x stack.zip stack.exe && move stack.exe %LOCAL_BIN%
+- where stack.exe || curl -sSkL -ostack.zip http://www.stackage.org/stack/windows-x86_64 && 7z x stack.zip stack.exe && move stack.exe %LOCAL_BIN%
 - curl -sSkL -opackage-test.sh https://raw.githubusercontent.com/harendra-kumar/package-test/%PACKAGE_TEST_VER%/package-test.sh
 
 test_script:

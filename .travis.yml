@@ -52,7 +52,7 @@ install: true
 script:
   - |
     # Customizable options
-    PACKAGE_TEST_VER="23c3e50a8d55804d60435c946192990ffb856336"
+    PACKAGE_TEST_VER="d049f2b70aca1566d39831d6d91375af53c0fe35"
     GHC_OPTIONS="-O0 -Werror"
     test -n "$COVERALLS" && \
       COVERALLS_OPTIONS="--coverage-mode=StrictlyFullLines \
@@ -78,8 +78,9 @@ script:
       CABALVER=$CABALVER
       GHC_OPTIONS="$GHC_OPTIONS"
       COVERALLS_OPTIONS="$COVERALLS_OPTIONS"
-      $(cabal_env CABAL_REINIT_CONFIG=y)
-      $(cabal_env CABAL_TEST_INSTALL=y)
+      CABAL_REINIT_CONFIG=y
+      TEST_INSTALL=y
+      $(cabal_env CABAL_CHECK_RELAX=y)
       $(cabal_env CABAL_NO_SANDBOX=y)
       $(cabal_env CABAL_HACKAGE_MIRROR=hackage.haskell.org:http://hackage.fpcomplete.com)
       /bin/bash <($CURL -sL $(pkg_test $PACKAGE_TEST_VER))
