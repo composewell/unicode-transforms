@@ -5,6 +5,7 @@ extra-deps:
 - base-compat-0.9.1
 - base-orphans-0.5.4
 - bitarray-0.0.1.1
+- criterion-1.1.1.0
 - directory-1.2.7.0
 - getopt-generics-0.13
 - path-0.5.7

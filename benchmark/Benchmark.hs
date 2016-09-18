@@ -17,7 +17,6 @@ import           Control.DeepSeq           (NFData)
 import           Criterion.Main            (Benchmark, bench, bgroup,
                                             defaultConfig, env, nf, runMode)
 import           Criterion.Main.Options    (describe)
-import           Data.Bifunctor            (second)
 import           Data.Text                 (Text)
 import qualified Data.Text                 as T
 import qualified Data.Text.Normalize       as UTText
@@ -67,6 +66,7 @@ strInput file = (dataName file,
 
 txtInput :: FilePath -> (String, IO Text)
 txtInput file = second (fmap T.pack) (strInput file)
+    where second f (a, b) = (a, f b)
 
 main :: IO ()
 main = do

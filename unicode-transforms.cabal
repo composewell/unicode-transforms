@@ -168,7 +168,7 @@ benchmark bench
   build-depends:
       base >= 4.7 && < 5
     , bitarray
-    , criterion >= 0.4.0
+    , criterion >= 1.1.1.0
     , deepseq >= 1.1.0.0
     , filepath
     , optparse-applicative

@@ -146,7 +146,7 @@ benchmarks:
 
     dependencies:
       - bitarray
-      - criterion >= 0.4.0
+      - criterion >= 1.1.1.0
       - deepseq >= 1.1.0.0
       - filepath
       - optparse-applicative
