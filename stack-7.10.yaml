@@ -1,5 +1,0 @@
-packages:
-- '.'
-resolver: lts-6.16
-extra-deps:
-- bitarray-0.0.1.1

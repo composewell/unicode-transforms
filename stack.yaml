@@ -1,1 +1,5 @@
-stack-7.10.yaml
+packages:
+- '.'
+resolver: lts-6.16
+extra-deps:
+- bitarray-0.0.1.1
