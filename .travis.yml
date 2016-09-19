@@ -30,14 +30,14 @@ matrix:
   - env: BUILD=cabal GHCVER=head CABALVER=head
     addons: {apt: {packages: [cabal-install-head,ghc-head], sources: [hvr-ghc]}}
 
-  # stack/linux
-  - env: BUILD=stack RESOLVER=lts-6
-    addons: {apt: {packages: [libgmp-dev]}}
+  # stack/linux use a pre-installed cabal-install for faster builds
+  - env: BUILD=stack RESOLVER=lts-6 CABALVER=1.22
+    addons: {apt: {packages: [libgmp-dev,cabal-install-1.22], sources: [hvr-ghc]}}
 
-  - env: BUILD=stack RESOLVER=nightly
-    addons: {apt: {packages: [libgmp-dev]}}
+  - env: BUILD=stack RESOLVER=nightly CABALVER=1.24
+    addons: {apt: {packages: [libgmp-dev,cabal-install-1.24], sources: [hvr-ghc]}}
 
-  # cabal/stack/osx
+  # cabal/stack/osx - TODO install cabal-install
   - env: BUILD=cabal RESOLVER=lts-6
     os: osx
 
@@ -52,7 +52,7 @@ install: true
 script:
   - |
     # Customizable options
-    PACKAGE_TEST_VER="d049f2b70aca1566d39831d6d91375af53c0fe35"
+    PACKAGE_TEST_VER="62db8f69afcb47428d1fb87ce4005b453f7f179c"
     GHC_OPTIONS="-O0 -Werror"
     test -n "$COVERALLS" && \
       COVERALLS_OPTIONS="--coverage-mode=StrictlyFullLines \
@@ -69,17 +69,20 @@ script:
     add_path GHCVER   ghc
     add_path CABALVER cabal
 
+  # TRAVIS vars are needed by hpc-coveralls
   - env -i
       LC_ALL=C.UTF-8
+      TRAVIS=$TRAVIS
+      TRAVIS_JOB_ID=$TRAVIS_JOB_ID
       PATH=$PATH
       BUILD=$BUILD
       RESOLVER=$RESOLVER
       GHCVER=$GHCVER
-      CABALVER=$CABALVER
       GHC_OPTIONS="$GHC_OPTIONS"
       COVERALLS_OPTIONS="$COVERALLS_OPTIONS"
       CABAL_REINIT_CONFIG=y
       TEST_INSTALL=y
+      $(cabal_env CABALVER=$CABALVER)
       $(cabal_env CABAL_CHECK_RELAX=y)
       $(cabal_env CABAL_NO_SANDBOX=y)
       $(cabal_env CABAL_HACKAGE_MIRROR=hackage.haskell.org:http://hackage.fpcomplete.com)
