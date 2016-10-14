@@ -25,9 +25,6 @@ compare them for equivalence. For example:
 True
 ```
 
-## More Unicode Related Stuff
-See NOTES.md.
-
 ## Contributing
 Please use https://github.com/harendra-kumar/unicode-transforms to raise
 issues, or send pull requests.
