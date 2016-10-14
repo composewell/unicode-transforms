@@ -3,11 +3,11 @@
 
 module Main (main) where
 
-import           Data.Text                            (Text)
-import qualified Data.Text.Normalize                  as T
-import           Data.Text.Normalize                  (NormalizationMode (..))
-import           QuickCheckUtils                      ()
-import           Test.QuickCheck
+import Data.Text (Text)
+import qualified Data.Text.Normalize as T
+import Data.Text.Normalize (NormalizationMode)
+import QuickCheckUtils ()
+import Test.QuickCheck (maxSuccess, stdArgs, quickCheckWith)
 
 #ifdef HAS_ICU
 import qualified Data.Text.ICU                        as ICU

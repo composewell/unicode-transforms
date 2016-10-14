@@ -1,8 +1,8 @@
 module Main (main) where
 
-import Data.Text.Normalize (NormalizationMode(..))
+import Data.Text.Normalize (NormalizationMode(NFD))
 import QuickCheckUtils ()
-import Test.QuickCheck
+import Test.QuickCheck (quickCheck)
 
 -- Misc, trivial, boundary test cases
 
