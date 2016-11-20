@@ -1,4 +1,12 @@
-# Unicode related packages
+# Unicode Resources
+
+* http://unicode.org/
+* http://www.unicode.org/versions/Unicode9.0.0/ch03.pdf Normalization spec
+* http://www.unicode.org/reports/tr15/ UNICODE NORMALIZATION FORMS
+* http://www.unicode.org/reports/tr44/ UNICODE CHARACTER DATABASE
+* [Unicode Character Database](http://www.unicode.org/Public/UCD/latest/ucd)
+
+# Unicode related Haskell packages
 
 ## Casemapping and Casefolding
 The `text` package already provides proper unicode casemapping and casefolding
@@ -44,7 +52,3 @@ not be up to date or useful.
 ### Text (UTF16)
 * [text](https://www.stackage.org/lts/package/text) An efficient packed Unicode text type
 * [text-normal](https://hackage.haskell.org/package/text-normal) Data types for Unicode-normalized text - depends on text-icu
-
-# Unicode resources
-
-* [Unicode Character Database](http://www.unicode.org/Public/UCD/latest/ucd)
