@@ -79,6 +79,7 @@ library:
     - Data.Unicode.Properties.DecomposeHangul
     - Data.Unicode.Properties.Decompositions
     - Data.Unicode.Properties.DecompositionsK
+    - Data.Unicode.Properties.DecompositionsK2
   dependencies:
     - bitarray   >= 0.0.1 && < 0.1
     - bytestring >= 0.9   && < 0.11

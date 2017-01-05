@@ -4,10 +4,12 @@ module Data.Unicode.Properties.Decompositions
 (decomposeChar)
 where
 
+
 -- Note: this is a partial function we do not expect to call
 -- this if isDecomposable returns false.
 {-# NOINLINE decomposeChar #-}
 decomposeChar :: Char -> [Char]
+
 decomposeChar '\192' = "A\768"
 decomposeChar '\193' = "A\769"
 decomposeChar '\194' = "A\770"

@@ -62,7 +62,7 @@ flag has-llvm
 
 library
   hs-source-dirs:
-      ./.
+      .
   default-language: Haskell2010
   ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
   exposed-modules:
@@ -79,6 +79,7 @@ library
       Data.Unicode.Properties.DecomposeHangul
       Data.Unicode.Properties.Decompositions
       Data.Unicode.Properties.DecompositionsK
+      Data.Unicode.Properties.DecompositionsK2
   build-depends:
       base >= 4.7 && < 5
     , bitarray   >= 0.0.1 && < 0.1
