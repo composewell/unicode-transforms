@@ -1,5 +1,5 @@
 packages:
 - '.'
-resolver: nightly-2016-09-08
+resolver: lts-7.14
 extra-deps:
 - bitarray-0.0.1.1
