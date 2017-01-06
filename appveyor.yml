@@ -10,17 +10,18 @@ environment:
     BUILD: "stack"
     RESOLVER: "lts-6"
     GHC_OPTIONS: "-O0 -Werror"
+#   STACK_OPTIONS: "-v"
 
     STACK_ROOT: "c:\\sr"
     LOCAL_BIN: "%APPDATA%\\local\\bin"
     PATH: "%PATH%;%APPDATA%\\local\\bin"
     CABAL_REINIT_CONFIG: "y"
     TEST_INSTALL: "y"
-    PACKAGE_TEST_VER: "62db8f69afcb47428d1fb87ce4005b453f7f179c"
+    PACKAGE_TEST_VER: "4e7e521c611c8f02b01e68c3de8d1321453fc955"
 
 cache:
   - "%STACK_ROOT%" # stack root
-  # ghc & msys - cache restore take almost same time as reinstall
+  # ghc & msys - cache restore takes almost same time as reinstall
   # - "%LOCALAPPDATA%\\Programs\\stack"
   - "%LOCAL_BIN%"
   - "%APPDATA%\\cabal"
@@ -35,4 +36,4 @@ before_test:
 
 test_script:
 - stack setup > nul
-- stack exec bash package-test.sh
+- chcp 65001 && stack exec bash package-test.sh
