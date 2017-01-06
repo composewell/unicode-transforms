@@ -10,7 +10,7 @@
 --               it to Haskell data structures
 --
 -- Copyright   : (c) 2014–2015 Antonio Nikishaev
---               (c) 2016 Harendra Kumar
+--               (c) 2016-2017 Harendra Kumar
 --
 -- License     : BSD-style
 -- Maintainer  : harendra.kumar@gmail.com
@@ -104,11 +104,11 @@ genMinMax prefix ordList = unlines
 
 genBitmap :: String -> [Int] -> String
 genBitmap prefix ordList = unlines
-    [ "bitList :: [(Int, Bool)]"
-    , "bitList = " ++ (show $ map (,True) ordList)
+    [ "bitList :: [Int]"
+    , "bitList = " ++ show ordList
     , ""
     , prefix <> "Bitmap :: BitArray"
-    , prefix <> "Bitmap = bitArray "
+    , prefix <> "Bitmap = bitArraySetBits "
       ++ (show (minimum ordList, maximum ordList))
       ++ " bitList"
     ]
@@ -121,7 +121,8 @@ genCombiningClass props file = unlines
             , "where"
             , ""
             , "import Data.Char (ord)"
-            , "import Data.BitArray (BitArray, bitArray, lookupBit)"
+            , "import Data.BitArray (BitArray, lookupBit)"
+            , "import Data.Unicode.Properties.BitArray (bitArraySetBits)"
             , ""
             , "getCombiningClass :: Char -> Int"
             , concat $ map genCombiningClassDef ccmap
@@ -160,7 +161,8 @@ genDecomposable dtype props file = unlines
             , "(decomposeBitmap, decomposeMax, decomposeMin)"
             , "where"
             , ""
-            , "import Data.BitArray (BitArray, bitArray)"
+            , "import Data.BitArray (BitArray)"
+            , "import Data.Unicode.Properties.BitArray (bitArraySetBits)"
             , ""
             , genMinMax "decompose" ordList
             , genBitmap "decompose" ordList

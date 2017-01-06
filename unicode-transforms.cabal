@@ -71,6 +71,7 @@ library
       Data.Unicode.Types
   other-modules:
       Data.Unicode.Internal.NormalizeStream
+      Data.Unicode.Properties.BitArray
       Data.Unicode.Properties.CombiningClass
       Data.Unicode.Properties.Compositions
       Data.Unicode.Properties.Decomposable
