@@ -1,3 +1,7 @@
+## 0.2.1
+
+* Improve speed and resource hog during compilation
+
 ## 0.2.0
 
 * Support Unicode version 8.0
