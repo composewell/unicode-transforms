@@ -10,22 +10,22 @@ import QuickCheckUtils ()
 import Test.QuickCheck (maxSuccess, stdArgs, quickCheckWith)
 
 #ifdef HAS_ICU
-import qualified Data.Text.ICU                        as ICU
+import qualified Data.Text.ICU as ICU
 
 toICUMode :: NormalizationMode -> ICU.NormalizationMode
 toICUMode mode =
     case mode of
-       NFD  -> ICU.NFD
-       NFKD -> ICU.NFKD
-       NFC  -> ICU.NFC
-       NFKC -> ICU.NFKC
+       T.NFD  -> ICU.NFD
+       T.NFKD -> ICU.NFKD
+       T.NFC  -> ICU.NFC
+       T.NFKC -> ICU.NFKC
 
 t_normalizeCompareICU :: NormalizationMode -> Text -> Bool
 t_normalizeCompareICU mode t =
     T.normalize mode t == ICU.normalize (toICUMode mode) t
 
 #else
-import qualified Data.Text                            as T
+import qualified Data.Text as T
 
 -- WARNING! These tests do not check the correctness of the output they
 -- only check whether a non empty output is produced.
