@@ -1,3 +1,7 @@
+## 0.3.0
+
+* Support Unicode version 9.0
+
 ## 0.2.1
 
 * Improve speed and resource hog during compilation
