@@ -1,5 +1,5 @@
 name:                unicode-transforms
-version:             0.2.1
+version:             0.3.0
 synopsis:            Unicode normalization
 description:         Fast Unicode 9.0 normalization in Haskell (NFC, NFKC, NFD, NFKD).
 homepage:            http://github.com/harendra-kumar/unicode-transforms
