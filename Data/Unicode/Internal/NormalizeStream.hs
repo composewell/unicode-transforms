@@ -188,7 +188,7 @@ stream (Text arr off len) = Stream next off (betweenSize (len `shiftR` 1) len)
             n2 = A.unsafeIndex arr (i + 1)
 {-# INLINE [0] stream #-}
 
--- | /O(n)/ Convert a 'Stream Char' into a decompose normalized 'Text'.
+-- | /O(n)/ Convert a 'Stream Char' into a decompose-normalized 'Text'.
 unstream :: D.DecomposeMode -> Stream Char -> Text
 unstream mode (Stream next0 s0 len) = runText $ \done -> do
   -- Before encoding each char we perform a buffer realloc check assuming
