@@ -1,3 +1,7 @@
+## 0.3.1
+
+* Update dependency versions
+
 ## 0.3.0
 
 * Support Unicode version 9.0

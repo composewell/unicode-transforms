@@ -8,7 +8,7 @@ clone_folder: "c:\\pkg"
 environment:
   global:
     BUILD: "stack"
-    RESOLVER: "lts-6"
+    RESOLVER: "lts-8.21"
     GHC_OPTIONS: "-O0 -Werror"
 #   STACK_OPTIONS: "-v"
 

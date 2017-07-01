@@ -31,17 +31,17 @@ matrix:
     addons: {apt: {packages: [cabal-install-head,ghc-head], sources: [hvr-ghc]}}
 
   # stack/linux use a pre-installed cabal-install for faster builds
-  - env: BUILD=stack RESOLVER=lts-6 CABALVER=1.22
+  - env: BUILD=stack RESOLVER=lts-8.21 CABALVER=1.22
     addons: {apt: {packages: [libgmp-dev,cabal-install-1.22], sources: [hvr-ghc]}}
 
   - env: BUILD=stack RESOLVER=nightly CABALVER=1.24
     addons: {apt: {packages: [libgmp-dev,cabal-install-1.24], sources: [hvr-ghc]}}
 
   # cabal/stack/osx - TODO install cabal-install
-  - env: BUILD=cabal RESOLVER=lts-6
+  - env: BUILD=cabal RESOLVER=lts-8.21
     os: osx
 
-  - env: BUILD=stack RESOLVER=lts-6
+  - env: BUILD=stack RESOLVER=lts-8.21
     os: osx
 
   allow_failures:
