@@ -31,8 +31,8 @@ extra-source-files:
     Changelog.md
     NOTES.md
     README.md
+    stack-7.10.yaml
     stack-7.8.yaml
-    stack-8.0.yaml
     stack.yaml
     unicode-data/extra/NormalizationTest.txt
     unicode-data/README.md
@@ -102,7 +102,7 @@ test-suite extras
   build-depends:
       base >= 4.7 && < 5
     , deepseq     >= 1.1 && < 1.5
-    , QuickCheck  >= 2.1 && < 2.10
+    , QuickCheck  >= 2.1 && < 2.11
     , text        >= 1.1.1 && < 1.3
     , unicode-transforms
   if flag(dev)
@@ -124,7 +124,7 @@ test-suite quickcheck
   build-depends:
       base >= 4.7 && < 5
     , deepseq     >= 1.1 && < 1.5
-    , QuickCheck  >= 2.1 && < 2.10
+    , QuickCheck  >= 2.1 && < 2.11
     , text        >= 1.1.1 && < 1.3
     , unicode-transforms
   if flag(dev)
@@ -169,12 +169,12 @@ benchmark bench
   ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
   build-depends:
       base >= 4.7 && < 5
-    , criterion            >= 1.1.1 && < 1.2
+    , criterion            >= 1.1.1 && < 1.3
     , deepseq              >= 1.1.0 && < 1.5
     , filepath             >= 1.0   && < 2
-    , optparse-applicative >= 0.0.1 && < 0.14
-    , path                 >= 0.0.0 && < 0.6
-    , path-io              >= 0.1.0 && < 1.3
+    , optparse-applicative >= 0.0.1 && < 0.15
+    , path                 >= 0.0.0 && < 0.7
+    , path-io              >= 0.1.0 && < 1.4
     , text                 >= 1.1.1 && < 1.3
     , unicode-transforms
   if flag(dev)
