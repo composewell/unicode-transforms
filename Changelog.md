@@ -1,3 +1,7 @@
+## 0.3.2
+
+* Work around a GHC/LLVM issue for ARM
+
 ## 0.3.1
 
 * Update dependency versions
