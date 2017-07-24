@@ -103,14 +103,20 @@ genMinMax prefix ordList = unlines
     ]
 
 genBitmap :: String -> [Int] -> String
-genBitmap prefix ordList = unlines
-    [ "bitList :: [Int]"
-    , "bitList = " ++ show ordList
+genBitmap prefix ordList =
+  let l  = length ordList
+      mn = minimum ordList
+      mx = maximum ordList
+      (ordList1, ordList2) = splitAt (div l 2) ordList
+  in  unlines
+    [ "bitList1, bitList2 :: [Int]"
+    , "bitList1 = " ++ show ordList1
+    , "bitList2 = " ++ show ordList2
     , ""
     , prefix <> "Bitmap :: BitArray"
     , prefix <> "Bitmap = bitArraySetBits "
-      ++ (show (minimum ordList, maximum ordList))
-      ++ " bitList"
+      ++ (show (mn, mx))
+      ++ " $ bitList1 ++ bitList2"
     ]
 
 genCombiningClass :: PropertiesDB -> String -> String
