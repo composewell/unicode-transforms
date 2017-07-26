@@ -104,6 +104,8 @@ genMinMax prefix ordList = unlines
 
 genBitmap :: String -> [Int] -> String
 genBitmap prefix ordList =
+  -- On ARM, compilation fails with llvm optimizer crashing when one big list
+  -- is used. Split it into two to avoid the problem.
   let l  = length ordList
       mn = minimum ordList
       mx = maximum ordList
