@@ -3,13 +3,9 @@
 
 module QuickCheckUtils () where
 
-import Control.DeepSeq (NFData(rnf))
 import qualified Data.Text as T
 import Data.Text.Normalize (NormalizationMode(NFD, NFKD, NFC, NFKC))
 import Test.QuickCheck (Arbitrary(arbitrary, shrink), elements)
-
-instance NFData Ordering where
-    rnf !_  = ()
 
 instance Arbitrary T.Text where
     arbitrary = T.pack `fmap` arbitrary
