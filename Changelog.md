@@ -1,3 +1,7 @@
+## 0.3.3
+
+* GHC 8.2.1 support
+
 ## 0.3.2
 
 * Work around a GHC/LLVM issue for ARM
