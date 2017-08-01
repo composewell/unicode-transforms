@@ -190,5 +190,5 @@ benchmark bench
     build-depends:
         path (< 0.5.12 || > 0.5.12)
   other-modules:
-      NormalizeFile
+      .
   default-language: Haskell2010

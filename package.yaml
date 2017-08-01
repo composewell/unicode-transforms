@@ -147,6 +147,7 @@ benchmarks:
 
     source-dirs: benchmark
     main:        Benchmark.hs
+    other-modules: .
 
     dependencies:
       - criterion            >= 1.1.1 && < 1.3

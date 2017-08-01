@@ -31,8 +31,8 @@ matrix:
   - env: BUILD=stack RESOLVER=lts-9.0 CABALVER=1.22
     addons: {apt: {packages: [libgmp-dev,cabal-install-1.22], sources: [hvr-ghc]}}
 
-  - env: BUILD=stack RESOLVER=nightly CABALVER=1.24
-    addons: {apt: {packages: [libgmp-dev,cabal-install-1.24], sources: [hvr-ghc]}}
+  - env: BUILD=stack RESOLVER=nightly CABALVER=2.0
+    addons: {apt: {packages: [libgmp-dev,cabal-install-2.0], sources: [hvr-ghc]}}
 
   # cabal/stack/osx - TODO install cabal-install
   - env: BUILD=cabal RESOLVER=lts-9.0
@@ -43,7 +43,7 @@ matrix:
 
   allow_failures:
   - env: BUILD=cabal GHCVER=head CABALVER=head
-  - env: BUILD=stack RESOLVER=nightly
+#  - env: BUILD=stack RESOLVER=nightly
 
 install: true
 script:
