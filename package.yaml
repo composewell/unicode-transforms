@@ -14,7 +14,7 @@ category:            Data,Text,Unicode
 stability:           Experimental
 github:              harendra-kumar/unicode-transforms
 
-tested-with: GHC==7.8.4, GHC==7.10.3, GHC==8.0.1
+tested-with: GHC==7.10.3, GHC==8.0.2, GHC==8.2.1
 
 extra-source-files:
   - Changelog.md
@@ -22,7 +22,6 @@ extra-source-files:
   - README.md
   - benchmark/data/*.txt
   - stack.yaml
-  - stack-7.8.yaml
   - stack-7.10.yaml
   - unicode-data/README.md
   - unicode-data/ucd/NormalizationTest.txt

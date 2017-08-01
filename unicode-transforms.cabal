@@ -10,7 +10,7 @@ homepage:            http://github.com/harendra-kumar/unicode-transforms
 bug-reports:         https://github.com/harendra-kumar/unicode-transforms/issues
 license:             BSD3
 license-file:        LICENSE
-tested-with:         GHC==7.8.4, GHC==7.10.3, GHC==8.0.1
+tested-with:         GHC==7.10.3, GHC==8.0.2, GHC==8.2.1
 author:              Harendra Kumar
 maintainer:          harendra.kumar@gmail.com
 copyright:           2016-2017 Harendra Kumar,
@@ -32,7 +32,6 @@ extra-source-files:
     NOTES.md
     README.md
     stack-7.10.yaml
-    stack-7.8.yaml
     stack.yaml
     unicode-data/extra/NormalizationTest.txt
     unicode-data/README.md
