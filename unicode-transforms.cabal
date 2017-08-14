@@ -190,6 +190,4 @@ benchmark bench
   if impl(ghc < 7.10)
     build-depends:
         path (< 0.5.12 || > 0.5.12)
-  other-modules:
-      .
   default-language: Haskell2010
