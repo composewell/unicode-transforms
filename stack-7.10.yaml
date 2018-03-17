@@ -3,3 +3,5 @@ packages:
 resolver: lts-6.35
 extra-deps:
 - bitarray-0.0.1.1
+- gauge-0.2.1
+- basement-0.0.7
