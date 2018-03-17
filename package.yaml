@@ -116,7 +116,7 @@ tests:
     other-modules: QuickCheckUtils
     dependencies:
       - deepseq     >= 1.1 && < 1.5
-      - QuickCheck  >= 2.1 && < 2.11
+      - QuickCheck  >= 2.1 && < 2.12
       - text        >= 1.1.1 && < 1.3
       - unicode-transforms
     when:
@@ -130,7 +130,7 @@ tests:
     other-modules: QuickCheckUtils
     dependencies:
       - deepseq     >= 1.1 && < 1.5
-      - QuickCheck  >= 2.1 && < 2.11
+      - QuickCheck  >= 2.1 && < 2.12
       - text        >= 1.1.1 && < 1.3
       - unicode-transforms
 
