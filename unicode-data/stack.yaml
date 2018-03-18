@@ -1,3 +1,5 @@
 # This stack.yaml is to independently build
 # the utility using its own cabal file
-resolver: lts-6.16
+resolver: lts-11.0
+extra-deps:
+- getopt-generics-0.13.0.2
