@@ -5,7 +5,8 @@ env:
   # ------------------------------------------------------------------------
   # Global options used for all CI tests
   # ------------------------------------------------------------------------
-  - GHC_OPTIONS="-Werror"
+  #- GHC_OPTIONS="-Werror"
+  #
 
   # ------------------------------------------------------------------------
   # Options for builds that need stack (note, cabal builds can use stack)
@@ -60,17 +61,17 @@ matrix:
   # (Linux) stack builds
   # --------------------------------------------------------------------------
 
-  - env: BUILD=stack CABALVER=1.22 GHCVER=7.10.3 RESOLVER=lts-6 STACK_YAML=stack-7.10.yaml
+    - env: BUILD=stack CABALVER=1.22 GHCVER=7.10.3 RESOLVER=lts-6 STACK_YAML=stack-7.10.yaml GHC_OPTIONS=-Werror
     addons: {apt: {packages: [cabal-install-1.22,ghc-7.10.3], sources: [hvr-ghc]}}
 
-  - env: BUILD=stack CABALVER=1.24 GHCVER=8.0.2 RESOLVER=lts-9
+  - env: BUILD=stack CABALVER=1.24 GHCVER=8.0.2 RESOLVER=lts-9 GHC_OPTIONS=-Werror
     addons: {apt: {packages: [cabal-install-1.24,ghc-8.0.2], sources: [hvr-ghc]}}
 
-  - env: BUILD=stack CABALVER=2.0 GHCVER=8.2.2 RESOLVER=lts-11
+  - env: BUILD=stack CABALVER=2.0 GHCVER=8.2.2 RESOLVER=lts-11 GHC_OPTIONS=-Werror
     addons: {apt: {packages: [cabal-install-2.0,ghc-8.2.2], sources: [hvr-ghc]}}
 
   # Nightly
-  - env: BUILD=stack RESOLVER=nightly
+  - env: BUILD=stack RESOLVER=nightly GHC_OPTIONS=-Werror
 
   # Using a custom stack-yaml config file.
   #- env: BUILD=stack STACK_YAML=.ci/stack-8.0.yaml
@@ -131,7 +132,7 @@ matrix:
   # --------------------------------------------------------------------------
 
   allow_failures:
-  - env: BUILD=stack RESOLVER=nightly
+  - env: BUILD=stack RESOLVER=nightly GHC_OPTIONS=-Werror
   - env: BUILD=cabal CABALVER=head GHCVER=head
   - env: BUILD=stack RESOLVER=lts-11 HLINT_COMMANDS="hlint lint ."
 
