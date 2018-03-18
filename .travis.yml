@@ -60,7 +60,7 @@ matrix:
   # (Linux) stack builds
   # --------------------------------------------------------------------------
 
-    - env: BUILD=stack CABALVER=1.22 GHCVER=7.10.3 RESOLVER=lts-6 STACK_YAML=stack-7.10.yaml GHC_OPTIONS=-Werror
+  - env: BUILD=stack CABALVER=1.22 GHCVER=7.10.3 RESOLVER=lts-6 STACK_YAML=stack-7.10.yaml GHC_OPTIONS=-Werror
     addons: {apt: {packages: [cabal-install-1.22,ghc-7.10.3], sources: [hvr-ghc]}}
 
   - env: BUILD=stack CABALVER=1.24 GHCVER=8.0.2 RESOLVER=lts-9 GHC_OPTIONS=-Werror
