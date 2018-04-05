@@ -1,3 +1,7 @@
+## 0.3.4
+
+* GHC 8.4.1 support
+
 ## 0.3.3
 
 * GHC 8.2.1 support
