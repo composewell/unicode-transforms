@@ -1,3 +1,8 @@
+## 0.3.5
+
+* Update dependency version bounds
+* Test with GHC 8.6.2
+
 ## 0.3.4
 
 * GHC 8.4.1 support
