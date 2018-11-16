@@ -112,11 +112,11 @@ matrix:
   #- env: BUILD=cabal-new GHCVER=8.2.2
   #  addons: {apt: {packages: [cabal-install-2.0,ghc-8.2.2], sources: [hvr-ghc]}}
 
-  - env: BUILD=cabal-new GHCVER=8.4.1
-    addons: {apt: {packages: [cabal-install-2.2,ghc-8.4.1], sources: [hvr-ghc]}}
+  - env: BUILD=cabal-new GHCVER=8.6.2
+    addons: {apt: {packages: [cabal-install-2.2,ghc-8.6.2], sources: [hvr-ghc]}}
 
-  - env: BUILD=cabal-new GHCVER=8.4.1 CABAL_NEWBUILD_OPTIONS="--flags=has-llvm"
-    addons: {apt: {packages: [llvm-5.0,cabal-install-2.2,ghc-8.4.1], sources: [llvm-toolchain-trusty-5.0,hvr-ghc]}}
+  - env: BUILD=cabal-new GHCVER=8.4.4 CABAL_NEWBUILD_OPTIONS="--flags=has-llvm"
+    addons: {apt: {packages: [llvm-5.0,cabal-install-2.2,ghc-8.4.4], sources: [llvm-toolchain-trusty-5.0,hvr-ghc]}}
 
   - env: BUILD=cabal-new GHCVER=head
     addons: {apt: {packages: [cabal-install-head,ghc-head], sources: [hvr-ghc]}}
@@ -130,7 +130,7 @@ matrix:
   # --------------------------------------------------------------------------
 
   # GHC 8.2.2/cabal build using stack!
-  - env: BUILD=cabal-new RESOLVER=lts-11 GHCVER=8.2.2
+  - env: BUILD=cabal-new RESOLVER=lts-12 GHCVER=8.4.4
     os: osx
 
   # GHC 8.2.2/stack
