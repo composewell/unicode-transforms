@@ -1,11 +1,11 @@
--- This file has been generated from package.yaml by hpack version 0.20.0.
+-- This file has been generated from package.yaml by hpack version 0.28.2.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 7a7d4e648121c309b0a878afd840b76eabfb6e00860059d926fea7fc97430651
+-- hash: 8d3b6fcf290b3d08f9396ca3a1c7414f3f5d88353b52cdaa26f17ca47200531a
 
 name:           unicode-transforms
-version:        0.3.4
+version:        0.3.5
 synopsis:       Unicode normalization
 description:    Fast Unicode 9.0 normalization in Haskell (NFC, NFKC, NFD, NFKD).
 category:       Data,Text,Unicode
@@ -21,7 +21,6 @@ license-file:   LICENSE
 tested-with:    GHC==7.10.3, GHC==8.0.2, GHC==8.2.2, GHC==8.4.4, GHC==8.6.2
 build-type:     Simple
 cabal-version:  >= 1.10
-
 extra-source-files:
     benchmark/data/AllChars.txt
     benchmark/data/Deutsch.txt
@@ -62,20 +61,6 @@ flag has-llvm
   default: False
 
 library
-  hs-source-dirs:
-      ./.
-  ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
-  build-depends:
-      base >=4.7 && <5
-    , bitarray >=0.0.1 && <0.1
-    , bytestring >=0.9 && <0.11
-    , text >=1.1.1 && <1.3
-  if flag(dev)
-    ghc-options: -O0
-  else
-    ghc-options: -O2 -funbox-strict-fields
-  if flag(has-llvm)
-    ghc-options: -fllvm
   exposed-modules:
       Data.ByteString.UTF8.Normalize
       Data.Text.Normalize
@@ -92,11 +77,27 @@ library
       Data.Unicode.Properties.Decompositions
       Data.Unicode.Properties.DecompositionsK
       Data.Unicode.Properties.DecompositionsK2
+  hs-source-dirs:
+      ./.
+  ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
+  build-depends:
+      base >=4.7 && <5
+    , bitarray >=0.0.1 && <0.1
+    , bytestring >=0.9 && <0.11
+    , text >=1.1.1 && <1.3
+  if flag(dev)
+    ghc-options: -O0
+  else
+    ghc-options: -O2 -funbox-strict-fields
+  if flag(has-llvm)
+    ghc-options: -fllvm
   default-language: Haskell2010
 
 test-suite extras
   type: exitcode-stdio-1.0
   main-is: Extra.hs
+  other-modules:
+      QuickCheckUtils
   hs-source-dirs:
       test
   ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
@@ -112,13 +113,13 @@ test-suite extras
     ghc-options: -O2 -funbox-strict-fields
   if flag(has-llvm)
     ghc-options: -fllvm
-  other-modules:
-      QuickCheckUtils
   default-language: Haskell2010
 
 test-suite quickcheck
   type: exitcode-stdio-1.0
   main-is: Properties.hs
+  other-modules:
+      QuickCheckUtils
   hs-source-dirs:
       test
   ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
@@ -138,8 +139,6 @@ test-suite quickcheck
     cpp-options: -DHAS_ICU
     build-depends:
         text-icu >=0.6.2.1
-  other-modules:
-      QuickCheckUtils
   default-language: Haskell2010
 
 test-suite ucd
