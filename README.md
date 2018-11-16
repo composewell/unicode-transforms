@@ -2,7 +2,7 @@
 
 [![Hackage](https://img.shields.io/hackage/v/unicode-transforms.svg?style=flat)](https://hackage.haskell.org/package/unicode-transforms)
 [![Build Status](https://travis-ci.org/composewell/unicode-transforms.svg?branch=master)](https://travis-ci.org/composewell/unicode-transforms)
-[![Windows Build status](https://ci.appveyor.com/api/projects/status/5wov8m1m0asvbv32?svg=true)](https://ci.appveyor.com/project/composewell/unicode-transforms)
+[![Windows Build status](https://ci.appveyor.com/api/projects/status/5wov8m1m0asvbv32?svg=true)](https://ci.appveyor.com/project/harendra-kumar/unicode-transforms)
 [![Coverage Status](https://coveralls.io/repos/composewell/unicode-transforms/badge.svg?branch=master&service=github)](https://coveralls.io/github/composewell/unicode-transforms?branch=master)
 
 Fast Unicode 9.0 normalization in Haskell (NFC, NFKC, NFD, NFKD).
