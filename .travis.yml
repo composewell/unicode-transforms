@@ -80,7 +80,7 @@ matrix:
   - env: BUILD=stack RESOLVER=lts-6 GHCVER=7.10.3 STACK_YAML=stack-7.10.yaml GHC_OPTIONS=-Werror
     addons: {apt: {packages: [cabal-install-1.22], sources: [hvr-ghc]}}
 
-  - env: BUILD=stack RESOLVER=lts-9 GHCVER=8.0.2 GHC_OPTIONS=-Werror
+  - env: BUILD=stack RESOLVER=lts-9 GHCVER=8.0.2 STACK_YAML=stack-8.0.yaml GHC_OPTIONS=-Werror
     addons: {apt: {packages: [cabal-install-1.24], sources: [hvr-ghc]}}
 
   # Use cabal-install-1.24 for stack solver to work
