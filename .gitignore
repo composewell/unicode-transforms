@@ -20,3 +20,6 @@ cabal.project.local
 cabal.project.local~
 .HTF/
 .ghc.environment.*
+
+unicode-data/ucdxml/ucd.all.flat.pdb
+unicode-data/ucdxml/ucd.all.flat.xml
