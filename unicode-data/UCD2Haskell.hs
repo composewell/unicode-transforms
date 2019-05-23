@@ -19,6 +19,7 @@
 --
 module Main where
 
+import           Prelude hiding (pred)
 import           Control.DeepSeq      (NFData (..), deepseq)
 import           Control.Exception
 import           Data.Binary          as Bin
@@ -333,6 +334,7 @@ toProp (TagOpen _ psml) = [ (c, CharProps{..}) | c <- cps ]
               in case readCP <$> ["cp", "first-cp", "last-cp"] of
                 [Just c , Nothing, Nothing] -> [c]
                 [Nothing, Just c1, Just c2] -> [c1..c2]
+                _                           -> undefined
 
         _name                       =                  psm!"na"
         _generalCategory            = read           $ psm!"gc"
@@ -354,6 +356,7 @@ toProp (TagOpen _ psml) = [ (c, CharProps{..}) | c <- cps ]
         _decomposition              = readDecomp     $ psm!"dm"
         _decompositionType          = readDecompType $ psm!"dt"
         _fullDecompositionExclusion = readYN         $ psm!"Comp_Ex"
+toProp _ = undefined
 
 -- | Extract char properties from UCD XML file
 xmlToProps :: FilePath -> FilePath -> IO [(Char, CharProps)]
