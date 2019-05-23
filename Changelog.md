@@ -1,3 +1,9 @@
+## Unreleased
+
+* Update to Unicode version 12.1.0
+* Update Quickcheck dependency version bounds
+* Test with GHC 8.6.5
+
 ## 0.3.5
 
 * Update dependency version bounds
