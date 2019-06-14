@@ -1,4 +1,4 @@
-## Unreleased
+## 0.3.6
 
 * Update to Unicode version 12.1.0
 * Update Quickcheck dependency version bounds
