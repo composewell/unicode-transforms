@@ -1,11 +1,5 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.31.2.
---
--- see: https://github.com/sol/hpack
---
--- hash: ce95a177770eecc5c1676191094fd31ddadc5ac3f54f5bc0245c2ce70837ca21
-
 name:           unicode-transforms
 version:        0.3.5
 synopsis:       Unicode normalization
