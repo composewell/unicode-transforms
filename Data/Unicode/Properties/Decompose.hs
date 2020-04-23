@@ -17,7 +17,6 @@ module Data.Unicode.Properties.Decompose
     )
 where
 
-import           Data.BitArray                           (BitArray, lookupBit)
 import           Data.Char                               (ord)
 
 import qualified Data.Unicode.Properties.Decomposable    as D
@@ -46,7 +45,7 @@ decomposeMax DecomposeNFD  = D.decomposeMax
 decomposeMax DecomposeNFKD = K.decomposeMax
 
 {-# INLINE decomposeBitmap #-}
-decomposeBitmap :: DecomposeMode -> BitArray
+decomposeBitmap :: DecomposeMode -> Int -> Bool
 decomposeBitmap DecomposeNFD  = D.decomposeBitmap
 decomposeBitmap DecomposeNFKD = K.decomposeBitmap
 
@@ -62,7 +61,7 @@ data DecomposeResult = FalseA | FalseB | FalseC | TrueA
 isDecomposable :: DecomposeMode -> Char -> DecomposeResult
 isDecomposable mode c | (ord c) <  decomposeMin mode = FalseA
 isDecomposable mode c | (ord c) <= decomposeMax mode =
-    case lookupBit (decomposeBitmap mode) (ord c) of
+    case decomposeBitmap mode (ord c) of
       True -> TrueA
       False -> FalseB
 isDecomposable _ _ = FalseC
