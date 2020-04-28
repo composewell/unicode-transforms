@@ -92,10 +92,10 @@ genSignature :: String -> String
 genSignature testBit = testBit <> " :: Char -> Bool"
 
 genRangeCheck :: String -> [Int] -> String
-genRangeCheck testBit ordList =
-      testBit <> " c | (ord c) < "
-      <> show (minimum ordList) <> " || (ord c) > "
-      <> show (maximum ordList) <> " = False"
+genRangeCheck var ordList =
+      var <> " < "
+      <> show (minimum ordList) <> " || " <> var <> " > "
+      <> show (maximum ordList)
 
 genMinMax :: String -> [Int] -> String
 genMinMax prefix ordList = unlines
@@ -108,11 +108,9 @@ genMinMax prefix ordList = unlines
 genBitmap :: String -> [Int] -> String
 genBitmap prefix ordList = unlines
   [ prefix <> "Bitmap :: Int -> Bool"
-  , prefix <> "Bitmap i@(I# i#) = W# (indexWordOffAddr# addr# (i# `iShiftRL#` logFbs#)) `testBit` (i .&. (fbs - 1))"
+  , prefix <> "Bitmap index = lookupBit64 bitmap# index"
   , "  where"
-  , "    fbs = finiteBitSize (0 :: Word)"
-  , "    logFbs# = case countTrailingZeros fbs of I# l# -> l#"
-  , "    addr# = " ++ show (bitMapToAddrLiteral (positionsToBitMap ordList)) ++ "#"
+  , "    bitmap# = " ++ show (bitMapToAddrLiteral (positionsToBitMap ordList)) ++ "#"
   ]
 
 positionsToBitMap :: [Int] -> [Bool]
@@ -146,9 +144,8 @@ genCombiningClass props file = unlines
             , "(getCombiningClass, isCombining)"
             , "where"
             , ""
-            , "import Data.Bits ((.&.), testBit, finiteBitSize, countTrailingZeros)"
             , "import Data.Char (ord)"
-            , "import GHC.Exts (Int(..), Word(..), iShiftRL#, indexWordOffAddr#)"
+            , "import Data.Unicode.Internal.Bits (lookupBit64)"
             , ""
             , "getCombiningClass :: Char -> Int"
             , concat $ map genCombiningClassDef ccmap
@@ -156,8 +153,12 @@ genCombiningClass props file = unlines
             , ""
             , "{-# INLINE isCombining #-}"
             , genSignature  "isCombining"
-            , genRangeCheck "isCombining" ordList
-            , "isCombining c = combiningBitmap (ord c)"
+            , "isCombining c ="
+            , "    let i = ord c"
+            , "    in if " ++ genRangeCheck "i" ordList
+            , "       then False"
+            , "       else combiningBitmap i"
+            , ""
             , genBitmap "combining" ordList
             ]
     where
@@ -188,8 +189,7 @@ genDecomposable dtype props file = unlines
             , "(decomposeBitmap, decomposeMax, decomposeMin)"
             , "where"
             , ""
-            , "import Data.Bits ((.&.), testBit, finiteBitSize, countTrailingZeros)"
-            , "import GHC.Exts (Int(..), Word(..), iShiftRL#, indexWordOffAddr#)"
+            , "import Data.Unicode.Internal.Bits (lookupBit64)"
             , ""
             , genMinMax "decompose" ordList
             , genBitmap "decompose" ordList
