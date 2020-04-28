@@ -1,5 +1,6 @@
 {-# OPTIONS_GHC -funbox-strict-fields #-}
 {-# LANGUAGE BangPatterns #-}
+{-# LANGUAGE TupleSections #-}
 -- |
 -- Module      : Data.Unicode.Internal.NormalizeStream
 -- Copyright   : (c) 2016 Harendra Kumar
@@ -19,10 +20,7 @@ module Data.Unicode.Internal.NormalizeStream
     )
     where
 
-import           Control.Monad                          (ap)
 import           Data.Char                              (chr, ord)
-import           Data.List                              (sortBy)
-import           Data.Ord                               (comparing)
 import qualified Data.Text.Array                        as A
 import           Data.Text.Internal                     (Text (..))
 import qualified Data.Text.Internal.Encoding.Utf16      as U16
@@ -44,7 +42,28 @@ import qualified Data.Unicode.Properties.DecomposeHangul as H
 -- Reorder buffer to hold characters till the next starter boundary
 -------------------------------------------------------------------------------
 
-data ReBuf = Empty | One {-# UNPACK #-} !Char | Many [Char]
+-- | A list of combining characters, ordered by 'CC.getCombiningClass'.
+-- Couple of top levels are unrolled and unpacked for efficiency.
+data ReBuf = Empty | One !Char | Many !Char !Char ![Char]
+
+{-# INLINE insertIntoReBuf #-}
+insertIntoReBuf :: Char -> ReBuf -> ReBuf
+insertIntoReBuf c Empty = One c
+insertIntoReBuf c (One c0)
+    | CC.getCombiningClass c < CC.getCombiningClass c0
+    = Many c c0 []
+    | otherwise
+    = Many c0 c []
+insertIntoReBuf c (Many c0 c1 cs)
+    | cc < CC.getCombiningClass c0
+    = Many c c0 (c1 : cs)
+    | cc < CC.getCombiningClass c1
+    = Many c0 c (c1 : cs)
+    | otherwise
+    = Many c0 c1 (cs' ++ (c : cs''))
+    where
+        cc = CC.getCombiningClass c
+        (cs', cs'') = span ((<= cc) . CC.getCombiningClass) cs
 
 writeStr :: A.MArray s -> Int -> [Char] -> ST s Int
 writeStr marr di str = go di str
@@ -62,25 +81,28 @@ writeReorderBuffer marr di (One c) = do
     n <- unsafeWrite marr di c
     return (di + n)
 
-writeReorderBuffer marr di (Many str) = writeStr marr di str
+writeReorderBuffer marr di (Many c1 c2 str) = do
+    n1 <- unsafeWrite marr di c1
+    n2 <- unsafeWrite marr (di + n1) c2
+    writeStr marr (di + n1 + n2) str
 
 -------------------------------------------------------------------------------
 -- Decomposition of Hangul characters is done algorithmically
 -------------------------------------------------------------------------------
 
 -- {-# INLINE decomposeCharHangul #-}
-decomposeCharHangul :: A.MArray s -> Int -> Char -> ST s (Int, ReBuf)
+decomposeCharHangul :: A.MArray s -> Int -> Char -> ST s Int
 decomposeCharHangul marr j c = do
     case D.decomposeCharHangul c of
         Left  (l, v)    -> do
             n1 <- unsafeWrite marr j l
             n2 <- unsafeWrite marr (j + n1) v
-            return ((j + n1 + n2), Empty)
+            return (j + n1 + n2)
         Right (l, v, t) -> do
             n1 <- unsafeWrite marr j l
             n2 <- unsafeWrite marr (j + n1) v
             n3 <- unsafeWrite marr (j + n1 + n2) t
-            return (j + n1 + n2 + n3, Empty)
+            return (j + n1 + n2 + n3)
 
 {-# INLINE decomposeChar #-}
 decomposeChar
@@ -92,7 +114,7 @@ decomposeChar
     -> ST s (Int, ReBuf)
 decomposeChar _ marr i reBuf c | D.isHangul c = do
     j <- writeReorderBuffer marr i reBuf
-    decomposeCharHangul marr j c
+    (, Empty) <$> decomposeCharHangul marr j c
 
 -------------------------------------------------------------------------------
 -- Decomposition of characters other than Hangul
@@ -130,46 +152,12 @@ decomposeChar mode marr index reBuf ch = do
         --
         -- (array) (array index) (reorder buffer) (input char)
         {-# INLINE reorder #-}
-        reorder _ i Empty c = return (i, One c)
-
-        -- input char is a starter, flush the reorder buffer
-        reorder arr i (One c0) c | not (CC.isCombining c) = do
-            n1 <- unsafeWrite arr i c0
-            n2 <- unsafeWrite arr (i + n1) c
-            return ((i + n1 + n2), Empty)
-
-        -- input char is combining and there is a starter char in the buffer
-        -- flush the starter char and add the combining char to the buffer
-        reorder arr i (One c0) c | not (CC.isCombining c0) = do
-            n <- unsafeWrite arr i c0
-            return (i + n, One c)
-
-        -- optimized ordering for common case of two combining chars
-        -- XXX replace many with Two here
-        reorder  _ i (One c0) c = return (i, Many orderedPair)
-            where
-                -- {-# INLINE orderedPair #-}
-                orderedPair =
-                    case inOrder c0 c of
-                        True  -> [c0, c]
-                        False -> [c, c0]
-
-                inOrder c1 c2 =
-                    CC.getCombiningClass c1 <= CC.getCombiningClass c2
-
-        -- input char is a starter, flush the reorder buffer
-        reorder arr i rbuf c | not (CC.isCombining c) = do
-            j <- writeReorderBuffer arr i rbuf
-            n <- unsafeWrite arr j c
-            return (j + n, Empty)
-
-        -- unoptimized generic sort for more than two combining chars
-        reorder _ i (Many str) c = return (i, Many (sortCluster (str ++ [c])))
-            where
-                {-# INLINE sortCluster #-}
-                sortCluster =   map fst
-                              . sortBy (comparing snd)
-                              . map (ap (,) CC.getCombiningClass)
+        reorder arr i rbuf c
+            | CC.isCombining c = return (i, insertIntoReBuf c rbuf)
+            | otherwise = do
+                j <- writeReorderBuffer arr i rbuf
+                n <- unsafeWrite arr j c
+                return (j + n, Empty)
 
 -- | /O(n)/ Convert a 'Text' into a 'Stream Char'.
 stream :: Text -> Stream Char
@@ -250,8 +238,8 @@ composeAndWrite arr di st1 Empty st2 = do
 composeAndWrite arr di st1 (One c) st2 =
     composeAndWrite' arr di st1 [c] st2
 
-composeAndWrite arr di st1 (Many str) st2 =
-    composeAndWrite' arr di st1 str st2
+composeAndWrite arr di st1 (Many c1 c2 str) st2 =
+    composeAndWrite' arr di st1 (c1 : c2 : str) st2
 
 composeAndWrite'
     :: A.MArray s
@@ -486,18 +474,7 @@ composeChar mode marr index starter reBuf jbuf ch = do
         reorder _arr i Nothing (One c0) c | not (CC.isCombining c0) = do
             return (i, Just c0, One c)
 
-        -- optimized ordering for common case of two combining chars
-        -- XXX replace many with Two here
-        reorder  _ i st (One c0) c = return (i, st, Many orderedPair)
-            where
-                -- {-# INLINE orderedPair #-}
-                orderedPair =
-                    case inOrder c0 c of
-                        True  -> [c0, c]
-                        False -> [c, c0]
-
-                inOrder c1 c2 =
-                    CC.getCombiningClass c1 <= CC.getCombiningClass c2
+        reorder _ i st rbuf@One{} c = return (i, st, insertIntoReBuf c rbuf)
 
         -- input char is a starter, flush the reorder buffer
         reorder arr i (Just st) rbuf c | not (CC.isCombining c) = do
@@ -508,14 +485,7 @@ composeChar mode marr index starter reBuf jbuf ch = do
             j <- writeReorderBuffer arr i rbuf
             return (j, Just c, Empty)
 
-        -- unoptimized generic sort for more than two combining chars
-        reorder _ i st (Many str) c =
-            return (i, st, Many (sortCluster (str ++ [c])))
-            where
-                {-# INLINE sortCluster #-}
-                sortCluster =   map fst
-                              . sortBy (comparing snd)
-                              . map (ap (,) CC.getCombiningClass)
+        reorder _ i st rbuf@Many{} c = return (i, st, insertIntoReBuf c rbuf)
 
 -- | /O(n)/ Convert a 'Stream Char' into a composed normalized 'Text'.
 unstreamC :: D.DecomposeMode -> Stream Char -> Text
