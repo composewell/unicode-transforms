@@ -1,21 +1,60 @@
 # Comparing benchmarks for regression
 
-Build and run the benchmark executable with `--csvraw=results.csv` option for
-the baseline code i.e. without the changes.
+The following commands are tested with `cabal` version 3.0.
+
+Run the benchmarks for the baseline code i.e. without the changes:
 
 ```
-$ cabal v2-run bench -- --csvraw=results.csv unicode-transforms
+# Remove any old benchmark results file first
+$ rm results.csv
+$ cabal run bench -- --csvraw=results.csv --quick
 ```
+
+It will collect the benchmark results in `results.csv` file.
 
 Now repeat the above step for the new code i.e. with the changes.
-It will append the benchmarks results to the existing csv file.
+It will append the new benchmarks results to the existing `results.csv` file.
 
-If you want the benchmarks to run quickly for a quick overview then use
-`--quick` option when running the benchmarking executable.
+If you want more accurate benchmark results remove the `--quick` flag.
 
-Build the bench-show reporting executable `chart`.
+To generate a benchmark comparison between old and new changes from the
+benchmark results in `results.csv` file:
 
 ```
 # [NOTE] The path "results.csv" is harcoded in the chart executable.
-$ cabal v2-run chart
+$ cabal run chart --flag bench-show
+```
+
+# Comparing with ICU (text-icu package)
+
+Install the icu library:
+
+```
+# On Mac OS using MacPorts
+$ sudo port install icu
+
+# On Debian Linux distributions
+$ sudo apt-get install icu
+```
+
+If cabal cannot automatically find the icu library (e.g. when installed
+via macports install) then use explicit `LIBRARY_PATH` to tell it where
+the library is:
+
+```
+$ export LIBRARY_PATH=/usr/lib/:opt/local/lib
+```
+
+Remove any old `results.csv` and run benchmarks with `has-icu` flag enabled:
+
+```
+$ rm results.csv
+$ cabal run bench --flag has-icu -- --csvraw=results.csv --quick
+```
+
+The following command will now show the comparison between `text-icu` and
+`unicode-transforms`:
+
+```
+$ cabal run chart --flag bench-show
 ```
