@@ -66,6 +66,7 @@ library
       Data.Text.Normalize
       Data.Unicode.Types
   other-modules:
+      Data.Unicode.Internal.Bits
       Data.Unicode.Internal.NormalizeStream
       Data.Unicode.Properties.CombiningClass
       Data.Unicode.Properties.Compositions
