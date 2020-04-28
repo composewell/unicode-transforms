@@ -20,3 +20,20 @@ utility and run it like this:
 ```
 ucd2haskell ucdxml/ucd.all.flat.xml ../Data/Unicode/Properties/
 ```
+
+Update the unicode version in the changelog below as well as in the top
+level README and haddock docs.
+
+## Changelog
+
+### 0.3.6
+
+* Unicode 12.1.0: https://www.unicode.org/Public/12.1.0/ucdxml/
+
+### 0.3.0
+
+* Unicode 9.0.0: https://www.unicode.org/Public/9.0.0/
+
+### 0.2.0
+
+* Unicode 8.0.0: https://www.unicode.org/Public/8.0.0/
