@@ -1,6 +1,12 @@
+# packcheck-0.4.3
 # You can use any of the options supported by packcheck as environment
-# variables here.  See https://github.com/harendra-kumar/packcheck for all
+# variables here.  See https://github.com/composewell/packcheck for all
 # options and their explanation.
+
+#dist: bionic
+# llvm-toolchain-xenial-9 repo is xenial specific
+# libicu55 package is xenial specific
+dist: xenial
 env:
   # ------------------------------------------------------------------------
   # Global options, you can use these per build as well
@@ -20,7 +26,7 @@ env:
   # - DISABLE_BENCH=y
   # - DISABLE_DOCS=y
   # - DISABLE_SDIST_BUILD=y
-  - ENABLE_INSTALL=y
+  # - DISABLE_DIST_CHECKS=y
 
   # ------------------------------------------------------------------------
   # stack options
@@ -54,8 +60,8 @@ env:
   - PACKCHECK_LOCAL_PATH="./packcheck.sh"
   # If you have not committed packcheck.sh in your repo at PACKCHECK_LOCAL_PATH
   # then it is automatically pulled from this URL.
-  - PACKCHECK_GITHUB_URL="https://raw.githubusercontent.com/harendra-kumar/packcheck"
-  - PACKCHECK_GITHUB_COMMIT="a81b6b5d05980977533d28419dbc1b8f8eaea919"
+  - PACKCHECK_GITHUB_URL="https://raw.githubusercontent.com/composewell/packcheck"
+  - PACKCHECK_GITHUB_COMMIT="b3e207e1286205c9285089b8c72cc1625816adfe"
 
 notifications:
   email:
@@ -73,93 +79,134 @@ matrix:
   include:
 
   # --------------------------------------------------------------------------
+  # (Linux) cabal builds (BUILD=cabal-v1, BUILD=cabal-v2). Common envvars are:
+  # CABAL_CONFIGURE_OPTIONS (cabal-v1), CABAL_BUILD_OPTIONS (cabal-v2)
+  # --------------------------------------------------------------------------
+
+  #- env: BUILD=cabal-v2 GHCVER=head
+  #  addons: {apt: {packages: [cabal-install-head,ghc-head], sources: [hvr-ghc]}}
+
+  - env: BUILD=cabal-v2 GHCVER=8.10.1 CABAL_BUILD_OPTIONS="--flag has-icu"
+    addons: {apt: {packages: [libicu55,cabal-install-3.2,ghc-8.10.1], sources: [hvr-ghc]}}
+
+  - env: BUILD=cabal-v2 GHCVER=8.10.1 CABAL_BUILD_OPTIONS="--flags=has-llvm"
+    addons:
+      apt:
+        packages:
+        - llvm-9
+        - cabal-install-3.2
+        - ghc-8.10.1
+        sources:
+        - hvr-ghc
+        - sourceline: 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-9 main'
+          key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
+
+  #- env: BUILD=cabal-v2 GHCVER=8.8.3
+  #  addons: {apt: {packages: [cabal-install-3.2,ghc-8.8.3], sources: [hvr-ghc]}}
+
+  - env: BUILD=cabal-v2 GHCVER=8.6.5
+    addons: {apt: {packages: [cabal-install-3.2,ghc-8.6.5], sources: [hvr-ghc]}}
+
+  - env: BUILD=cabal-v2 GHCVER=8.4.4
+    addons: {apt: {packages: [cabal-install-3.2,ghc-8.4.4], sources: [hvr-ghc]}}
+
+  - env: BUILD=cabal-v2 GHCVER=8.2.2
+    addons: {apt: {packages: [cabal-install-3.2,ghc-8.2.2], sources: [hvr-ghc]}}
+
+  - env: BUILD=cabal-v2 GHCVER=8.0.2
+    addons: {apt: {packages: [cabal-install-3.2,ghc-8.0.2], sources: [hvr-ghc]}}
+
+  #- env: BUILD=cabal-v2 GHCVER=7.10.3
+  #  addons: {apt: {packages: [cabal-install-3.2,ghc-7.10.3], sources: [hvr-ghc]}}
+
+  # You can specify build flags like this:
+  #- env: BUILD=cabal-v2 CABAL_BUILD_OPTIONS="--flags=dev"
+  #  addons: {apt: {packages: [cabal-install-head,ghc-head], sources: [hvr-ghc]}}
+
+  # You can use a cabal project file to specify flags like -Werror on per
+  # package basis.
+  #- env: BUILD=cabal-v2 CABAL_PROJECT=cabal.project.ci
+  #  addons: {apt: {packages: [cabal-install-3.2,ghc-8.6.5], sources: [hvr-ghc]}}
+
+  # --------------------------------------------------------------------------
+  # GHCJS cabal builds
+  # --------------------------------------------------------------------------
+
+  # Use CABAL_BUILD_OPTIONS to pass any options to cabal e.g. project-file
+  # - env: BUILD=cabal-v2 ENABLE_GHCJS=y CABAL_BUILD_OPTIONS="" DISABLE_DOCS=y DISABLE_SDIST_BUILD=y
+  #   addons:
+  #     apt:
+  #       sources:
+  #       - hvr-ghc
+  #       - sourceline: 'ppa:hvr/ghcjs'
+  #       - sourceline: 'deb https://deb.nodesource.com/node_11.x xenial main'
+  #         key_url: 'https://deb.nodesource.com/gpgkey/nodesource.gpg.key'
+  #       packages: [cabal-install-2.4,ghcjs-8.4]
+
+  # --------------------------------------------------------------------------
   # (Linux) stack builds (BUILD=stack). Some common envvars for stack builds
   # are: STACK_YAML, STACK_OPTIONS, STACK_BUILD_OPTIONS
   # --------------------------------------------------------------------------
+  #
+  # NOTE: cabal-install is required for some of the packcheck options to work.
+  # We just install it so that packcheck does not build it from source
+  # otherwise.
 
-  - env: BUILD=stack RESOLVER=lts-6 GHCVER=7.10.3 STACK_YAML=stack-7.10.yaml GHC_OPTIONS=-Werror
-    addons: {apt: {packages: [cabal-install-1.22], sources: [hvr-ghc]}}
+  #- env: BUILD=stack RESOLVER=nightly
+  - env: BUILD=stack RESOLVER=lts-15 GHCVER=8.8 GHC_OPTIONS=-Werror
+    addons: {apt: {packages: [cabal-install-3.2], sources: [hvr-ghc]}}
 
-  - env: BUILD=stack RESOLVER=lts-9 GHCVER=8.0.2 STACK_YAML=stack-8.0.yaml GHC_OPTIONS=-Werror
-    addons: {apt: {packages: [cabal-install-1.24], sources: [hvr-ghc]}}
+  #- env: BUILD=stack RESOLVER=lts-14 GHCVER=8.6
+  #  addons: {apt: {packages: [cabal-install-3.2], sources: [hvr-ghc]}}
 
-  # Use cabal-install-1.24 for stack solver to work
-  - env: BUILD=stack RESOLVER=lts-11 GHCVER=8.2.2 GHC_OPTIONS=-Werror STACK_BUILD_OPTIONS="--flag unicode-transforms:has-icu"
-    addons: {apt: {packages: [cabal-install-1.24, libicu52], sources: [hvr-ghc]}}
+  #- env: BUILD=stack RESOLVER=lts-12 GHCVER=8.4
+  #  addons: {apt: {packages: [cabal-install-3.2], sources: [hvr-ghc]}}
 
-  # Use cabal-install-1.24 for stack solver to work
-  - env: BUILD=stack RESOLVER=nightly GHC_OPTIONS=-Werror
-    addons: {apt: {packages: [cabal-install-1.24], sources: [hvr-ghc]}}
+  - env: BUILD=stack RESOLVER=lts-6 GHCVER=7.10 STACK_YAML=stack-7.10.yaml
+    addons: {apt: {packages: [cabal-install-3.2], sources: [hvr-ghc]}}
 
   # You can keep a STACK_YAML file at any path location
   #- env: BUILD=stack STACK_YAML=.ci/stack-8.0.yaml
 
   # You can specify build flags like this:
-  #- env: BUILD=stack RESOLVER=lts-11 STACK_BUILD_OPTIONS="--flag packcheck:dev"
-
-  # --------------------------------------------------------------------------
-  # (Linux) cabal builds (BUILD=cabal, BUILD=cabal-new). Common envvars are:
-  # CABAL_CONFIGURE_OPTIONS (cabal), CABAL_NEWBUILD_OPTIONS (cabal-new)
-  # --------------------------------------------------------------------------
-
-  #- env: BUILD=cabal-new GHCVER=7.10.3
-  #  addons: {apt: {packages: [cabal-install-1.22,ghc-7.10.3], sources: [hvr-ghc]}}
-
-  #- env: BUILD=cabal-new GHCVER=8.0.2
-  #  addons: {apt: {packages: [cabal-install-1.24,ghc-8.0.2], sources: [hvr-ghc]}}
-
-  # Disabled by default as we have a cabal ghc-8.2.2 build for OSX
-  #- env: BUILD=cabal-new GHCVER=8.2.2
-  #  addons: {apt: {packages: [cabal-install-2.0,ghc-8.2.2], sources: [hvr-ghc]}}
-
-  - env: BUILD=cabal-new GHCVER=8.6.5
-    addons: {apt: {packages: [cabal-install-2.2,ghc-8.6.5], sources: [hvr-ghc]}}
-
-  - env: BUILD=cabal-new GHCVER=8.4.4 CABAL_NEWBUILD_OPTIONS="--flags=has-llvm"
-    addons: {apt: {packages: [llvm-5.0,cabal-install-2.2,ghc-8.4.4], sources: [llvm-toolchain-trusty-5.0,hvr-ghc]}}
-
-  - env: BUILD=cabal-new GHCVER=head
-    addons: {apt: {packages: [cabal-install-head,ghc-head], sources: [hvr-ghc]}}
-
-  # You can specify build flags like this:
-  #- env: BUILD=cabal-new CABAL_NEWBUILD_OPTIONS="--flags=dev"
-  #  addons: {apt: {packages: [cabal-install-head,ghc-head], sources: [hvr-ghc]}}
+  #- env: BUILD=stack RESOLVER=lts-12 STACK_BUILD_OPTIONS="--flag packcheck:dev"
 
   # --------------------------------------------------------------------------
   # OS X builds
   # --------------------------------------------------------------------------
 
-  # GHC 8.2.2/cabal build using stack!
-  - env: BUILD=cabal-new RESOLVER=lts-13 GHCVER=8.6.5
+  # GHC cabal build using stack!
+  #- env: BUILD=cabal-v2 RESOLVER=lts-15 GHCVER=8.8
+  - env: BUILD=stack RESOLVER=lts-15 GHCVER=8.8 DISABLE_SDIST_BUILD=y
     os: osx
 
-  # GHC 8.2.2/stack
-  #- env: BUILD=stack RESOLVER=lts-11 GHCVER=8.2.2
+  #- env: BUILD=stack RESOLVER=lts-14 GHCVER=8.6
   #  os: osx
 
   # --------------------------------------------------------------------------
   # Lint e.g. HLINT_COMMANDS="hlint lint src; hlint lint test"
   # --------------------------------------------------------------------------
 
-  #- env: BUILD=stack RESOLVER=lts-11 HLINT_COMMANDS="hlint lint ."
+  #- env: BUILD=stack RESOLVER=lts-15 HLINT_COMMANDS="hlint lint ."
 
   # --------------------------------------------------------------------------
-  # Build and send coverage report to coveralls.io using hpc-coveralls
-  # Works only with BUILD=cabal; add your project to coveralls.io first
-  # For available options see hpc-coveralls docs.
+  # Build and send coverage report to coveralls.io using hpc-coveralls.  Add
+  # your project to coveralls.io first, for available options see hpc-coveralls
+  # docs. CAVEATS:
+  # * Does not work for multi-package repos
   # --------------------------------------------------------------------------
 
-  - env: BUILD=cabal COVERALLS_OPTIONS="--coverage-mode=StrictlyFullLines --exclude-dir=test ucd quickcheck extras"
-    addons: {apt: {packages: [cabal-install-2.0,ghc-8.2.2], sources: [hvr-ghc]}}
+  - env: BUILD=cabal-v2 CABAL_PROJECT=cabal.project.coveralls COVERALLS_OPTIONS="--coverage-mode=StrictlyFullLines --exclude-dir=test ucd quickcheck extras"
+    addons: {apt: {packages: [cabal-install-3.2,ghc-8.8.3], sources: [hvr-ghc]}}
 
   # --------------------------------------------------------------------------
   # Builds that are allowed to fail
   # --------------------------------------------------------------------------
 
   allow_failures:
-  - env: BUILD=stack RESOLVER=nightly GHC_OPTIONS=-Werror
-  - env: BUILD=cabal-new GHCVER=head
-  - env: BUILD=stack RESOLVER=lts-11 HLINT_COMMANDS="hlint lint ."
+  - env: BUILD=cabal-v2 GHCVER=head
+  - env: BUILD=stack RESOLVER=nightly
+  - env: BUILD=stack RESOLVER=lts-15 HLINT_COMMANDS="hlint lint ."
 
 # ------------------------------------------------------------------------
 #  Settings beyond this point are advanced and normally not tweaked
@@ -171,18 +218,13 @@ cache:
   directories:
   - $HOME/.cabal
   - $HOME/.ghc
+  - $HOME/.ghcjs
   - $HOME/.local
   - $HOME/.stack
 install: true
 
 script:
   - |
-    # We remove the default llvm and install llvm-5.0
-    # ghc cannot use opt-5.0 and llc-5.0, it needs opt and llc
-    mkdir -p ~/.local/bin
-    ln -s /usr/bin/opt-5.0 ~/.local/bin/opt
-    ln -s /usr/bin/llc-5.0 ~/.local/bin/llc
-
     # If a custom stack-yaml is specified, replace the default with that
     if test -e "$STACK_YAML"; then rm -f stack.yaml && ln -sv $STACK_YAML stack.yaml; else true; fi
     unset STACK_YAML
@@ -196,4 +238,4 @@ script:
     # This script is governed by various PACKCHECK envvars that are set above.
     # In addition, hpc-coveralls needs TRAVIS, TRAVIS_JOB_ID variables set by
     # the travis CI environment.
-  - bash -c "$PACKCHECK_LOCAL_PATH $BUILD PATH=/bin:/usr/bin"
+  - bash -c "$PACKCHECK_LOCAL_PATH $BUILD PATH=/usr/lib/llvm-9/bin/:/bin:/usr/bin"
