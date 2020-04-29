@@ -33,8 +33,11 @@ Install the icu library:
 # On Mac OS using MacPorts
 $ sudo port install icu
 
-# On Debian Linux distributions
-$ sudo apt-get install icu
+# On Mac OS using brew
+$ brew install icu4c
+
+# On Debian Linux based distributions (the library version suffix may differ)
+$ sudo apt-get install libicu65
 ```
 
 If cabal cannot automatically find the icu library (e.g. when installed
@@ -43,6 +46,9 @@ the library is:
 
 ```
 $ export LIBRARY_PATH=/usr/lib/:opt/local/lib
+
+# Alternatively, pass the lib and include path as follows
+$ cabal bench --extra-lib-dirs=/usr/local/opt/icu4c/lib --extra-include-dirs=/usr/local/opt/icu4c/include
 ```
 
 Remove any old `results.csv` and run benchmarks with `has-icu` flag enabled:
