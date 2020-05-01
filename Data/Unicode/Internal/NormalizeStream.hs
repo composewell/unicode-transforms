@@ -381,7 +381,8 @@ composeChar mode marr = go . (: [])
         reorder _ i st rbuf c
             | CC.isCombining c = return (i, st, insertIntoReBuf c rbuf)
         reorder _ i (Just st) Empty c
-            | Just x <- C.composePair st c = return (i, Just x, Empty)
+            | C.composePairSecondNonCombining c
+            , Just x <- C.composePairNonCombining st c = return (i, Just x, Empty)
         reorder arr i st rbuf c = do
             j <- writeStarterRbuf arr i st rbuf
             return (j, Just c, Empty)
