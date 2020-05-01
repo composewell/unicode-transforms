@@ -123,20 +123,18 @@ decomposeChar _ marr i reBuf c | D.isHangul c = do
 decomposeChar mode marr index reBuf ch = do
     -- TODO: return fully decomposed form
     case D.isDecomposable mode ch of
-      D.FalseA -> reorder marr index reBuf ch
-      D.TrueA  -> decomposeAll marr index reBuf (D.decomposeChar mode ch)
-      _ -> reorder marr index reBuf ch
-
+      False -> reorder marr index reBuf ch
+      True  -> decomposeAll marr index reBuf (D.decomposeChar mode ch)
     where
         {-# INLINE decomposeAll #-}
         decomposeAll _ i rbuf [] = return (i, rbuf)
         decomposeAll arr i rbuf (x : xs)  =
             case D.isDecomposable mode x of
-                D.TrueA  -> do
+                True  -> do
                     (i', rbuf') <- decomposeAll arr i rbuf
                                                 (D.decomposeChar mode x)
                     decomposeAll arr i' rbuf' xs
-                _ -> do
+                False -> do
                     -- XXX calling reorder is wrong if decomposition results in
                     -- a further decomposable Hangul char. In that case we will
                     -- not go through the Hangul decompose for that char.
@@ -386,24 +384,21 @@ composeChar _ marr index st rbuf jbuf ch | H.isHangul ch || H.isJamo ch = do
 composeChar mode marr index starter reBuf jbuf ch = do
     index' <- writeJamoBuf marr index jbuf
     case D.isDecomposable mode ch of
-        D.FalseA -> do
+        False -> do
             (i, st, rbuf) <- reorder marr index' starter reBuf ch
             return (i, st, rbuf, JamoEmpty)
-        D.TrueA  -> do
+        True  -> do
             decomposeAll marr index' starter reBuf jbuf (D.decomposeChar mode ch)
-        _ -> do
-            (i, st, rbuf) <- reorder marr index' starter reBuf ch
-            return (i, st, rbuf, JamoEmpty)
     where
         {-# INLINE decomposeAll #-}
         decomposeAll _ i st rbuf jb [] = return (i, st, rbuf, jb)
         decomposeAll arr i st rbuf jb (x : xs)  =
             case D.isDecomposable mode x of
-                D.TrueA  -> do
+                True  -> do
                     (i', st', rbuf', jb') <- decomposeAll arr i st rbuf jb
                                                 (D.decomposeChar mode x)
                     decomposeAll arr i' st' rbuf' jb' xs
-                _ -> do
+                False -> do
                     -- XXX this recursive call here hurts performance
                     -- We can make the hangul composition a separate function
                     -- and call that or reorder here based on the type fo char
