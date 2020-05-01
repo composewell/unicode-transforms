@@ -45,7 +45,7 @@ via macports install) then use explicit `LIBRARY_PATH` to tell it where
 the library is:
 
 ```
-$ export LIBRARY_PATH=/usr/lib/:opt/local/lib
+$ export LIBRARY_PATH=/usr/lib/:/opt/local/lib
 
 # Alternatively, pass the lib and include path as follows
 $ cabal bench --extra-lib-dirs=/usr/local/opt/icu4c/lib --extra-include-dirs=/usr/local/opt/icu4c/include
