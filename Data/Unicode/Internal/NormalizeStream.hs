@@ -92,17 +92,18 @@ writeReorderBuffer marr di (Many c1 c2 str) = do
 
 -- {-# INLINE decomposeCharHangul #-}
 decomposeCharHangul :: A.MArray s -> Int -> Char -> ST s Int
-decomposeCharHangul marr j c = do
-    case D.decomposeCharHangul c of
-        Left  (l, v)    -> do
-            n1 <- unsafeWrite marr j l
-            n2 <- unsafeWrite marr (j + n1) v
-            return (j + n1 + n2)
-        Right (l, v, t) -> do
-            n1 <- unsafeWrite marr j l
-            n2 <- unsafeWrite marr (j + n1) v
-            n3 <- unsafeWrite marr (j + n1 + n2) t
-            return (j + n1 + n2 + n3)
+decomposeCharHangul marr j c =
+    if t == chr H.jamoTFirst then do
+        n1 <- unsafeWrite marr j l
+        n2 <- unsafeWrite marr (j + n1) v
+        return (j + n1 + n2)
+    else do
+        n1 <- unsafeWrite marr j l
+        n2 <- unsafeWrite marr (j + n1) v
+        n3 <- unsafeWrite marr (j + n1 + n2) t
+        return (j + n1 + n2 + n3)
+    where
+        (l, v, t) = D.decomposeCharHangul c
 
 {-# INLINE decomposeChar #-}
 decomposeChar

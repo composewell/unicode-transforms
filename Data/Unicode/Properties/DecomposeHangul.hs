@@ -17,6 +17,7 @@ module Data.Unicode.Properties.DecomposeHangul
     , jamoLIndex
     , jamoNCount
     , jamoVIndex
+    , jamoTFirst
     , jamoTCount
     , jamoTIndex
     )
@@ -101,10 +102,8 @@ jamoTIndex c
 -------------------------------------------------------------------------------
 
 {-# INLINE decomposeCharHangul #-}
-decomposeCharHangul :: Char -> Either (Char, Char) (Char, Char, Char)
-decomposeCharHangul c
-    | ti == 0   = Left (l, v)
-    | otherwise = Right (l, v, t)
+decomposeCharHangul :: Char -> (Char, Char, Char)
+decomposeCharHangul c = (l, v, t)
     where
         i = (ord c) - hangulFirst
         !(tn, ti) = i  `quotRem` jamoTCount
