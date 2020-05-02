@@ -1,5 +1,6 @@
 {-# OPTIONS_GHC -funbox-strict-fields #-}
 {-# LANGUAGE BangPatterns #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE TupleSections #-}
 -- |
 -- Module      : Data.Unicode.Internal.NormalizeStream
@@ -264,16 +265,6 @@ composeAndWrite' arr di = go []
                 cc = CC.getCombiningClass c
                 (same, bigger) = span ((== cc) . CC.getCombiningClass) cs
 
-writeStarterRbuf :: A.MArray s
-                 -> Int
-                 -> Maybe Char
-                 -> ReBuf
-                 -> ST s Int
-writeStarterRbuf marr di st rbuf =
-    case st of
-        Nothing -> writeReorderBuffer marr di rbuf
-        Just starter -> composeAndWrite marr di starter rbuf
-
 -------------------------------------------------------------------------------
 -- Composition of Hangul Jamo characters, done algorithmically
 -------------------------------------------------------------------------------
@@ -320,14 +311,12 @@ composeCharJamo arr i jb@(JamoLV lv) c =
             ix <- writeJamoBuf arr i jb
             composeCharJamo arr ix JamoEmpty c
 
-composeCharHangul :: A.MArray s -> Int -> JamoBuf -> Char -> ST s (Int, JamoBuf)
-composeCharHangul arr i jb c = do
-    ix <- writeJamoBuf arr i jb
-    case H.isHangulLV c of
-        True -> return (ix, JamoLV c)
-        False -> do
-            n <- unsafeWrite arr ix c
-            return (ix + n, JamoEmpty)
+composeCharHangul :: A.MArray s -> Int -> Char -> ST s (Int, JamoBuf)
+composeCharHangul arr i c
+    | H.isHangulLV c = return (i, JamoLV c)
+    | otherwise = do
+        n <- unsafeWrite arr i c
+        return (i + n, JamoEmpty)
 
 -- TODO Unify compose and decompose if possible with good perf
 -- TODO try unifying st, rbuf
@@ -343,49 +332,59 @@ composeCharHangul arr i jb c = do
 -- XXX The unicode normalization test suite does not seem to have tests for a
 -- LV composed hangul syllable followed by a jamo T.
 
-{-# INLINE composeChar #-}
+data ComposeState
+    = NoStarter !ReBuf
+    | Starter !Char !ReBuf
+    | Jamo !JamoBuf
 
+{-# INLINE flushComposeState #-}
+flushComposeState :: A.MArray s -> Int -> ComposeState -> ST s Int
+flushComposeState arr i = \case
+    NoStarter rbuf -> writeReorderBuffer arr i   rbuf
+    Starter s rbuf -> composeAndWrite    arr i s rbuf
+    Jamo      jbuf -> writeJamoBuf       arr i   jbuf
+
+{-# INLINE composeChar #-}
 composeChar
     :: D.DecomposeMode
     -> A.MArray s       -- destination array for decomposition
     -> Char             -- char to be decomposed
     -> Int              -- array index
-    -> Maybe Char       -- last starter
-    -> ReBuf            -- reorder buffer
-    -> JamoBuf          -- jamo buffer
-    -> ST s (Int, Maybe Char, ReBuf, JamoBuf)
-    -- ^ index, starter, reorder buf, jamobuf
+    -> ComposeState
+    -> ST s (Int, ComposeState)
 composeChar mode marr = go . (: [])
     where
-        go [] !index !st !rbuf !jbuf = pure (index, st, rbuf, jbuf)
-        go (ch : rest) index st rbuf jbuf
+        go [] !i !st = pure (i, st)
+        go (ch : rest) i st
             | H.isHangul ch = do
-                j <- writeStarterRbuf marr index st rbuf
-                (k, jbuf') <- composeCharHangul marr j jbuf ch
-                go rest k Nothing Empty jbuf'
-
-            | H.isJamo ch = do
-                j <- writeStarterRbuf marr index st rbuf
-                (k, jbuf') <- composeCharJamo marr j jbuf ch
-                go rest k Nothing Empty jbuf'
-
-            | D.isDecomposable mode ch = do
-                go (D.decomposeChar mode ch ++ rest) index st rbuf jbuf
-
+                j <- flushComposeState marr i st
+                (k, jbuf') <- composeCharHangul marr j ch
+                go rest k (Jamo jbuf')
+            | H.isJamo ch = case st of
+                Jamo jbuf -> do
+                    (k, jbuf') <- composeCharJamo marr i jbuf ch
+                    go rest k (Jamo jbuf')
+                _ -> do
+                    j <- flushComposeState marr i st
+                    (k, jbuf') <- composeCharJamo marr j JamoEmpty ch
+                    go rest k (Jamo jbuf')
+            | D.isDecomposable mode ch =
+                go (D.decomposeChar mode ch ++ rest) i st
+            | CC.isCombining ch = case st of
+                Jamo jbuf -> do
+                    k <- writeJamoBuf marr i jbuf
+                    go rest k (NoStarter (One ch))
+                NoStarter rbuf ->
+                    go rest i (NoStarter (insertIntoReBuf ch rbuf))
+                Starter s rbuf ->
+                    go rest i (Starter s (insertIntoReBuf ch rbuf))
+            | Starter s Empty <- st
+            , C.composePairSecondNonCombining ch
+            , Just x <- C.composePairNonCombining s ch =
+                go rest i (Starter x Empty)
             | otherwise = do
-                index' <- writeJamoBuf marr index jbuf
-                (!i, !st', !rbuf') <- reorder marr index' st rbuf ch
-                go rest i st' rbuf' JamoEmpty
-
-        {-# INLINE reorder #-}
-        reorder _ i st rbuf c
-            | CC.isCombining c = return (i, st, insertIntoReBuf c rbuf)
-        reorder _ i (Just st) Empty c
-            | C.composePairSecondNonCombining c
-            , Just x <- C.composePairNonCombining st c = return (i, Just x, Empty)
-        reorder arr i st rbuf c = do
-            j <- writeStarterRbuf arr i st rbuf
-            return (j, Just c, Empty)
+                k <- flushComposeState marr i st
+                go rest k (Starter ch Empty)
 
 -- | /O(n)/ Convert a 'Stream Char' into a composed normalized 'Text'.
 unstreamC :: D.DecomposeMode -> Stream Char -> Text
@@ -400,30 +399,27 @@ unstreamC mode (Stream next0 s0 len) = runText $ \done -> do
   let outer !arr !maxi = encode
        where
         -- keep the common case loop as small as possible
-        encode !si !di st rbuf jbuf =
+        encode !si !di st =
             -- simply check for the worst case
             if maxi < di + margin
-               then realloc si di st rbuf jbuf
+               then realloc si di st
             else
                 case next0 si of
                     Done -> do
-                        -- Flush any leftover buffers, only one of rbuf/jbuf
-                        -- will have contents
-                        di'  <- writeStarterRbuf arr di st rbuf
-                        di'' <- writeJamoBuf arr di' jbuf
-                        done arr di''
-                    Skip si'    -> encode si' di st rbuf jbuf
+                        di' <- flushComposeState arr di st
+                        done arr di'
+                    Skip si'    -> encode si' di st
                     Yield c si' -> do
-                        (di', st', rbuf', jbuf') <- composeChar mode arr c di st rbuf jbuf
-                        encode si' di' st' rbuf' jbuf'
+                        (di', st') <- composeChar mode arr c di st
+                        encode si' di' st'
 
         -- keep uncommon case separate from the common case code
         {-# NOINLINE realloc #-}
-        realloc !si !di st rbuf jbuf = do
+        realloc !si !di st = do
             let newlen = maxi * 2
             arr' <- A.new newlen
             A.copyM arr' 0 arr 0 di
-            outer arr' (newlen - 1) si di st rbuf jbuf
+            outer arr' (newlen - 1) si di st
 
-  outer arr0 (mlen - 1) s0 0 Nothing Empty JamoEmpty
+  outer arr0 (mlen - 1) s0 0 (NoStarter Empty)
 {-# INLINE [0] unstreamC #-}
