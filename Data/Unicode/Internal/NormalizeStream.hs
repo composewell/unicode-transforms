@@ -380,8 +380,8 @@ composeChar mode marr = go SPEC . (: [])
                 Starter s rbuf ->
                     go SPEC rest i (Starter s (insertIntoReBuf ch rbuf))
             | Starter s Empty <- st
-            , C.composePairSecondNonCombining ch
-            , Just x <- C.composePairNonCombining s ch =
+            , C.isSecondStarter ch
+            , Just x <- C.composeStarterPair s ch =
                 go SPEC rest i (Starter x Empty)
             | otherwise = do
                 k <- flushComposeState marr i st

@@ -254,7 +254,7 @@ genCompositions props file = unlines
             , "{-# OPTIONS_GHC -fno-warn-incomplete-patterns #-}"
             , "{-# LANGUAGE MagicHash #-}"
             , "module Data.Unicode.Properties." <> file
-            , "(composePair, composePairNonCombining, composePairSecondNonCombining)"
+            , "(composePair, composeStarterPair, isSecondStarter)"
             , "where"
             , ""
             , "import Data.Char (ord)"
@@ -265,15 +265,17 @@ genCompositions props file = unlines
             , concat $ map (genComposePair "composePair") decomps
             , "composePair _ _ = " <> "Nothing" <> "\n"
             , ""
-            , "composePairNonCombining :: Char -> Char -> Maybe Char"
-            , concat $ map (genComposePair "composePairNonCombining") decompsNonCombining
-            , "composePairNonCombining _ _ = " <> "Nothing" <> "\n"
+            , "composeStarterPair :: Char -> Char -> Maybe Char"
+            , concat $ map (genComposePair "composeStarterPair") starterPairs
+            , "composeStarterPair _ _ = " <> "Nothing" <> "\n"
             , ""
-            , genBitmap "composePairSecondNonCombining" composePairSecondNonCombining
+            , genBitmap "isSecondStarter" secondStarters
             ]
     where
         genComposePair name (c, [d1, d2]) =
-            name <> " " <> show d1 <> " " <> show d2 <> " = Just " <> show c <> "\n"
+            name <> " " <> show d1 <> " " <> show d2
+                 <> " = Just " <> show c <> "\n"
+
         genComposePair _ _ = error "Bug: decomp length is not 2"
 
         decomps =   filter ((flip S.notMember) exclusions . fst)
@@ -285,11 +287,19 @@ genCompositions props file = unlines
                     . map fst
                     . filter (_fullDecompositionExclusion . snd) $ props
 
-        composePairSecond = S.fromList $ map (ord . head . tail . snd) decomps
-        combiningChars = S.fromList $ map (ord . fst) $ filter ((/= 0) . _combiningClass . snd) props
-        composePairSecondNonCombining = S.toList $ composePairSecond S.\\ combiningChars
+        composePairSnds =
+            S.fromList $ map (ord . head . tail . snd) decomps
 
-        decompsNonCombining = filter ((`S.notMember` combiningChars) . ord . head . tail . snd) decomps
+        combiningChars =
+              S.fromList
+            $ map (ord . fst)
+            $ filter ((/= 0) . _combiningClass . snd) props
+
+        secondStarters = S.toList $ composePairSnds S.\\ combiningChars
+
+        starterPairs =
+            filter ((`S.notMember` combiningChars) . ord . head . tail . snd)
+                   decomps
 
 -------------------------------------------------------------------------------
 -- Create and read binary properties data
