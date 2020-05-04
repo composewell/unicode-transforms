@@ -26,6 +26,10 @@ level README and haddock docs.
 
 ## Changelog
 
+### Unreleased
+
+* Unicode 13.0.0: https://www.unicode.org/Public/13.0.0/
+
 ### 0.3.6
 
 * Unicode 12.1.0: https://www.unicode.org/Public/12.1.0/ucdxml/
