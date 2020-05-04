@@ -1,6 +1,7 @@
 ## Unreleased
 
 * Significant performance improvements
+* Update to Unicode version 13.0.0
 
 ## 0.3.6
 
