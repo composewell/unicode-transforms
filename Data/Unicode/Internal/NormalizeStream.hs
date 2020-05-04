@@ -34,6 +34,7 @@ import           Data.Text.Internal.Unsafe.Char         (unsafeWrite)
 import           Data.Text.Internal.Unsafe.Char         (unsafeChr)
 import           Data.Text.Internal.Unsafe.Shift        (shiftR)
 import           GHC.ST                                 (ST (..))
+import           GHC.Types                              (SPEC(..))
 
 import qualified Data.Unicode.Properties.CombiningClass  as CC
 import qualified Data.Unicode.Properties.Compositions    as C
@@ -352,39 +353,39 @@ composeChar
     -> Int              -- array index
     -> ComposeState
     -> ST s (Int, ComposeState)
-composeChar mode marr = go . (: [])
+composeChar mode marr = go SPEC . (: [])
     where
-        go [] !i !st = pure (i, st)
-        go (ch : rest) i st
+        go !_ [] !i !st = pure (i, st)
+        go !_ (ch : rest) i st
             | H.isHangul ch = do
                 j <- flushComposeState marr i st
                 (k, jbuf') <- composeCharHangul marr j ch
-                go rest k (Jamo jbuf')
+                go SPEC rest k (Jamo jbuf')
             | H.isJamo ch = case st of
                 Jamo jbuf -> do
                     (k, jbuf') <- composeCharJamo marr i jbuf ch
-                    go rest k (Jamo jbuf')
+                    go SPEC rest k (Jamo jbuf')
                 _ -> do
                     j <- flushComposeState marr i st
                     (k, jbuf') <- composeCharJamo marr j JamoEmpty ch
-                    go rest k (Jamo jbuf')
+                    go SPEC rest k (Jamo jbuf')
             | D.isDecomposable mode ch =
-                go (D.decomposeChar mode ch ++ rest) i st
+                go SPEC (D.decomposeChar mode ch ++ rest) i st
             | CC.isCombining ch = case st of
                 Jamo jbuf -> do
                     k <- writeJamoBuf marr i jbuf
-                    go rest k (NoStarter (One ch))
+                    go SPEC rest k (NoStarter (One ch))
                 NoStarter rbuf ->
-                    go rest i (NoStarter (insertIntoReBuf ch rbuf))
+                    go SPEC rest i (NoStarter (insertIntoReBuf ch rbuf))
                 Starter s rbuf ->
-                    go rest i (Starter s (insertIntoReBuf ch rbuf))
+                    go SPEC rest i (Starter s (insertIntoReBuf ch rbuf))
             | Starter s Empty <- st
             , C.composePairSecondNonCombining ch
             , Just x <- C.composePairNonCombining s ch =
-                go rest i (Starter x Empty)
+                go SPEC rest i (Starter x Empty)
             | otherwise = do
                 k <- flushComposeState marr i st
-                go rest k (Starter ch Empty)
+                go SPEC rest k (Starter ch Empty)
 
 -- | /O(n)/ Convert a 'Stream Char' into a composed normalized 'Text'.
 unstreamC :: D.DecomposeMode -> Stream Char -> Text
