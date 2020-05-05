@@ -332,44 +332,77 @@ flushComposeState arr i = \case
 {-# INLINE composeChar #-}
 composeChar
     :: D.DecomposeMode
-    -> A.MArray s       -- destination array for decomposition
-    -> Char             -- char to be decomposed
+    -> A.MArray s       -- destination array for composition
+    -> Char             -- input char
     -> Int              -- array index
     -> ComposeState
     -> ST s (Int, ComposeState)
-composeChar mode marr = go SPEC . (: [])
+composeChar mode marr = go0
     where
-        go !_ [] !i !st = pure (i, st)
-        go !_ (ch : rest) i st
-            | H.isHangul ch = do
-                j <- flushComposeState marr i st
-                (k, jbuf') <- composeCharHangul marr j ch
-                go SPEC rest k (Jamo jbuf')
-            | H.isJamo ch = case st of
-                Jamo jbuf -> do
-                    (k, jbuf') <- composeCharJamo marr i jbuf ch
-                    go SPEC rest k (Jamo jbuf')
-                _ -> do
-                    j <- flushComposeState marr i st
-                    (k, jbuf') <- composeCharJamo marr j JamoEmpty ch
-                    go SPEC rest k (Jamo jbuf')
+        go0 ch i st
+            | H.isHangul ch || H.isJamo ch =
+                hangulJamo ch i st
             | D.isDecomposable mode ch =
-                go SPEC (D.decomposeChar mode ch ++ rest) i st
-            | CC.isCombining ch = case st of
-                Jamo jbuf -> do
-                    k <- writeJamoBuf marr i jbuf
-                    go SPEC rest k (NoStarter (One ch))
-                NoStarter rbuf ->
-                    go SPEC rest i (NoStarter (insertIntoReBuf ch rbuf))
-                Starter s rbuf ->
-                    go SPEC rest i (Starter s (insertIntoReBuf ch rbuf))
+                go (D.decomposeChar mode ch) i st
+            | CC.isCombining ch =
+                case st of
+                    Jamo jbuf -> do
+                        k <- writeJamoBuf marr i jbuf
+                        pure (k, (NoStarter (One ch)))
+                    NoStarter rbuf ->
+                        pure (i, (NoStarter (insertIntoReBuf ch rbuf)))
+                    Starter s rbuf ->
+                        pure (i, (Starter s (insertIntoReBuf ch rbuf)))
             | Starter s Empty <- st
             , C.isSecondStarter ch
             , Just x <- C.composeStarterPair s ch =
-                go SPEC rest i (Starter x Empty)
+                pure (i, (Starter x Empty))
             | otherwise = do
                 k <- flushComposeState marr i st
-                go SPEC rest k (Starter ch Empty)
+                pure (k, (Starter ch Empty))
+
+        hangulJamo ch i st
+            | H.isHangul ch = do
+                j <- flushComposeState marr i st
+                (k, jbuf') <- composeCharHangul marr j ch
+                pure (k, (Jamo jbuf'))
+            | otherwise =
+                case st of
+                    Jamo jbuf -> do
+                        (k, jbuf') <- composeCharJamo marr i jbuf ch
+                        pure (k, (Jamo jbuf'))
+                    _ -> do
+                        j <- flushComposeState marr i st
+                        (k, jbuf') <- composeCharJamo marr j JamoEmpty ch
+                        pure (k, (Jamo jbuf'))
+
+        go [] !i !st = pure (i, st)
+        go (ch : rest) i st
+            -- Normally a non-hangul char does not decompose to hangul char so
+            -- we should not see a hangul char in this loop. But there are some
+            -- compatibility decompositions like 'decomposeChar '\12593' =
+            -- "\4352"' where 12593 is not in algorithmic hangul range but 4352
+            -- is Hangul.
+            | H.isHangul ch || H.isJamo ch = do
+                (j, s) <- hangulJamo ch i st
+                go rest j s
+            | D.isDecomposable mode ch =
+                go (D.decomposeChar mode ch ++ rest) i st
+            | CC.isCombining ch = case st of
+                Jamo jbuf -> do
+                    k <- writeJamoBuf marr i jbuf
+                    go rest k (NoStarter (One ch))
+                NoStarter rbuf ->
+                    go rest i (NoStarter (insertIntoReBuf ch rbuf))
+                Starter s rbuf ->
+                    go rest i (Starter s (insertIntoReBuf ch rbuf))
+            | Starter s Empty <- st
+            , C.isSecondStarter ch
+            , Just x <- C.composeStarterPair s ch =
+                go rest i (Starter x Empty)
+            | otherwise = do
+                k <- flushComposeState marr i st
+                go rest k (Starter ch Empty)
 
 -- | /O(n)/ Convert a 'Stream Char' into a composed normalized 'Text'.
 unstreamC :: D.DecomposeMode -> Stream Char -> Text
@@ -381,10 +414,10 @@ unstreamC mode (Stream next0 s0 len) = runText $ \done -> do
   let margin = 1 + maxDecomposeLen
       mlen = (upperBound 4 len + margin)
   arr0 <- A.new mlen
-  let outer !arr !maxi = encode
+  let outer !arr !maxi = encode SPEC
        where
         -- keep the common case loop as small as possible
-        encode !si !di st =
+        encode !_ !si !di st =
             -- simply check for the worst case
             if maxi < di + margin
                then realloc si di st
@@ -393,10 +426,10 @@ unstreamC mode (Stream next0 s0 len) = runText $ \done -> do
                     Done -> do
                         di' <- flushComposeState arr di st
                         done arr di'
-                    Skip si'    -> encode si' di st
+                    Skip si'    -> encode SPEC si' di st
                     Yield c si' -> do
                         (di', st') <- composeChar mode arr c di st
-                        encode si' di' st'
+                        encode SPEC si' di' st'
 
         -- keep uncommon case separate from the common case code
         {-# NOINLINE realloc #-}
