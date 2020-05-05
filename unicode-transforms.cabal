@@ -94,7 +94,7 @@ library
   if flag(dev)
     ghc-options: -O0
   else
-    ghc-options: -O2 -funbox-strict-fields
+    ghc-options: -O2 -funbox-strict-fields -fspec-constr-count=10
   if flag(has-llvm)
     ghc-options: -fllvm
   default-language: Haskell2010
