@@ -116,50 +116,34 @@ decomposeChar
     -> ReBuf            -- reorder buffer
     -> Char             -- char to be decomposed
     -> ST s (Int, ReBuf)
-decomposeChar _ marr i reBuf c | D.isHangul c = do
-    j <- writeReorderBuffer marr i reBuf
-    (, Empty) <$> decomposeCharHangul marr j c
+decomposeChar mode marr index reBuf ch
+    | D.isHangul ch = do
+        j <- writeReorderBuffer marr index reBuf
+        (, Empty) <$> decomposeCharHangul marr j ch
+    | D.isDecomposable mode ch =
+        decomposeAll index reBuf (D.decomposeChar mode ch)
+    | otherwise =
+        reorder index reBuf ch
 
--------------------------------------------------------------------------------
--- Decomposition of characters other than Hangul
--------------------------------------------------------------------------------
-
-decomposeChar mode marr index reBuf ch = do
-    -- TODO: return fully decomposed form
-    case D.isDecomposable mode ch of
-      False -> reorder marr index reBuf ch
-      True  -> decomposeAll marr index reBuf (D.decomposeChar mode ch)
     where
-        {-# INLINE decomposeAll #-}
-        decomposeAll _ i rbuf [] = return (i, rbuf)
-        decomposeAll arr i rbuf (x : xs)  =
-            case D.isDecomposable mode x of
-                True  -> do
-                    (i', rbuf') <- decomposeAll arr i rbuf
-                                                (D.decomposeChar mode x)
-                    decomposeAll arr i' rbuf' xs
-                False -> do
-                    -- XXX calling reorder is wrong if decomposition results in
-                    -- a further decomposable Hangul char. In that case we will
-                    -- not go through the Hangul decompose for that char.
-                    -- To be strictly correct we have to call decomposeChar
-                    -- recursively here.
-                    (i', rbuf') <- reorder arr i rbuf x
-                    decomposeAll arr i' rbuf' xs
 
-        -- Unicode 9.0.0: 3.11
-        -- D108 Reorderable pair: Two adjacent characters A and B in a coded
-        -- character sequence <A,B> are a Reorderable Pair if and only if
-        -- ccc(A) > ccc(B) > 0.
-        --
-        -- (array) (array index) (reorder buffer) (input char)
-        {-# INLINE reorder #-}
-        reorder arr i rbuf c
-            | CC.isCombining c = return (i, insertIntoReBuf c rbuf)
-            | otherwise = do
-                j <- writeReorderBuffer arr i rbuf
-                n <- unsafeWrite arr j c
-                return (j + n, Empty)
+    {-# INLINE decomposeAll #-}
+    decomposeAll i rbuf [] = return (i, rbuf)
+    decomposeAll i rbuf (x : xs)
+        | D.isDecomposable mode x = do
+            (i', rbuf') <- decomposeAll i rbuf (D.decomposeChar mode x)
+            decomposeAll i' rbuf' xs
+        | otherwise  = do
+            (i', rbuf') <- reorder i rbuf x
+            decomposeAll i' rbuf' xs
+
+    {-# INLINE reorder #-}
+    reorder i rbuf c
+        | CC.isCombining c = return (i, insertIntoReBuf c rbuf)
+        | otherwise = do
+            j <- writeReorderBuffer marr i rbuf
+            n <- unsafeWrite marr j c
+            return (j + n, Empty)
 
 -- | /O(n)/ Convert a 'Text' into a 'Stream Char'.
 stream :: Text -> Stream Char
