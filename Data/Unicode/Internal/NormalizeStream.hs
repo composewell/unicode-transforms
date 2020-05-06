@@ -223,12 +223,12 @@ maxDecomposeLen = 32
 
 -- Hold an L to wait for V, hold an LV to wait for T.
 data JamoBuf
-    = JamoLIndex {-# UNPACK #-} !Int
-    | JamoLV     {-# UNPACK #-} !Char
+    = JamoLIndex !Int
+    | JamoLV !Char
 
 data RegBuf
     = RegOne !Char
-    | RegMany !Char !Char [Char]
+    | RegMany !Char !Char ![Char]
 
 data ComposeState
     = ComposeNone
@@ -368,6 +368,8 @@ composeChar mode marr = go0
                     go (D.decomposeChar mode ch) i st
                 | CC.isCombining ch -> do
                     pure (i, ComposeReg (insertIntoRegBuf ch rbuf))
+                -- The first char in RegBuf may or may not be a starter. In
+                -- case it is not we rely on composeStarterPair failing.
                 | RegOne s <- rbuf
                 , C.isSecondStarter ch
                 , Just x <- C.composeStarterPair s ch ->
