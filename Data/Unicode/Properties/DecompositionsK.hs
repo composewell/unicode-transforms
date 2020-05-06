@@ -2356,5 +2356,6 @@ decomposeChar '\43868' = "\42791"
 decomposeChar '\43869' = "\43831"
 decomposeChar '\43870' = "\619"
 decomposeChar '\43871' = "\43858"
+decomposeChar '\43881' = "\653"
 
 decomposeChar c = DK2.decomposeChar c
