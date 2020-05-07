@@ -10,6 +10,7 @@
 module Data.Unicode.Properties.DecomposeHangul
     (decomposeCharHangul
     , hangulFirst
+    , hangulLast
     , isHangul
     , isHangulLV
     , isJamo
@@ -20,6 +21,7 @@ module Data.Unicode.Properties.DecomposeHangul
     , jamoTFirst
     , jamoTCount
     , jamoTIndex
+    , jamoLast
     )
 where
 

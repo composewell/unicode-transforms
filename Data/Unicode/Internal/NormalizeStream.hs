@@ -358,25 +358,18 @@ composeChar mode marr = go0
     go0 ch !i !st =
         case st of
             ComposeReg rbuf
-                | H.isHangul ch -> do
-                    j <- writeRegBuf marr i rbuf
-                    initHangulLV marr j ch
-                | H.isJamo ch -> do
+                | ich < H.jamoLFirst ->
+                    composeReg rbuf ch i st
+                | ich <= H.jamoLast -> do
                     j <- writeRegBuf marr i rbuf
                     initJamoLIndex marr j ch
-                | D.isDecomposable mode ch ->
-                    go (D.decomposeChar mode ch) i st
-                | CC.isCombining ch -> do
-                    pure (i, ComposeReg (insertIntoRegBuf ch rbuf))
-                -- The first char in RegBuf may or may not be a starter. In
-                -- case it is not we rely on composeStarterPair failing.
-                | RegOne s <- rbuf
-                , C.isSecondStarter ch
-                , Just x <- C.composeStarterPair s ch ->
-                    pure (i, (ComposeReg (RegOne x)))
-                | otherwise -> do
+                | ich < H.hangulFirst ->
+                    composeReg rbuf ch i st
+                | ich <= H.hangulLast -> do
                     j <- writeRegBuf marr i rbuf
-                    pure (j, ComposeReg (RegOne ch))
+                    initHangulLV marr j ch
+                | otherwise ->
+                    composeReg rbuf ch i st
             ComposeJamo jbuf
                 | H.isJamo ch ->
                     composeCharJamo marr i jbuf ch
@@ -386,19 +379,42 @@ composeChar mode marr = go0
                         _
                             | H.isHangul ch -> do
                                 initHangulLV marr j ch
-                            | D.isDecomposable mode ch ->
-                                go (D.decomposeChar mode ch) j ComposeNone
-                            | otherwise -> do
-                                pure (j, ComposeReg (RegOne ch))
+                            | otherwise -> initReg ch j
             ComposeNone
-                | H.isHangul ch ->
+                | ich < H.jamoLFirst ->
+                    initReg ch i
+                | ich <= H.jamoLast ->
+                    initJamoLIndex marr i ch
+                | ich < H.hangulFirst ->
+                    initReg ch i
+                | ich <= H.hangulLast ->
                     initHangulLV marr i ch
-                | H.isJamo ch ->
-                   initJamoLIndex marr i ch
-                | D.isDecomposable mode ch ->
-                    go (D.decomposeChar mode ch) i st
                 | otherwise ->
-                    pure (i, ComposeReg (RegOne ch))
+                    initReg ch i
+        where ich = ord ch
+
+    {-# INLINE initReg #-}
+    initReg !ch !i
+        | D.isDecomposable mode ch =
+            go (D.decomposeChar mode ch) i ComposeNone
+        | otherwise =
+            pure (i, ComposeReg (RegOne ch))
+
+    {-# INLINE composeReg #-}
+    composeReg rbuf !ch !i !st
+        | D.isDecomposable mode ch =
+            go (D.decomposeChar mode ch) i st
+        | CC.isCombining ch = do
+            pure (i, ComposeReg (insertIntoRegBuf ch rbuf))
+        -- The first char in RegBuf may or may not be a starter. In
+        -- case it is not we rely on composeStarterPair failing.
+        | RegOne s <- rbuf
+        , C.isSecondStarter ch
+        , Just x <- C.composeStarterPair s ch =
+            pure (i, (ComposeReg (RegOne x)))
+        | otherwise = do
+            j <- writeRegBuf marr i rbuf
+            pure (j, ComposeReg (RegOne ch))
 
     go [] !i !st = pure (i, st)
     go (ch : rest) i st =
