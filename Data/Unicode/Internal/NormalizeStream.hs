@@ -210,21 +210,15 @@ maxDecomposeLen = 32
 -- Composition
 -------------------------------------------------------------------------------
 
--------------------------------------------------------------------------------
--- Composition of Hangul Jamo characters, done algorithmically
--------------------------------------------------------------------------------
-
 -- If we are composing we do not need to first decompose Hangul. We can just
 -- compose assuming there could be some partially composed syllables e.g. LV
 -- syllable followed by a jamo T. We need to compose this case as well.
---
--- XXX The unicode normalization test suite does not seem to have tests for a
--- LV composed hangul syllable followed by a jamo T.
 
 -- Hold an L to wait for V, hold an LV to wait for T.
 data JamoBuf
-    = JamoLIndex !Int
-    | JamoLV !Char
+    = Jamo !Char -- Jamo L, V or T
+    | Hangul !Char -- Hangul Syllable LV or LVT
+    | HangulLV !Char
 
 data RegBuf
     = RegOne !Char
@@ -235,60 +229,92 @@ data ComposeState
     | ComposeReg !RegBuf
     | ComposeJamo !JamoBuf
 
-{-# INLINE writeJamoLIndex #-}
-writeJamoLIndex :: A.MArray s -> Int -> Int -> ST s Int
-writeJamoLIndex arr i li = do
-    n <- unsafeWrite arr i (chr (D.jamoLFirst + li))
-    return (i + n)
-
-{-# INLINE writeJamoLV #-}
-writeJamoLV :: A.MArray s -> Int -> Char -> ST s Int
-writeJamoLV arr i lv = do
-    n <- unsafeWrite arr i lv
-    return (i + n)
+-------------------------------------------------------------------------------
+-- Composition of Jamo into Hangul syllables, done algorithmically
+-------------------------------------------------------------------------------
 
 {-# INLINE writeJamoBuf #-}
 writeJamoBuf :: A.MArray s -> Int -> JamoBuf -> ST s Int
-writeJamoBuf arr i = \case
-    JamoLIndex li -> writeJamoLIndex arr i li
-    JamoLV lv -> writeJamoLV arr i lv
+writeJamoBuf arr i jbuf = do
+    n <- unsafeWrite arr i (getCh jbuf)
+    return (i + n)
 
-{-# INLINE initHangulLV #-}
-initHangulLV :: A.MArray s -> Int -> Char -> ST s (Int, ComposeState)
-initHangulLV arr i c
-    | H.isHangulLV c = return (i, ComposeJamo (JamoLV c))
-    | otherwise = do
-        n <- unsafeWrite arr i c
-        return (i + n, ComposeNone)
+    where
 
-{-# INLINE initJamoLIndex #-}
-initJamoLIndex :: A.MArray s -> Int -> Char -> ST s (Int, ComposeState)
-initJamoLIndex arr i c =
-    case H.jamoLIndex c of
-        Just li -> return (i, ComposeJamo (JamoLIndex li))
-        Nothing -> do
-            n <- unsafeWrite arr i c
-            return (i + n, ComposeNone)
+    getCh (Jamo ch) = ch
+    getCh (Hangul ch) = ch
+    getCh (HangulLV ch) = ch
 
-{-# INLINE composeCharJamo #-}
-composeCharJamo
+{-# INLINE initHangul #-}
+initHangul :: Char -> Int -> ST s (Int, ComposeState)
+initHangul c i = return (i, ComposeJamo (Hangul c))
+
+{-# INLINE initJamo #-}
+initJamo :: Char -> Int -> ST s (Int, ComposeState)
+initJamo c i = return (i, ComposeJamo (Jamo c))
+
+{-# INLINE insertJamo #-}
+insertJamo
     :: A.MArray s -> Int -> JamoBuf -> Char -> ST s (Int, ComposeState)
-composeCharJamo arr i (JamoLIndex li) c =
-    case H.jamoVIndex c of
-        Just vi -> do
-            let lvi = li * H.jamoNCount + vi * H.jamoTCount
-            return (i, ComposeJamo (JamoLV (chr (H.hangulFirst + lvi))))
-        Nothing -> do
-            j <- writeJamoLIndex arr i li
-            initJamoLIndex arr j c
-composeCharJamo arr i (JamoLV lv) c =
-    case H.jamoTIndex c of
-        Just ti -> do
-            n <- unsafeWrite arr i (chr ((ord lv) + ti))
-            return (i + n, ComposeNone)
-        Nothing -> do
-            j <- writeJamoLV arr i lv
-            initJamoLIndex arr j c
+insertJamo arr i jbuf ch
+    | ich <= H.jamoLLast = do
+        j <- writeJamoBuf arr i jbuf
+        return (j, ComposeJamo (Jamo ch))
+    | ich < H.jamoVFirst =
+        flushAndWrite arr i jbuf ch
+    | ich <= H.jamoVLast = do
+        case jbuf of
+            Jamo c ->
+                case H.jamoLIndex c of
+                    Just li ->
+                        let vi = ich - H.jamoVFirst
+                            lvi = li * H.jamoNCount + vi * H.jamoTCount
+                            lv = chr (H.hangulFirst + lvi)
+                         in return (i, ComposeJamo (HangulLV lv))
+                    Nothing -> writeTwo arr i c ch
+            Hangul c -> writeTwo arr i c ch
+            HangulLV c -> writeTwo arr i c ch
+    | ich <= H.jamoTFirst = do
+        flushAndWrite arr i jbuf ch
+    | otherwise = do
+        let ti = ich - H.jamoTFirst
+        case jbuf of
+            Jamo c -> writeTwo arr i c ch
+            Hangul c
+                | H.isHangulLV c -> do
+                    writeLVT arr i c ti
+                | otherwise ->
+                    writeTwo arr i c ch
+            HangulLV c ->
+                writeLVT arr i c ti
+
+    where
+
+    ich = ord ch
+
+    {-# INLINE flushAndWrite #-}
+    flushAndWrite marr ix jb c = do
+        j <- writeJamoBuf marr ix jb
+        n <- unsafeWrite marr j c
+        return (j + n, ComposeNone)
+
+    {-# INLINE writeLVT #-}
+    writeLVT marr ix lv ti = do
+        n <- unsafeWrite marr ix (chr ((ord lv) + ti))
+        return (ix + n, ComposeNone)
+
+    {-# INLINE writeTwo #-}
+    writeTwo marr ix c1 c2 = do
+        n <- unsafeWrite marr ix c1
+        m <- unsafeWrite marr (ix + n) c2
+        return ((ix + n + m), ComposeNone)
+
+{-# INLINE insertHangul #-}
+insertHangul
+    :: A.MArray s -> Int -> JamoBuf -> Char -> ST s (Int, ComposeState)
+insertHangul arr i jbuf ch = do
+    j <- writeJamoBuf arr i jbuf
+    return (j, ComposeJamo (Hangul ch))
 
 {-# INLINE insertIntoRegBuf #-}
 insertIntoRegBuf :: Char -> RegBuf -> RegBuf
@@ -362,36 +388,42 @@ composeChar mode marr = go0
                     composeReg rbuf ch i st
                 | ich <= H.jamoLast -> do
                     j <- writeRegBuf marr i rbuf
-                    initJamoLIndex marr j ch
+                    initJamo ch j
                 | ich < H.hangulFirst ->
                     composeReg rbuf ch i st
                 | ich <= H.hangulLast -> do
                     j <- writeRegBuf marr i rbuf
-                    initHangulLV marr j ch
+                    initHangul ch j
                 | otherwise ->
                     composeReg rbuf ch i st
             ComposeJamo jbuf
-                | H.isJamo ch ->
-                    composeCharJamo marr i jbuf ch
-                | otherwise -> do
-                    j <- writeJamoBuf marr i jbuf
-                    case () of
-                        _
-                            | H.isHangul ch -> do
-                                initHangulLV marr j ch
-                            | otherwise -> initReg ch j
+                | ich < H.jamoLFirst -> do
+                    jamoToReg marr i jbuf ch
+                | ich <= H.jamoLast -> do
+                    insertJamo marr i jbuf ch
+                | ich < H.hangulFirst ->
+                    jamoToReg marr i jbuf ch
+                | ich <= H.hangulLast -> do
+                    insertHangul marr i jbuf ch
+                | otherwise ->
+                    jamoToReg marr i jbuf ch
             ComposeNone
                 | ich < H.jamoLFirst ->
                     initReg ch i
                 | ich <= H.jamoLast ->
-                    initJamoLIndex marr i ch
+                    initJamo ch i
                 | ich < H.hangulFirst ->
                     initReg ch i
                 | ich <= H.hangulLast ->
-                    initHangulLV marr i ch
+                    initHangul ch i
                 | otherwise ->
                     initReg ch i
         where ich = ord ch
+
+    {-# INLINE jamoToReg #-}
+    jamoToReg arr i jbuf ch = do
+        j <- writeJamoBuf arr i jbuf
+        initReg ch j
 
     {-# INLINE initReg #-}
     initReg !ch !i
@@ -422,11 +454,11 @@ composeChar mode marr = go0
             ComposeReg rbuf
                 | H.isHangul ch -> do
                     j <- writeRegBuf marr i rbuf
-                    (k, s) <- initHangulLV marr j ch
+                    (k, s) <- initHangul ch j
                     go rest k s
                 | H.isJamo ch -> do
                     j <- writeRegBuf marr i rbuf
-                    (k, s) <- initJamoLIndex marr j ch
+                    (k, s) <- initJamo ch j
                     go rest k s
                 | D.isDecomposable mode ch ->
                     go (D.decomposeChar mode ch ++ rest) i st
@@ -441,15 +473,15 @@ composeChar mode marr = go0
                     go rest j (ComposeReg (RegOne ch))
             ComposeJamo jbuf
                 | H.isJamo ch -> do
-                    (j, s) <- composeCharJamo marr i jbuf ch
+                    (j, s) <- insertJamo marr i jbuf ch
+                    go rest j s
+                | H.isHangul ch -> do
+                    (j, s) <- insertHangul marr i jbuf ch
                     go rest j s
                 | otherwise -> do
                     j <- writeJamoBuf marr i jbuf
                     case () of
                         _
-                            | H.isHangul ch -> do
-                                (k, s) <- initHangulLV marr j ch
-                                go rest k s
                             | D.isDecomposable mode ch ->
                                 go (D.decomposeChar mode ch ++ rest) j
                                    ComposeNone
@@ -457,10 +489,10 @@ composeChar mode marr = go0
                                 go rest j (ComposeReg (RegOne ch))
             ComposeNone
                 | H.isHangul ch -> do
-                    (j, s) <- initHangulLV marr i ch
+                    (j, s) <- initHangul ch i
                     go rest j s
                 | H.isJamo ch -> do
-                    (j, s) <- initJamoLIndex marr i ch
+                    (j, s) <- initJamo ch i
                     go rest j s
                 | D.isDecomposable mode ch ->
                     go (D.decomposeChar mode ch ++ rest) i st

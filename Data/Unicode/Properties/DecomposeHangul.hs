@@ -14,15 +14,22 @@ module Data.Unicode.Properties.DecomposeHangul
     , hangulLast
     , isHangul
     , isHangulLV
+
     , isJamo
     , jamoLFirst
     , jamoLIndex
-    , jamoNCount
+    , jamoLLast
+
+    , jamoVFirst
     , jamoVIndex
+    , jamoVLast
+
     , jamoTFirst
     , jamoTCount
     , jamoTIndex
     , jamoLast
+
+    , jamoNCount
     )
 where
 
@@ -37,17 +44,29 @@ import Data.Unicode.Internal.Division (quotRem21, quotRem28)
 -- General utilities used by decomposition as well as composition
 -------------------------------------------------------------------------------
 
+-- * https://www.unicode.org/versions/Unicode13.0.0/ch03.pdf
+-- * https://en.wikipedia.org/wiki/List_of_Hangul_jamo
+-- * https://www.unicode.org/reports/tr15/tr15-18.html#Hangul
+
+-- D134   Standard Korean syllable block: A sequence of one or more L followed
+-- by a sequence of  one  or  more  V  and  a  sequence  of  zero  or  more  T,
+-- or any other sequence that is canonically equivalent
+
 -- jamo leading
-jamoLFirst, jamoLCount :: Int
+jamoLFirst, jamoLCount, jamoLLast :: Int
 jamoLFirst  = 0x1100
 jamoLCount = 19
+jamoLLast = jamoLFirst + jamoLCount - 1
 
 -- jamo vowel
-jamoVFirst, jamoVCount :: Int
+jamoVFirst, jamoVCount, jamoVLast :: Int
 jamoVFirst  = 0x1161
 jamoVCount = 21
+jamoVLast = jamoVFirst + jamoVCount - 1
 
 -- jamo trailing
+-- jamoTFirst does not represent a valid T, it represents a missing T i.e. LV
+-- without a T. See comments under jamoTIndex .
 jamoTFirst, jamoTCount :: Int
 jamoTFirst  = 0x11a7
 jamoTCount = 28
