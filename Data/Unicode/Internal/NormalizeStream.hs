@@ -121,28 +121,28 @@ decomposeChar mode marr index reBuf ch
         j <- writeReorderBuffer marr index reBuf
         (, Empty) <$> decomposeCharHangul marr j ch
     | D.isDecomposable mode ch =
-        decomposeAll index reBuf (D.decomposeChar mode ch)
+        decomposeAll marr index reBuf (D.decomposeChar mode ch)
     | otherwise =
-        reorder index reBuf ch
+        reorder marr index reBuf ch
 
     where
 
     {-# INLINE decomposeAll #-}
-    decomposeAll i rbuf [] = return (i, rbuf)
-    decomposeAll i rbuf (x : xs)
+    decomposeAll _ i rbuf [] = return (i, rbuf)
+    decomposeAll arr i rbuf (x : xs)
         | D.isDecomposable mode x = do
-            (i', rbuf') <- decomposeAll i rbuf (D.decomposeChar mode x)
-            decomposeAll i' rbuf' xs
+            (i', rbuf') <- decomposeAll arr i rbuf (D.decomposeChar mode x)
+            decomposeAll arr i' rbuf' xs
         | otherwise  = do
-            (i', rbuf') <- reorder i rbuf x
-            decomposeAll i' rbuf' xs
+            (i', rbuf') <- reorder arr i rbuf x
+            decomposeAll arr i' rbuf' xs
 
     {-# INLINE reorder #-}
-    reorder i rbuf c
+    reorder arr i rbuf c
         | CC.isCombining c = return (i, insertIntoReBuf c rbuf)
         | otherwise = do
-            j <- writeReorderBuffer marr i rbuf
-            n <- unsafeWrite marr j c
+            j <- writeReorderBuffer arr i rbuf
+            n <- unsafeWrite arr j c
             return (j + n, Empty)
 
 -- | /O(n)/ Convert a 'Text' into a 'Stream Char'.
