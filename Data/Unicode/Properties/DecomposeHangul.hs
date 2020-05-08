@@ -1,4 +1,5 @@
 {-# LANGUAGE BangPatterns #-}
+
 -- |
 -- Module      : Data.Unicode.Properties.DecomposeHangul
 -- Copyright   : (c) 2016 Harendra Kumar
@@ -25,8 +26,10 @@ module Data.Unicode.Properties.DecomposeHangul
     )
 where
 
-import           Data.Char (ord)
-import           GHC.Base  (unsafeChr)
+import Control.Exception              (assert)
+import Data.Char                      (ord)
+import GHC.Base                       (unsafeChr)
+import Data.Unicode.Internal.Division (quotRem21, quotRem28)
 
 -- Hangul characters can be decomposed algorithmically instead of via mappings
 
@@ -66,10 +69,8 @@ isHangul c = n >= hangulFirst && n <= hangulLast
     where n = ord c
 
 isHangulLV :: Char -> Bool
-isHangulLV c = ti == 0
-    where
-        i = (ord c) - hangulFirst
-        !(_, ti) = i  `quotRem` jamoTCount
+isHangulLV c = assert (jamoTCount == 28)
+    snd (quotRem28 (ord c - hangulFirst)) == 0
 
 isJamo :: Char -> Bool
 isJamo c = n >= jamoLFirst && n <= jamoLast
@@ -108,8 +109,8 @@ decomposeCharHangul :: Char -> (Char, Char, Char)
 decomposeCharHangul c = (l, v, t)
     where
         i = (ord c) - hangulFirst
-        !(tn, ti) = i  `quotRem` jamoTCount
-        !(li, vi) = tn `quotRem` jamoVCount
+        !(tn, ti) = assert (jamoTCount == 28) quotRem28 i
+        !(li, vi) = assert (jamoVCount == 21) quotRem21 tn
 
         l = unsafeChr (jamoLFirst + li)
         v = unsafeChr (jamoVFirst + vi)
