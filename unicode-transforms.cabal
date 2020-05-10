@@ -168,6 +168,25 @@ test-suite ucd
     ghc-options: -fllvm
   default-language: Haskell2010
 
+test-suite conformance
+  type: exitcode-stdio-1.0
+  main-is: ConformanceTest.hs
+  hs-source-dirs:
+      test
+  ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
+  build-depends:
+      base >=4.7 && <5
+    , text >=1.1.1 && <1.3
+    , unicode-transforms
+    , raw-strings-qq
+  if flag(dev)
+    ghc-options: -O0
+  else
+    ghc-options: -O2 -funbox-strict-fields
+  if flag(has-llvm)
+    ghc-options: -fllvm
+  default-language: Haskell2010
+
 benchmark bench
   type: exitcode-stdio-1.0
   main-is: Benchmark.hs
