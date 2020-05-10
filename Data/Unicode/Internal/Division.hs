@@ -1,6 +1,7 @@
 {-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE MagicHash #-}
 {-# LANGUAGE UnboxedTuples #-}
+{-# OPTIONS_HADDOCK hide #-}
 -- |
 -- Module      : Data.Unicode.Internal.Division
 -- Copyright   : (c) 2020 Andrew Lelechenko

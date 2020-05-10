@@ -1,13 +1,17 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module Main (main) where
 
 import Data.Text (Text)
 import qualified Data.Text.Normalize as T
 import Data.Text.Normalize (NormalizationMode)
+import Data.Unicode.Internal.Division (quotRem21, quotRem28)
 import QuickCheckUtils ()
-import Test.QuickCheck (maxSuccess, stdArgs, quickCheckWith)
+import Test.Hspec.QuickCheck (modifyMaxSuccess, prop)
+import Test.Hspec as H
+import Test.QuickCheck (NonNegative(..))
 
 #ifdef HAS_ICU
 import qualified Data.Text.ICU as ICU
@@ -43,11 +47,21 @@ t_normalize mode = t_nonEmpty $ T.normalize mode
 #endif
 
 main :: IO ()
-main = do
+main =
+      hspec
+    $ H.parallel
+    $ modifyMaxSuccess (const 10000)
+    $ do
+        prop "quotRem28" $ \(NonNegative n) -> n `quotRem` 28 == quotRem28 n
+        prop "quotRem28 maxBound" $ \(NonNegative n) ->
+            let n1 = maxBound - n
+             in n1 `quotRem` 28 == quotRem28 n1
+        prop "quotRem21" $ \(NonNegative n) -> n `quotRem` 21 == quotRem21 n
+        prop "quotRem21 maxBound" $ \(NonNegative n) ->
+            let n1 = maxBound - n
+             in n1 `quotRem` 21 == quotRem21 n1
 #ifdef HAS_ICU
-    putStrLn "Comparing random strings with ICU..."
-    quickCheckWith stdArgs { maxSuccess = 10000 } t_normalizeCompareICU
+        prop "Comparing random strings with ICU..." t_normalizeCompareICU
 #else
-    putStrLn "Checking non-empty results for random strings..."
-    quickCheckWith stdArgs { maxSuccess = 10000 } t_normalize
+        prop "Checking non-empty results for random strings..." t_normalize
 #endif
