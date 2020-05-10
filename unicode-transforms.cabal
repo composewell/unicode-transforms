@@ -71,15 +71,15 @@ library
       Data.ByteString.UTF8.Normalize
       Data.Text.Normalize
       Data.Unicode.Types
+      Data.Unicode.Properties.CombiningClass
+      Data.Unicode.Properties.Decompose
   other-modules:
       Data.Unicode.Internal.Bits
       Data.Unicode.Internal.Division
       Data.Unicode.Internal.NormalizeStream
-      Data.Unicode.Properties.CombiningClass
       Data.Unicode.Properties.Compositions
       Data.Unicode.Properties.Decomposable
       Data.Unicode.Properties.DecomposableK
-      Data.Unicode.Properties.Decompose
       Data.Unicode.Properties.DecomposeHangul
       Data.Unicode.Properties.Decompositions
       Data.Unicode.Properties.DecompositionsK
