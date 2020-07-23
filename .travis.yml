@@ -5,7 +5,6 @@
 
 #dist: bionic
 # llvm-toolchain-xenial-9 repo is xenial specific
-# libicu55 package is xenial specific
 dist: xenial
 env:
   # ------------------------------------------------------------------------
@@ -87,7 +86,13 @@ matrix:
   #  addons: {apt: {packages: [cabal-install-head,ghc-head], sources: [hvr-ghc]}}
 
   - env: BUILD=cabal-v2 GHCVER=8.10.1 CABAL_BUILD_OPTIONS="--flag has-icu"
-    addons: {apt: {packages: [libicu55,cabal-install-3.2,ghc-8.10.1], sources: [hvr-ghc]}}
+    addons:
+      apt:
+        sources:
+        - hvr-ghc
+        - sourceline: 'ppa:pkgcrosswire/ppa'
+        packages: [libicu66,cabal-install-3.2,ghc-8.10.1]
+    dist: bionic
 
   - env: BUILD=cabal-v2 GHCVER=8.10.1 CABAL_BUILD_OPTIONS="--flags=has-llvm"
     addons:
