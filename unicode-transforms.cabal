@@ -3,7 +3,7 @@ cabal-version: 1.12
 name:           unicode-transforms
 version:        0.3.6
 synopsis:       Unicode normalization
-description:    Fast Unicode 12.1.0 normalization in Haskell (NFC, NFKC, NFD, NFKD).
+description:    Fast Unicode 13.0.0 normalization in Haskell (NFC, NFKC, NFD, NFKD).
 category:       Data,Text,Unicode
 stability:      Experimental
 homepage:       http://github.com/harendra-kumar/unicode-transforms

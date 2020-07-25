@@ -25,7 +25,7 @@ import           Data.Typeable (Typeable)
 -- Normalization transforms Unicode text into an equivalent
 -- composed or decomposed form, allowing for easier sorting and
 -- searching of text. Standard normalization forms are described in
--- <http://www.unicode.org/unicode/reports/tr15/>,
+-- <https://unicode.org/reports/tr15/>,
 -- Unicode Standard Annex #15: Unicode Normalization Forms.
 --
 -- Characters with accents or other adornments can be encoded in
