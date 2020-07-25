@@ -1,4 +1,4 @@
-## Unreleased
+## 0.3.7
 
 * Significant performance improvements
 * Update to Unicode version 13.0.0
