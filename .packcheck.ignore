@@ -1,0 +1,3 @@
+.packcheck.ignore
+cabal.project.coveralls
+unicode-data/ucdxml/ucd.all.flat.zip
