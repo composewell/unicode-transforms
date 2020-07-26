@@ -14,6 +14,7 @@ import Test.Hspec as H
 import Test.QuickCheck (NonNegative(..))
 
 #ifdef HAS_ICU
+import Data.Text (pack)
 import qualified Data.Text.ICU as ICU
 
 toICUMode :: NormalizationMode -> ICU.NormalizationMode
@@ -61,6 +62,8 @@ main =
             let n1 = maxBound - n
              in n1 `quotRem` 21 == quotRem21 n1
 #ifdef HAS_ICU
+        it "Compare \127340 with ICU" $
+            t_normalizeCompareICU T.NFKD (pack "\127340") `H.shouldBe` True
         prop "Comparing random strings with ICU..." t_normalizeCompareICU
 #else
         prop "Checking non-empty results for random strings..." t_normalize
