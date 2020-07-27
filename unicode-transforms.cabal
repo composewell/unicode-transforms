@@ -24,6 +24,7 @@ tested-with:    GHC==7.10.3
 build-type:     Simple
 extra-source-files:
     Changelog.md
+    MAINTAINING.md
     NOTES.md
     README.md
     benchmark/data/AllChars.txt
