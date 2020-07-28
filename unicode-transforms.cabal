@@ -209,8 +209,8 @@ executable chart
     buildable: True
     build-Depends:
         base >= 4.8 && < 5
-      , bench-show >= 0.2 && < 0.3
-      , split
+      , bench-show >= 0.3 && < 0.4
+      , split >= 0.2 && < 0.3
       , transformers >= 0.4   && < 0.6
   else
     buildable: False
