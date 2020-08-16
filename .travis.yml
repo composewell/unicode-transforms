@@ -120,8 +120,8 @@ matrix:
   - env: BUILD=cabal-v2 GHCVER=8.0.2
     addons: {apt: {packages: [cabal-install-3.2,ghc-8.0.2], sources: [hvr-ghc]}}
 
-  #- env: BUILD=cabal-v2 GHCVER=7.10.3
-  #  addons: {apt: {packages: [cabal-install-3.2,ghc-7.10.3], sources: [hvr-ghc]}}
+  - env: BUILD=cabal-v2 GHCVER=7.10.3
+    addons: {apt: {packages: [cabal-install-3.2,ghc-7.10.3], sources: [hvr-ghc]}}
 
   # You can specify build flags like this:
   #- env: BUILD=cabal-v2 CABAL_BUILD_OPTIONS="--flags=dev"
@@ -166,8 +166,8 @@ matrix:
   #- env: BUILD=stack RESOLVER=lts-12 GHCVER=8.4
   #  addons: {apt: {packages: [cabal-install-3.2], sources: [hvr-ghc]}}
 
-  - env: BUILD=stack RESOLVER=lts-6 GHCVER=7.10 STACK_YAML=stack-7.10.yaml
-    addons: {apt: {packages: [cabal-install-3.2], sources: [hvr-ghc]}}
+  #- env: BUILD=stack RESOLVER=lts-6 GHCVER=7.10 STACK_YAML=stack-7.10.yaml
+  #  addons: {apt: {packages: [cabal-install-3.2], sources: [hvr-ghc]}}
 
   # You can keep a STACK_YAML file at any path location
   #- env: BUILD=stack STACK_YAML=.ci/stack-8.0.yaml
