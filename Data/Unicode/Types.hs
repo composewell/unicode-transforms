@@ -6,7 +6,7 @@
 -- Module      : Data.Unicode.Types
 -- Copyright   : (c) 2016 Harendra Kumar
 --
--- License     : BSD-style
+-- License     : BSD-3-Clause
 -- Maintainer  : harendra.kumar@gmail.com
 -- Stability   : experimental
 -- Portability : GHC

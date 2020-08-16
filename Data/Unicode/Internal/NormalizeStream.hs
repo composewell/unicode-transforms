@@ -7,7 +7,7 @@
 -- Copyright   : (c) 2016 Harendra Kumar
 --               (c) 2020 Andrew Lelechenko
 --
--- License     : BSD-style
+-- License     : BSD-3-Clause
 -- Maintainer  : harendra.kumar@gmail.com
 -- Stability   : experimental
 --

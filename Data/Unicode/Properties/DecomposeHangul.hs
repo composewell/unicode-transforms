@@ -4,7 +4,7 @@
 -- Module      : Data.Unicode.Properties.DecomposeHangul
 -- Copyright   : (c) 2016 Harendra Kumar
 --
--- License     : BSD-style
+-- License     : BSD-3-Clause
 -- Maintainer  : harendra.kumar@gmail.com
 -- Stability   : experimental
 --
