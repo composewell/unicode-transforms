@@ -17,8 +17,9 @@ module Data.Unicode.Internal.Bits
     ) where
 
 import GHC.Exts
-       (Addr#, Int(..), Word(..), indexWord64OffAddr#, and#, andI#,
+       (Addr#, Int(..), indexWord64OffAddr#, and#, andI#,
         uncheckedIShiftRL#, uncheckedShiftL#)
+import GHC.Word (Word64(..))
 
 -- | @lookup64 addr index@ looks up the bit stored at bit index @index@ using a
 -- bitmap starting at the address @addr@. Looks up the 64-bit word containing
@@ -27,7 +28,7 @@ import GHC.Exts
 -- accessible memory.
 --
 lookupBit64 :: Addr# -> Int -> Bool
-lookupBit64 addr# (I# index#) = W# (word## `and#` bitMask##) /= 0
+lookupBit64 addr# (I# index#) = W64# (word## `and#` bitMask##) /= 0
   where
     wordIndex# = index# `uncheckedIShiftRL#` 6#
     word## = indexWord64OffAddr# addr# wordIndex#
