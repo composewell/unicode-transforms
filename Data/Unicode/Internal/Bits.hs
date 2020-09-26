@@ -1,3 +1,4 @@
+{-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE MagicHash #-}
 -- |
 -- Module      : Data.Unicode.Internal.Bits
@@ -16,8 +17,9 @@ module Data.Unicode.Internal.Bits
       lookupBit64
     ) where
 
+import Data.Bits (finiteBitSize, popCount)
 import GHC.Exts
-       (Addr#, Int(..), Word(..), indexWord64OffAddr#, and#, andI#,
+       (Addr#, Int(..), Word(..), indexWordOffAddr#, and#, andI#,
         uncheckedIShiftRL#, uncheckedShiftL#)
 
 -- | @lookup64 addr index@ looks up the bit stored at bit index @index@ using a
@@ -29,7 +31,13 @@ import GHC.Exts
 lookupBit64 :: Addr# -> Int -> Bool
 lookupBit64 addr# (I# index#) = W# (word## `and#` bitMask##) /= 0
   where
-    wordIndex# = index# `uncheckedIShiftRL#` 6#
-    word## = indexWord64OffAddr# addr# wordIndex#
-    bitIndex# = index# `andI#` 63#
+    !fbs@(I# fbs#) = finiteBitSize (0 :: Word) - 1
+    !(I# logFbs#) = case fbs of
+      31 -> 5
+      63 -> 6
+      _  -> popCount fbs -- this is a really weird architecture
+
+    wordIndex# = index# `uncheckedIShiftRL#` logFbs#
+    word## = indexWordOffAddr# addr# wordIndex#
+    bitIndex# = index# `andI#` fbs#
     bitMask## = 1## `uncheckedShiftL#` bitIndex#
