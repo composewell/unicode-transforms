@@ -1,3 +1,7 @@
+## 0.3.7.1
+
+* Fix x32 build
+
 ## 0.3.7
 
 * Significant performance improvements
