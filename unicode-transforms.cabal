@@ -6,8 +6,8 @@ synopsis:       Unicode normalization
 description:    Fast Unicode 13.0.0 normalization in Haskell (NFC, NFKC, NFD, NFKD).
 category:       Data,Text,Unicode
 stability:      Experimental
-homepage:       http://github.com/harendra-kumar/unicode-transforms
-bug-reports:    https://github.com/harendra-kumar/unicode-transforms/issues
+homepage:       http://github.com/composewell/unicode-transforms
+bug-reports:    https://github.com/composewell/unicode-transforms/issues
 author:         Harendra Kumar
 maintainer:     harendra.kumar@gmail.com
 copyright:      2016-2017 Harendra Kumar,
@@ -51,7 +51,7 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/harendra-kumar/unicode-transforms
+  location: https://github.com/composewell/unicode-transforms
 
 flag dev
   description: Developer build
