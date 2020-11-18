@@ -6,3 +6,5 @@ extra-deps:
 - gauge-0.2.4
 - basement-0.0.7
 - Cabal-3.2.0.0@sha256:d0d7a1f405f25d0000f5ddef684838bc264842304fd4e7f80ca92b997b710874,27320
+- github: composewell/unicode-data
+  commit: a9bfbaae0a70e8b3d153ed9f12fb8581c6857cae
