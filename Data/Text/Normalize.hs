@@ -30,7 +30,7 @@ import           Data.Unicode.Types                    (NormalizationMode (..))
 normalize :: NormalizationMode -> Text -> Text
 normalize mode =
     case mode of
-      NFD  -> (unstream DecomposeNFD)   . stream
-      NFKD -> (unstream DecomposeNFKD)  . stream
-      NFC  -> (unstreamC DecomposeNFD)  . stream
-      NFKC -> (unstreamC DecomposeNFKD) . stream
+      NFD  -> (unstream Canonical)   . stream
+      NFKD -> (unstream Kompat)  . stream
+      NFC  -> (unstreamC Canonical)  . stream
+      NFKC -> (unstreamC Kompat) . stream

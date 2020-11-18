@@ -42,12 +42,8 @@ extra-source-files:
     stack.yaml
     stack-7.10.yaml
     stack-8.0.yaml
-    unicode-data/README.md
-    unicode-data/ucd/NormalizationTest.txt
-    unicode-data/extra/NormalizationTest.txt
-    unicode-data/stack.yaml
-    unicode-data/ucd2haskell.cabal
-    unicode-data/UCD2Haskell.hs
+    test/data/NormalizationTest.txt
+    test/data/extra/NormalizationTest.txt
 
 source-repository head
   type: git
@@ -78,24 +74,14 @@ library
       Data.ByteString.UTF8.Normalize
       Data.Text.Normalize
       Data.Unicode.Types
-      Data.Unicode.Internal.Division
   other-modules:
-      Data.Unicode.Internal.Bits
       Data.Unicode.Internal.NormalizeStream
-      Data.Unicode.Properties.CombiningClass
-      Data.Unicode.Properties.Compositions
-      Data.Unicode.Properties.Decomposable
-      Data.Unicode.Properties.DecomposableK
-      Data.Unicode.Properties.Decompose
-      Data.Unicode.Properties.DecomposeHangul
-      Data.Unicode.Properties.Decompositions
-      Data.Unicode.Properties.DecompositionsK
-      Data.Unicode.Properties.DecompositionsK2
   hs-source-dirs:
       ./.
   ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
   build-depends:
       base >=4.7 && <5
+    , unicode-data >= 0.1 && <0.2
     , bytestring >=0.9 && <0.12
     , text >=1.1.1 && <1.3
     , ghc-prim >= 0.2 && < 0.7
@@ -139,6 +125,7 @@ test-suite quickcheck
   ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
   build-depends:
       QuickCheck >=2.1 && <2.15
+    , unicode-data >= 0.1 && <0.2
     , base >=4.7 && <5
     , deepseq >=1.1 && <1.5
     , hspec >= 2.0 && < 3

@@ -122,6 +122,6 @@ testNormalize file = do
 
 main :: IO ()
 main = do
-    testNormalize "unicode-data/ucd/NormalizationTest.txt"
+    testNormalize "test/data/NormalizationTest.txt"
     -- Additional test cases not in the unicode standard suite
-    testNormalize "unicode-data/extra/NormalizationTest.txt"
+    testNormalize "test/data/extra/NormalizationTest.txt"
