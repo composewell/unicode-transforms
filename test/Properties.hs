@@ -7,11 +7,11 @@ module Main (main) where
 import Data.Text (Text)
 import qualified Data.Text.Normalize as T
 import Data.Text.Normalize (NormalizationMode)
-import Data.Unicode.Internal.Division (quotRem21, quotRem28)
 import QuickCheckUtils ()
 import Test.Hspec.QuickCheck (modifyMaxSuccess, prop)
 import Test.Hspec as H
 import Test.QuickCheck (NonNegative(..))
+import Unicode.Internal.Division (quotRem21, quotRem28)
 
 #ifdef HAS_ICU
 import Data.Text (pack)
