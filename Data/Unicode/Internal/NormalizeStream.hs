@@ -22,6 +22,7 @@ module Data.Unicode.Internal.NormalizeStream
     )
     where
 
+import           Data.Bits                              (shiftR)
 import           Data.Char                              (chr, ord)
 import qualified Data.Text.Array                        as A
 import           Data.Text.Internal                     (Text (..))
@@ -32,7 +33,6 @@ import           Data.Text.Internal.Fusion.Types        (Step (..), Stream (..))
 import           Data.Text.Internal.Private             (runText)
 import           Data.Text.Internal.Unsafe.Char         (unsafeWrite)
 import           Data.Text.Internal.Unsafe.Char         (unsafeChr)
-import           Data.Text.Internal.Unsafe.Shift        (shiftR)
 import           GHC.ST                                 (ST (..))
 import           GHC.Types                              (SPEC(..))
 
