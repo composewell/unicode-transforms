@@ -70,8 +70,7 @@ library
       Data.Unicode.Types
   other-modules:
       Data.Unicode.Internal.NormalizeStream
-  hs-source-dirs:
-      ./.
+  hs-source-dirs: .
   ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
   build-depends:
       base >=4.7 && <5
