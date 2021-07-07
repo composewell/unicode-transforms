@@ -99,9 +99,12 @@ jobs:
         # Uncomment GHC versions you want the CI to run on.
         ghc_version:
           [ 8.10.3
-          # , 8.8.4
-          # , 8.6.5
-          # , 8.4.4
+          , 8.8.4
+          , 8.6.5
+          , 8.4.4
+          , 8.2.2
+          , 8.0.2
+          , 7.10.3
           ]
         command:
           [ cabal-v2
@@ -113,10 +116,9 @@ jobs:
           ]
         include:
           # Additional ci matrix elements
-          # - name: ci
-          #   ghc_version: 8.8.3
-          #   command: stack
-          #   runner: ubuntu-latest
+          - name: ci
+            command: stack
+            runner: ubuntu-latest
 
           # - name: ci
           #   ghc_version: 8.4.4
