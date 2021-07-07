@@ -1,3 +1,9 @@
 .packcheck.ignore
 cabal.project.coveralls
-unicode-data/ucdxml/ucd.all.flat.zip
+cabal.project
+.gitignore
+.github/workflows/packcheck.yml
+appveyor.yml
+stack.yaml
+stack-7.10.yaml
+stack-8.0.yaml
