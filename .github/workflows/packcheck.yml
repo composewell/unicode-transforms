@@ -130,12 +130,12 @@ jobs:
           #   command: cabal-v2
           #   runner: macos-latest
 
-          - name: hlint
-            command: cabal-v2
-            runner: ubuntu-latest
-            pack_options: >-
-              HLINT_OPTIONS="lint"
-              HLINT_TARGETS="Data"
+          # - name: hlint
+          #   command: cabal-v2
+          #   runner: ubuntu-latest
+          #   pack_options: >-
+          #     HLINT_OPTIONS="lint"
+          #     HLINT_TARGETS="Data"
 
     steps:
     - uses: actions/checkout@v2
