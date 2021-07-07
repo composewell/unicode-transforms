@@ -1,4 +1,4 @@
-# packcheck-0.4.3
+# packcheck-0.5.1
 # You can use any of the options supported by packcheck as environment
 # variables here.  See https://github.com/composewell/packcheck for all
 # options and their explanation.
@@ -22,7 +22,9 @@ environment:
     # DISABLE_BENCH: "y"
     # DISABLE_DOCS: "y"
     # DISABLE_SDIST_BUILD: "y"
+    # DISABLE_SDIST_GIT_CHECK: "y"
     # DISABLE_DIST_CHECKS: "y"
+    DISABLE_SDIST_PROJECT_CHECK: "y"
 
     # ------------------------------------------------------------------------
     # stack options
@@ -39,7 +41,6 @@ environment:
     # cabal options
     # ------------------------------------------------------------------------
     CABAL_CHECK_RELAX: "y"
-    CABAL_NO_SANDBOX: "y"
     CABAL_HACKAGE_MIRROR: "hackage.haskell.org:http://hackage.fpcomplete.com"
 
     # ------------------------------------------------------------------------
@@ -59,7 +60,7 @@ environment:
     # If you have not committed packcheck.sh in your repo at PACKCHECK_LOCAL_PATH
     # then it is automatically pulled from this URL.
     PACKCHECK_GITHUB_URL: "https://raw.githubusercontent.com/composewell/packcheck"
-    PACKCHECK_GITHUB_COMMIT: "f17ef1f60cb926230a082c4a3089c14c35db0e1f"
+    PACKCHECK_GITHUB_COMMIT: "37bbe8a79ad5136e654e48e03ec519060a5b11e6"
 
     # Override the temp directory to avoid sed escaping issues
     # See https://github.com/haskell/cabal/issues/5386
