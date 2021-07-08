@@ -18,12 +18,16 @@ module Data.Text.Normalize
     , normalize
     ) where
 
-import           Data.Text                             (Text)
-import           Data.Unicode.Internal.NormalizeStream ( DecomposeMode(..)
-                                                       , stream
-                                                       , unstream
-                                                       , unstreamC)
-import           Data.Unicode.Types                    (NormalizationMode (..))
+import Data.Text (Text)
+import Data.Unicode.Types (NormalizationMode(..))
+
+-- Internal modules
+import Data.Unicode.Internal.NormalizeStream
+    ( DecomposeMode(..)
+    , stream
+    , unstream
+    , unstreamC
+    )
 
 -- | Perform Unicode normalization on @Text@ according to the specified
 -- normalization mode.
