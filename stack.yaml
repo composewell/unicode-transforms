@@ -1,5 +1,5 @@
 packages:
 - '.'
-resolver: lts-16.6
+resolver: lts-18.1
 extra-deps:
-- unicode-data-0.1.0
+- unicode-data-0.1.0.1
