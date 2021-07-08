@@ -22,21 +22,21 @@ module Data.Unicode.Internal.NormalizeStream
     )
     where
 
-import           Data.Bits                              (shiftR)
-import           Data.Char                              (chr, ord)
-import qualified Data.Text.Array                        as A
-import           Data.Text.Internal                     (Text (..))
-import qualified Data.Text.Internal.Encoding.Utf16      as U16
-import           Data.Text.Internal.Fusion.Size         (betweenSize,
-                                                         upperBound)
-import           Data.Text.Internal.Fusion.Types        (Step (..), Stream (..))
-import           Data.Text.Internal.Private             (runText)
-import           Data.Text.Internal.Unsafe.Char         (unsafeWrite)
-import           Data.Text.Internal.Unsafe.Char         (unsafeChr)
-import           GHC.ST                                 (ST (..))
-import           GHC.Types                              (SPEC(..))
+import Data.Bits (shiftR)
+import Data.Char (chr, ord)
+import GHC.ST (ST(..))
+import GHC.Types (SPEC(..))
 
+import qualified Data.Text.Array as A
 import qualified Unicode.Char as UC
+
+-- Internal modules
+import Data.Text.Internal (Text(..))
+import Data.Text.Internal.Fusion.Size (betweenSize, upperBound)
+import Data.Text.Internal.Fusion.Types (Step(..), Stream(..))
+import Data.Text.Internal.Private (runText)
+import Data.Text.Internal.Unsafe.Char (unsafeChr, unsafeWrite)
+import Data.Text.Internal.Encoding.Utf16 (chr2)
 
 -------------------------------------------------------------------------------
 -- Reorder buffer to hold characters till the next starter boundary
@@ -152,7 +152,7 @@ stream (Text arr off len) = Stream next off (betweenSize (len `shiftR` 1) len)
           | i >= end                   = Done
           -- shift generates only two branches instead of three in case of
           -- range check, works quite a bit faster with llvm backend.
-          | (n `shiftR` 10) == 0x36    = Yield (U16.chr2 n n2) (i + 2)
+          | (n `shiftR` 10) == 0x36    = Yield (chr2 n n2) (i + 2)
           | otherwise                  = Yield (unsafeChr n) (i + 1)
           where
             n  = A.unsafeIndex arr i
