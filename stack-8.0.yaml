@@ -1,6 +1,0 @@
-packages:
-- '.'
-resolver: lts-9.21
-extra-deps:
-- gauge-0.2.4
-- unicode-data-0.1.0
