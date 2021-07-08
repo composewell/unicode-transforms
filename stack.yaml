@@ -2,5 +2,4 @@ packages:
 - '.'
 resolver: lts-16.6
 extra-deps:
-- github: composewell/unicode-data
-  commit: a9bfbaae0a70e8b3d153ed9f12fb8581c6857cae
+- unicode-data-0.1.0
