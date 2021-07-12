@@ -27,6 +27,7 @@ extra-source-files:
     MAINTAINING.md
     NOTES.md
     README.md
+    download-ucd-files.sh
     benchmark/README.md
     benchmark/NormalizeFile.hs
     benchmark/data/AllChars.txt
