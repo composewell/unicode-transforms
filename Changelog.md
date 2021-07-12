@@ -1,3 +1,9 @@
+## Unreleased
+
+* Allow ghc-prim 0.7
+* Extract `unicode-data` into its own package
+* Depend on the latest stable `text`
+
 ## 0.3.7.1
 
 * Fix x32 build
