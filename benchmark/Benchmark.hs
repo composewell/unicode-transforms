@@ -15,12 +15,11 @@ import Control.Applicative ((<$>), (<*>))
 #endif
 import Control.DeepSeq (NFData)
 import Data.Text (Text)
-import Gauge.Main (Benchmark, bench, bgroup, env, nf, runMode)
-import Gauge.Main.Options (defaultConfig, Config(..), parseWith)
 import Path (Dir, Path, Rel, mkRelDir, toFilePath, (</>))
 import Path.IO (listDir)
-import System.Environment (getArgs)
 import System.FilePath (dropExtensions, takeFileName)
+
+import Gauge.Main (Benchmark, bench, bgroup, defaultMain, env, nf)
 
 import qualified Data.Text as T
 import qualified Data.Text.Normalize as UTText
@@ -69,10 +68,8 @@ txtInput file = second (fmap T.pack) (strInput file)
 
 main :: IO ()
 main = do
-    args <- getArgs
-    let (cfg, xs) = parseWith defaultConfig args
     dataFiles <- fmap (map toFilePath . snd) (listDir dataDir)
-    runMode (mode cfg) cfg xs
+    defaultMain $
         [
 #ifdef BENCH_ICU
           bgroup "text-icu"
