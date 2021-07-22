@@ -1,5 +1,6 @@
 packages:
 - '.'
-resolver: lts-18.1
+resolver: lts-18.3
 extra-deps:
 - unicode-data-0.1.0.1
+- tasty-bench-0.3
