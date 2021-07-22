@@ -1,4 +1,4 @@
-## Unreleased
+## 0.3.8
 
 * Allow ghc-prim 0.7
 * Extract `unicode-data` into its own package
