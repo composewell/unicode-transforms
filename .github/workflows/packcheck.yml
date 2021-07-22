@@ -98,7 +98,8 @@ jobs:
         name: [ci]
         # Uncomment GHC versions you want the CI to run on.
         ghc_version:
-          [ 8.10.3
+          [ 9.0.1
+          , 8.10.3
           , 8.8.4
           , 8.6.5
           , 8.4.4
