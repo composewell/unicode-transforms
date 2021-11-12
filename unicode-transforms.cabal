@@ -3,7 +3,7 @@ cabal-version: 2.2
 name:           unicode-transforms
 version:        0.3.8
 synopsis:       Unicode normalization
-description:    Fast Unicode 13.0.0 normalization in Haskell (NFC, NFKC, NFD, NFKD).
+description:    Fast Unicode 14.0.0 normalization in Haskell (NFC, NFKC, NFD, NFKD).
 category:       Data,Text,Unicode
 stability:      Experimental
 homepage:       http://github.com/composewell/unicode-transforms
@@ -82,10 +82,10 @@ library
   hs-source-dirs: .
   ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
   build-depends:
-      base >=4.8 && <5
-    , unicode-data >= 0.1 && <0.2
-    , bytestring >=0.9 && <0.12
-    , ghc-prim >= 0.2 && < 0.8
+      base         >= 4.8 && < 5
+    , unicode-data >= 0.2 && < 0.3
+    , bytestring   >= 0.9 && < 0.12
+    , ghc-prim     >= 0.2 && < 0.8
 
     -- We depend on a lot of internal modules in text. We keep the upper bound
     -- inclusive of the latest stable version.
@@ -129,11 +129,11 @@ test-suite quickcheck
       test
   ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
   build-depends:
-      QuickCheck >=2.1 && <2.15
-    , unicode-data >= 0.1 && <0.2
-    , base >=4.7 && <5
-    , deepseq >=1.1 && <1.5
-    , hspec >= 2.0 && < 3
+      QuickCheck   >= 2.1   && < 2.15
+    , unicode-data >= 0.2   && < 0.3
+    , base         >= 4.7   && < 5
+    , deepseq      >= 1.1   && < 1.5
+    , hspec        >= 2.0   && < 3
     , text
     , unicode-transforms
   if flag(dev)
