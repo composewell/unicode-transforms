@@ -1,3 +1,8 @@
+## Next
+
+* Bump `unicode-data` to `0.2`
+* Update to Unicode version 14.0.0
+
 ## 0.3.8
 
 * Allow ghc-prim 0.7

@@ -5,7 +5,7 @@
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/5wov8m1m0asvbv32?svg=true)](https://ci.appveyor.com/project/harendra-kumar/unicode-transforms)
 [![Coverage Status](https://coveralls.io/repos/composewell/unicode-transforms/badge.svg?branch=master&service=github)](https://coveralls.io/github/composewell/unicode-transforms?branch=master)
 
-Fast Unicode 13.0.0 normalization in Haskell (NFC, NFKC, NFD, NFKD).
+Fast Unicode 14.0.0 normalization in Haskell (NFC, NFKC, NFD, NFKD).
 
 ## What is normalization?
 

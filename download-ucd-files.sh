@@ -4,11 +4,11 @@
 # we used to generate them earlier are exactly the same as the ones we are
 # downloading. To ensure that verfication of the checksum is necessary.
 
-VERSION=13.0.0
+VERSION=14.0.0
 
 SRC_FILE="https://www.unicode.org/Public/$VERSION/ucd/NormalizationTest.txt"
 DST_FILE="test/data/NormalizationTest.txt"
-SRC_FILE_CKSUM="d60ee55dd9169444652e48d337109cc814ecc59a9d3122eedddf7de388f2e01d"
+SRC_FILE_CKSUM="7cb30cc2abe6c29c292b99095865d379ce1213045c78c4ff59c7e9391bbe2331"
 
 
 # Download the file
