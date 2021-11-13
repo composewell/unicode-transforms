@@ -1,0 +1,39 @@
+name: s390x
+on:
+  push:
+    branches:
+      - master
+  pull_request: {} # Validate all PRs
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  # Emulation on s390x platform is incredibly slow and memory demanding.
+  # It seems that any executable with GHC RTS takes at least 7-8 Gb of RAM, so we can
+  # run `cabal` or `ghc` on their own, but cannot run them both at the same time, striking
+  # out `cabal test`. Instead we rely on system packages and invoke `ghc --make` manually,
+  # and even so `ghc -O` is prohibitively expensive.
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: uraimo/run-on-arch-action@v2.1.1
+      timeout-minutes: 60
+      with:
+        arch: s390x
+        distro: ubuntu20.04
+        githubToken: ${{ github.token }}
+        install: |
+          apt-get update -y
+          apt-get install -y ghc libghc-quickcheck2-dev libghc-hspec-dev libghc-getopt-generics-dev libghc-split-dev curl
+        run: |
+          ghc --version
+          curl -s -L https://hackage.haskell.org/package/unicode-data-0.3.0.tar.gz | tar xz
+          ghc --make -XMagicHash -XBangPatterns -XUnboxedTuples -itest:unicode-data-0.3.0/lib -o extras test/Extra.hs
+          ./extras
+          ghc --make -XMagicHash -XBangPatterns -XUnboxedTuples -itest:unicode-data-0.3.0/lib -o quickcheck test/Properties.hs
+          ./quickcheck
+          ghc --make -XMagicHash -XBangPatterns -XUnboxedTuples -itest:unicode-data-0.3.0/lib -o ucd test/NormalizationTest.hs
+          ./ucd
