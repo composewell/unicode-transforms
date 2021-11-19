@@ -1,5 +1,6 @@
 {-# OPTIONS_GHC -funbox-strict-fields #-}
 {-# LANGUAGE BangPatterns #-}
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE TupleSections #-}
 -- |
@@ -22,7 +23,6 @@ module Data.Unicode.Internal.NormalizeStream
     )
     where
 
-import Data.Bits (shiftR)
 import Data.Char (chr, ord)
 import GHC.ST (ST(..))
 import GHC.Types (SPEC(..))
@@ -30,13 +30,21 @@ import GHC.Types (SPEC(..))
 import qualified Data.Text.Array as A
 import qualified Unicode.Char as UC
 
+#if MIN_VERSION_text(2,0,0)
+import Data.Text.Internal.Fusion (stream)
+#else
+import Data.Bits (shiftR)
+import Data.Text.Internal.Unsafe.Char (unsafeChr)
+import Data.Text.Internal.Fusion.Size (betweenSize)
+import Data.Text.Internal.Encoding.Utf16 (chr2)
+#endif
+
 -- Internal modules
 import Data.Text.Internal (Text(..))
-import Data.Text.Internal.Fusion.Size (betweenSize, upperBound)
+import Data.Text.Internal.Fusion.Size (upperBound)
 import Data.Text.Internal.Fusion.Types (Step(..), Stream(..))
 import Data.Text.Internal.Private (runText)
-import Data.Text.Internal.Unsafe.Char (unsafeChr, unsafeWrite)
-import Data.Text.Internal.Encoding.Utf16 (chr2)
+import Data.Text.Internal.Unsafe.Char (unsafeWrite)
 
 -------------------------------------------------------------------------------
 -- Reorder buffer to hold characters till the next starter boundary
@@ -142,6 +150,7 @@ decomposeChar mode marr index reBuf ch
             n <- unsafeWrite arr j c
             return (j + n, Empty)
 
+#if !MIN_VERSION_text(2,0,0)
 -- | /O(n)/ Convert a 'Text' into a 'Stream Char'.
 stream :: Text -> Stream Char
 stream (Text arr off len) = Stream next off (betweenSize (len `shiftR` 1) len)
@@ -158,6 +167,7 @@ stream (Text arr off len) = Stream next off (betweenSize (len `shiftR` 1) len)
             n  = A.unsafeIndex arr i
             n2 = A.unsafeIndex arr (i + 1)
 {-# INLINE [0] stream #-}
+#endif
 
 -- | /O(n)/ Convert a 'Stream Char' into a decompose-normalized 'Text'.
 unstream :: UC.DecomposeMode -> Stream Char -> Text

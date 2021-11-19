@@ -89,7 +89,7 @@ library
 
     -- We depend on a lot of internal modules in text. We keep the upper bound
     -- inclusive of the latest stable version.
-    , text >= 1.1.1 && <= 1.2.4.1
+    , text >=1.1.1 && <=1.2.5.0 || >=2.0 && <2.1
   if flag(dev)
     ghc-options: -O0
   else
@@ -110,7 +110,7 @@ test-suite extras
       QuickCheck >=2.1 && <2.15
     , base >=4.7 && <5
     , deepseq >=1.1 && <1.5
-    , text >=1.1.1 && <1.3
+    , text
     , unicode-transforms
   if flag(dev)
     ghc-options: -O0
@@ -134,7 +134,7 @@ test-suite quickcheck
     , base >=4.7 && <5
     , deepseq >=1.1 && <1.5
     , hspec >= 2.0 && < 3
-    , text >=1.1.1 && <1.3
+    , text
     , unicode-transforms
   if flag(dev)
     ghc-options: -O0
@@ -158,7 +158,7 @@ test-suite ucd
       base >=4.7 && <5
     , getopt-generics >=0.11 && <0.14
     , split >=0.1 && <0.3
-    , text >=1.1.1 && <1.3
+    , text
     , unicode-transforms
   if flag(dev)
     ghc-options: -O0
@@ -180,7 +180,7 @@ benchmark bench
     , filepath >=1.0 && <2
     , path >=0.0.0 && <0.9
     , path-io >=0.1.0 && <1.7
-    , text >=1.1.1 && <1.3
+    , text
     , unicode-transforms
   if flag(use-gauge)
     build-depends: gauge >=0.2.0 && <0.3
