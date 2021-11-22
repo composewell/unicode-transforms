@@ -2,5 +2,5 @@ packages:
 - '.'
 resolver: lts-18.3
 extra-deps:
-- unicode-data-0.1.0.1
+- unicode-data-0.2.0
 - tasty-bench-0.3
