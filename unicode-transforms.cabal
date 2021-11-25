@@ -1,7 +1,7 @@
 cabal-version: 2.2
 
 name:           unicode-transforms
-version:        0.3.8
+version:        0.4.0
 synopsis:       Unicode normalization
 description:    Fast Unicode 14.0.0 normalization in Haskell (NFC, NFKC, NFD, NFKD).
 category:       Data,Text,Unicode
@@ -89,7 +89,7 @@ library
 
     -- We depend on a lot of internal modules in text. We keep the upper bound
     -- inclusive of the latest stable version.
-    , text >=1.1.1 && <=1.2.5.0 || >=2.0 && <2.1
+    , text         >=1.1.1 && <=1.2.5.0 || >=2.0 && <2.1
   if flag(dev)
     ghc-options: -O0
   else
