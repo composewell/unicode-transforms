@@ -78,7 +78,7 @@ jobs:
       # If you have not committed packcheck.sh in your repo at PACKCHECK
       # then it is automatically pulled from this URL.
       PACKCHECK_GITHUB_URL: "https://raw.githubusercontent.com/composewell/packcheck"
-      PACKCHECK_GITHUB_COMMIT: "37bbe8a79ad5136e654e48e03ec519060a5b11e6"
+      PACKCHECK_GITHUB_COMMIT: "v0.6.0"
 
       # ------------------------------------------------------------------------
       # Final build variables
@@ -105,7 +105,6 @@ jobs:
           , 8.4.4
           , 8.2.2
           , 8.0.2
-          , 7.10.3
           ]
         command:
           [ cabal-v2
