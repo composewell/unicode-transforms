@@ -22,11 +22,7 @@ on:
 
 jobs:
   build:
-    name: >-
-      ${{ matrix.name }}
-      ${{ matrix.command }}
-      ${{ matrix.runner }}
-      ${{ matrix.ghc_version }}
+    name: ${{ matrix.name }}
     env:
       # ------------------------------------------------------------------------
       # Common options
@@ -89,46 +85,65 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # The reason we have name here is to force an additional config instead
-        # of adding to an existing config while adding additional configs.
-        # Look at <https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions#jobsjob_idstrategymatrix>
-        # for more info about adding matrix elements.
-        # Adding any element to the list will increase the number of matrix
-        # elemets proportional to the cross product.
-        name: [ci]
-        # Uncomment GHC versions you want the CI to run on.
-        ghc_version:
-          [ 9.0.1
-          , 8.10.3
-          , 8.8.4
-          , 8.6.5
-          , 8.4.4
-          , 8.2.2
-          , 8.0.2
-          ]
-        command:
-          [ cabal-v2
-          # , stack
-          ]
-        runner:
-          [ ubuntu-latest
-          # , macos-latest
-          ]
+        name:
+          - 9.0.1
+          - 8.10.7
+          - 8.10.7+stack
+          - 8.8.4
+          - 8.6.5
+          - 8.4.4
+          - 8.2.2
+          - 8.0.2
         include:
-          # Additional ci matrix elements
-          - name: ci
+          - name: 9.0.1
+            ghc-version: 9.0.1
+            command: cabal-v2
+            runner: ubuntu-latest
+            cabal-version: 3.2
+
+          - name: 8.10.7
+            ghc-version: 8.10.7
+            command: cabal-v2
+            runner: ubuntu-latest
+            cabal-version: 3.2
+
+          - name: 8.8.4
+            ghc-version: 8.8.4
+            command: cabal-v2
+            runner: ubuntu-latest
+            cabal-version: 3.2
+
+          - name: 8.6.5
+            ghc-version: 8.6.5
+            command: cabal-v2
+            runner: ubuntu-latest
+            cabal-version: 3.2
+
+          - name: 8.4.4
+            ghc-version: 8.4.4
+            command: cabal-v2
+            runner: ubuntu-latest
+            cabal-version: 3.2
+
+          - name: 8.2.2
+            ghc-version: 8.2.2
+            command: cabal-v2
+            runner: ubuntu-latest
+            cabal-version: 3.2
+
+          - name: 8.0.2
+            ghc-version: 8.0.2
+            command: cabal-v2
+            runner: ubuntu-latest
+            cabal-version: 3.2
+
+          - name: 8.10.7+stack
+            ghc-version: 8.10.7
             command: stack
             runner: ubuntu-latest
-
-          # - name: ci
-          #   ghc_version: 8.4.4
-          #   command: stack
-          #   runner: ubuntu-latest
-
-          # - name: ci
-          #   ghc_version: 8.8.3
-          #   command: cabal-v2
-          #   runner: macos-latest
+            cabal-version: 3.2
+            pack_options: >-
+              RESOLVER=lts-18.18
 
           # - name: hlint
           #   command: cabal-v2
@@ -141,11 +156,10 @@ jobs:
     - uses: actions/checkout@v2
 
     - uses: haskell/actions/setup@v1
-      if: ${{ matrix.name != 'hlint' }}
       with:
-        ghc-version: ${{ matrix.ghc_version }}
-        # We need not put this in the matrix. This will be fixed in most cases.
-        cabal-version: 3.2
+        ghc-version: ${{ matrix.ghc-version }}
+        cabal-version: ${{ matrix.cabal-version }}
+
 
     - uses: actions/cache@v2
       name: Cache common directories
