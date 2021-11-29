@@ -86,6 +86,7 @@ jobs:
       fail-fast: false
       matrix:
         name:
+          - 9.2.1
           - 9.0.1
           - 8.10.7
           - 8.10.7+stack
@@ -95,6 +96,12 @@ jobs:
           - 8.2.2
           - 8.0.2
         include:
+          - name: 9.2.1
+            ghc-version: 9.2.1
+            command: cabal-v2
+            runner: ubuntu-latest
+            cabal-version: 3.6
+
           - name: 9.0.1
             ghc-version: 9.0.1
             command: cabal-v2
