@@ -155,7 +155,6 @@ test-suite ucd
   ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
   build-depends:
       base >=4.7 && <5
-    , getopt-generics >=0.11 && <0.14
     , split >=0.1 && <0.3
     , text
     , unicode-transforms
