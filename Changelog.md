@@ -1,8 +1,9 @@
 ## 0.4.0 (November 2021)
 
 * Bump `unicode-data` to `0.2`
-* Allow `text 2.0` 
+* Allow `text 2.0`
 * Update to Unicode version 14.0.0
+* Drop support for GHC 7.10
 
 ## 0.3.8
 
