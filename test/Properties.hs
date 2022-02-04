@@ -15,7 +15,12 @@ import Unicode.Internal.Division (quotRem21, quotRem28)
 
 #ifdef HAS_ICU
 import Data.Text (pack)
-import qualified Data.Text.ICU as ICU
+
+#if MIN_VERSION_text_icu(0,8,0)
+import qualified Data.Text.ICU.Normalize2 as ICU
+#else
+import qualified Data.Text.ICU.Normalize as ICU
+#endif
 
 toICUMode :: NormalizationMode -> ICU.NormalizationMode
 toICUMode mode =
