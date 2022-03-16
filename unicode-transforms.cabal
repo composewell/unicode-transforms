@@ -108,7 +108,7 @@ test-suite extras
   ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
   build-depends:
       QuickCheck >=2.1 && <2.15
-    , base >=4.7 && <4.17
+    , base
     , deepseq >=1.1 && <1.5
     , text
     , unicode-transforms
@@ -129,10 +129,10 @@ test-suite quickcheck
       test
   ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
   build-depends:
-      QuickCheck   >= 2.1   && < 2.15
-    , unicode-data >= 0.2   && < 0.4
-    , base         >= 4.7   && < 4.17
-    , deepseq      >= 1.1   && < 1.5
+      QuickCheck
+    , unicode-data
+    , base
+    , deepseq
     , hspec        >= 2.0   && < 3
     , text
     , unicode-transforms
@@ -145,7 +145,7 @@ test-suite quickcheck
   if flag(has-icu)
     cpp-options: -DHAS_ICU
     build-depends:
-        text-icu >=0.6.2.1
+        text-icu >=0.6.2.1 && <0.9
   default-language: Haskell2010
 
 test-suite ucd
@@ -155,9 +155,9 @@ test-suite ucd
       test
   ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
   build-depends:
-      base >=4.7 && <4.17
+      base
     , bytestring
-    , split >=0.1 && <0.3
+    , split >=0.2 && <0.3
     , text
     , unicode-transforms
   if flag(dev)
@@ -175,8 +175,8 @@ benchmark bench
       benchmark
   ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
   build-depends:
-      base >=4.7 && <4.17
-    , deepseq >=1.1.0 && <1.5
+      base
+    , deepseq
     , filepath >=1.0 && <2
     , path >=0.0.0 && <0.9
     , path-io >=0.1.0 && <1.7
@@ -196,7 +196,7 @@ benchmark bench
   if flag(has-icu)
     cpp-options: -DBENCH_ICU
     build-depends:
-        text-icu >=0.6.2.1 && <0.8
+        text-icu
   if impl(ghc < 7.10)
     build-depends:
         path (<0.5.12 || >0.5.12)
@@ -209,9 +209,9 @@ executable chart
   if flag(bench-show)
     buildable: True
     build-Depends:
-        base >= 4.8 && < 4.17
+        base
       , bench-show >= 0.3 && < 0.4
-      , split >= 0.2 && < 0.3
+      , split
       , transformers >= 0.4   && < 0.6
   else
     buildable: False
