@@ -1,7 +1,7 @@
 cabal-version: 2.2
 
 name:           unicode-transforms
-version:        0.4.0
+version:        0.4.0.1
 synopsis:       Unicode normalization
 description:    Fast Unicode 14.0.0 normalization in Haskell (NFC, NFKC, NFD, NFKD).
 category:       Data,Text,Unicode

@@ -1,3 +1,8 @@
+## 0.4.0.1 (March 2022)
+
+* Support text-icu == 0.8.* in tests
+* Support unicode-data == 0.3.*
+
 ## 0.4.0 (November 2021)
 
 * Bump `unicode-data` to `0.2`
