@@ -12,7 +12,8 @@
 module Data.Unicode.Internal.Char.DerivedNormalizationProperties
 ( pattern YesStarter
 , pattern MaybeStarterNoDecomp
-, pattern Decomposable, pattern Combining
+, pattern Decomposable
+, pattern Combining
 , isNFKC_QC, isNFKD_QC, isNFC_QC, isNFD_QC)
 where
 
@@ -25,8 +26,10 @@ pattern MaybeStarterNoDecomp = 2
 pattern YesStarter :: Int
 pattern YesStarter = 3
 
-pattern Decomposable, Combining :: Int
+pattern Decomposable :: Int
 pattern Decomposable = 0
+
+pattern Combining :: Int
 pattern Combining = 1
 
 {-# INLINE isNFKC_QC #-}

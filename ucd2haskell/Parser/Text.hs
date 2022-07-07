@@ -210,7 +210,8 @@ genNormalizationPropertiesModule moduleName =
         , "( pattern YesStarter"
         -- , ", pattern MaybeCombiningStarter, pattern MaybeStarterNoDecomp"
         , ", pattern MaybeStarterNoDecomp"
-        , ", pattern Decomposable, pattern Combining"
+        , ", pattern Decomposable"
+        , ", pattern Combining"
         -- , "( pattern Decomposable, pattern Combining, pattern CombiningStarter"
         -- , ", pattern Starter, pattern Stable"
         , ", " <> mconcat (intersperse ", " (prop2FuncName <$> exports)) <> ")"
@@ -239,8 +240,10 @@ genNormalizationPropertiesModule moduleName =
         , "pattern YesStarter = " <> show yesStarter
         -- , "pattern YesStable = " <> show yesStable
         , ""
-        , "pattern Decomposable, Combining :: Int"
+        , "pattern Decomposable :: Int"
         , "pattern Decomposable = " <> show decomposable
+        , ""
+        , "pattern Combining :: Int"
         , "pattern Combining = " <> show combining
         , ""
         , mconcat bitmaps
