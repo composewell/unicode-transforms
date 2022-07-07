@@ -1,0 +1,60 @@
+cabal-version:      3.4
+name:               ucd2haskell
+version:            0.1.0.0
+-- synopsis:
+-- description:
+homepage:           https://github.com/composewell/unicode-transforms
+license:            Apache-2.0
+license-file:       LICENSE
+author:             Pierre Le Marre
+maintainer:         dev@wismill.eu
+-- copyright:
+category:           Text
+build-type:         Simple
+extra-doc-files:    CHANGELOG.md
+-- extra-source-files:
+
+flag ucd2haskell
+  description: Build the ucd2haskell executable
+  manual: True
+  default: False
+
+common default-extensions
+    default-extensions:
+        BangPatterns
+        DeriveGeneric
+        MagicHash
+        RecordWildCards
+        ScopedTypeVariables
+        TupleSections
+        FlexibleContexts
+
+        -- Experimental, may lead to issues
+        DeriveAnyClass
+        TemplateHaskell
+        UnboxedTuples
+
+common compile-options
+    ghc-options: -Wall
+                -fwarn-identities
+                -fwarn-incomplete-record-updates
+                -fwarn-incomplete-uni-patterns
+                -fwarn-tabs
+    default-language: Haskell2010
+
+executable ucd2haskell
+    import: default-extensions, compile-options
+    ghc-options: -O2
+    hs-source-dirs: .
+    main-is: Main.hs
+    other-modules: Parser.Text
+    if flag(ucd2haskell)
+        build-depends:
+              base             >= 4.7   && < 4.17
+            , containers       >= 0.5   && < 0.7
+            , directory        >= 1.3.6 && < 1.3.7
+            , getopt-generics  >= 0.13  && < 0.14
+            , streamly         >= 0.8   && < 0.9
+            , unicode-data     >= 0.3   && < 0.4
+    else
+        buildable: False

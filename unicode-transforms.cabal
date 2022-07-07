@@ -76,6 +76,9 @@ library
       Data.Unicode.Types
       Data.Text.Normalize
 
+      -- Internal
+      Data.Unicode.Internal.Char.DerivedNormalizationProperties
+
       -- Deprecated
       Data.ByteString.UTF8.Normalize
   other-modules:
