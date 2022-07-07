@@ -23,3 +23,6 @@ cabal.project.local~
 
 unicode-data/ucdxml/ucd.all.flat.pdb
 unicode-data/ucdxml/ucd.all.flat.xml
+
+*.csv
+ucd/
