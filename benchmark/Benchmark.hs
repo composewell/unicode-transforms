@@ -25,18 +25,19 @@ import qualified Data.Text as T
 import qualified Data.Text.Normalize as UTText
 
 #ifdef BENCH_ICU
+
 #if MIN_VERSION_text_icu(0,8,0)
-import qualified Data.Text.ICU.Normalize2 as TI    
+import qualified Data.Text.ICU.Normalize2 as ICU
 #else
-import qualified Data.Text.ICU            as TI
+import qualified Data.Text.ICU.Normalize as ICU
 #endif
 
 textICUFuncs :: [(String, Text -> Text)]
 textICUFuncs =
-    [ ("NFD", TI.normalize TI.NFD)
-    , ("NFKD", TI.normalize TI.NFKD)
-    , ("NFC", TI.normalize TI.NFC)
-    , ("NFKC", TI.normalize TI.NFKC)
+    [ ("NFD", ICU.normalize ICU.NFD)
+    , ("NFKD", ICU.normalize ICU.NFKD)
+    , ("NFC", ICU.normalize ICU.NFC)
+    , ("NFKC", ICU.normalize ICU.NFKC)
     ]
 #endif
 
