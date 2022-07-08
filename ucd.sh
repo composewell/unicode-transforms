@@ -14,6 +14,21 @@ FILES="\
     DerivedNormalizationProps.txt:ucd:b2c444c20730b097787fdf50bd7d6dd3fc5256ab8084f5b35b11c8776eca674c \
     NormalizationTest.txt:test/data:7cb30cc2abe6c29c292b99095865d379ce1213045c78c4ff59c7e9391bbe2331"
 
+delete_file() {
+    local pair=$1
+    local file=$(echo $pair | cut -f1 -d':')
+    local destination="$(echo $pair | cut -f2 -d':')/$file"
+    rm "$destination"
+}
+
+# Remove previous downloaded files
+delete_files() {
+    for pair in $FILES
+    do
+        delete_file "$pair"
+    done
+}
+
 # Download the files
 
 # Download $file from https://www.unicode.org/Public/$VERSION/$file
@@ -28,7 +43,7 @@ download_file() {
 
     if test ! -e "$destination"
     then
-        wget -P `dirname "$destination"` "https://www.unicode.org/Public/$VERSION/ucd/$file" 
+        wget -P `dirname "$destination"` "https://www.unicode.org/Public/$VERSION/ucd/$file"
     fi
     if test -n "$VERIFY_CHECKSUM"
     then
@@ -52,24 +67,25 @@ download_files() {
     done
 }
 
-# Print help text
-print_help() {
-    echo "Usage: ucd.sh <command>"
-    echo
-    echo "Available commands:"
-    echo "  download: downloads the text files required"
-    echo "  generate: generate the haskell files from the downloaded text files"
-    echo
-    echo "Example:"
-    echo "$ ./ucd.sh download && ./ucd.sh generate"
-}
-
 # Generate the Haskell files.
 run_generator() {
     # Compile and run ucd2haskell
     cabal run --flag ucd2haskell ucd2haskell -- \
           --input ./ucd/ \
-          --output ./ 
+          --output ./
+}
+
+# Print help text
+print_help() {
+    echo "Usage: ucd.sh <command>"
+    echo
+    echo "Available commands:"
+    echo "  clean: delete downloaded files"
+    echo "  download: downloads the text files required"
+    echo "  generate: generate the haskell files from the downloaded text files"
+    echo
+    echo "Example:"
+    echo "$ ./ucd.sh download && ./ucd.sh generate"
 }
 
 # Main program
@@ -80,6 +96,7 @@ export UNICODE_VERSION="$VERSION"
 # Parse command line
 case $1 in
     -h|--help) print_help;;
+    clean) delete_files;;
     download) download_files;;
     generate) run_generator;;
     *) echo "Unknown argument"; print_help;;
