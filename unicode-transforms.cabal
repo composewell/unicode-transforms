@@ -188,6 +188,7 @@ benchmark bench
   if flag(use-gauge)
     build-depends: gauge >=0.2.0 && <0.3
   else
+    cpp-options: -DUSE_TASTY_BENCH
     build-depends: tasty-bench>= 0.2.5 && <0.4
     mixins: tasty-bench (Test.Tasty.Bench as Gauge.Main)
   if flag(dev)
@@ -197,7 +198,7 @@ benchmark bench
   if flag(has-llvm)
     ghc-options: -fllvm
   if flag(has-icu)
-    cpp-options: -DBENCH_ICU
+    cpp-options: -DHAS_ICU
     build-depends:
         text-icu
   if impl(ghc < 7.10)
