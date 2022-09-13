@@ -309,17 +309,20 @@ composeHangulLV marr lv t i = do
 insertIntoRegBuf :: Char -> RegBuf -> RegBuf
 insertIntoRegBuf c = \case
     RegOne c0
-        | UC.combiningClass c < UC.combiningClass c0
-        -> {-# SCC insertIntoRegBuf_one_before #-} RegMany c c0 []
-        | otherwise
-        -> {-# SCC insertIntoRegBuf_one_after #-} RegMany c0 c []
+        | UC.combiningClass c < UC.combiningClass c0 ->
+            {-# SCC insertIntoRegBuf_one_before #-}
+            RegMany c c0 []
+        | otherwise ->
+            {-# SCC insertIntoRegBuf_one_after #-}
+            RegMany c0 c []
     RegMany c0 c1 cs
-        | cc < UC.combiningClass c0
-        -> {-# SCC insertIntoRegBuf_many_first #-} RegMany c c0 (c1 : cs)
-        | cc < UC.combiningClass c1
-        -> {-# SCC insertIntoRegBuf_many_second #-} RegMany c0 c (c1 : cs)
-        | otherwise
-        ->
+        | cc < UC.combiningClass c0 ->
+            {-# SCC insertIntoRegBuf_many_first #-}
+            RegMany c c0 (c1 : cs)
+        | cc < UC.combiningClass c1 ->
+            {-# SCC insertIntoRegBuf_many_second #-}
+            RegMany c0 c (c1 : cs)
+        | otherwise ->
             {-# SCC insertIntoRegBuf_many_other #-}
             RegMany c0 c1 (cs' ++ (c : cs''))
         where
@@ -359,7 +362,7 @@ writeRegBuf marr i = \case
             where
                 cc = UC.combiningClass c
                 (same, bigger) = span ((== cc) . UC.combiningClass) cs
-        _ -> writeStr marr i (st : uncs)
+        [] -> writeStr marr i (st : uncs)
 
 --
 -- Composition
@@ -372,137 +375,129 @@ composeChar
     -> A.MArray s       -- ^ Destination array for composition
     -> Char             -- ^ Input char
     -> Int              -- ^ Array index
-    -> ComposeState
+    -> ComposeState     -- ^ Compose state
     -> ST s (Int, ComposeState)
-composeChar mode marr = go0
+composeChar mode marr ch0 !i0 !st0 = case st0 of
+    -- Pending starter, QC = Yes
+    ComposeStarter s -> {-# SCC compose_YesStarter #-} case quickCheck ch0 of
+        -- QC = Yes, starter (includes Jamo L & Hangul syllables),
+        -- may decompose, may compose with next
+        QC.YesStarter -> {-# SCC compose_YesStarter_YesStarter #-} do
+            n <- unsafeWrite marr i0 s
+            pure (i0 + n, ComposeStarter ch0)
+        -- QC = Yes or Maybe, combining, not decomposable
+        QC.Combining
+            -- Pending decomposition
+            | UC.isDecomposable mode s ->
+                {-# SCC compose_YesStarter_Combining_decomp #-}
+                go (UC.decompose mode s ++ [ch0]) i0 ComposeNone
+            -- Starter + combining
+            | otherwise ->
+                {-# SCC compose_YesStarter_Combining_nodecomp #-}
+                pure (i0, ComposeReg (RegMany s ch0 []))
+        -- QC = No or Maybe, decomposable
+        QC.Decomposable
+            -- Pending decomposition
+            | UC.isDecomposable mode s ->
+                {-# SCC compose_YesStarter_Decomposable_decomp #-}
+                go (UC.decompose mode s ++ UC.decompose mode ch0) i0 ComposeNone
+            -- Starter + decomposable
+            | otherwise ->
+                {-# SCC compose_YesStarter_Decomposable_nodecomp #-}
+                go (UC.decompose mode ch0) i0 st0
+        -- QC = Maybe, starter, not decomposable
+        _
+            -- Pending decomposition
+            | UC.isDecomposable mode s ->
+                {-# SCC compose_YesStarter_other_decomp_starter #-}
+                go (UC.decompose mode s ++ [ch0]) i0 ComposeNone
+            -- Jamo V or T
+            | UC.isJamo ch0 -> {-# SCC compose_YesStarter_other_jamo #-} if
+                -- Jamo L + jamo V
+                | UC.jamoLFirst <= cp && cp <= UC.jamoLLast &&
+                    UC.jamoVFirst <= ich0 && ich0 <= UC.jamoVLast ->
+                    pure (i0, composeJamoL s ch0)
+                -- Hangul LV + T
+                | UC.isHangul s && UC.isHangulLV s &&
+                    UC.jamoTFirst < ich0 && ich0 <= UC.jamoTLast ->
+                    composeHangulLV marr s ch0 i0
+                -- Cannot compose: flush buffer
+                | otherwise -> do
+                    n1 <- unsafeWrite marr i0 s
+                    n2 <- unsafeWrite marr (i0 + n1) ch0
+                    pure (i0 + n1 + n2, ComposeNone)
+            -- Combining starter
+            | UC.isCombiningStarter ch0
+            , Just x <- UC.composeStarters s ch0 ->
+                {-# SCC compose_YesStarter_other_composable #-}
+                pure (i0, ComposeReg (RegOne x))
+            -- Two non-composable starters
+            | otherwise -> {-# SCC compose_YesStarter_other_other #-} do
+                n <- unsafeWrite marr i0 s
+                pure (i0 + n, ComposeReg (RegOne ch0))
+            where cp = ord s
+    -- Pending composable string
+    ComposeReg rbuf -> {-# SCC compose_Reg #-} case quickCheck ch0 of
+        -- QC = Yes, starter (includes Jamo L & Hangul syllables),
+        -- may decompose, may compose with next
+        QC.YesStarter -> {-# SCC compose_reg_YesStarter #-} do
+            j <- writeRegBuf marr i0 rbuf
+            pure (j, ComposeStarter ch0)
+        -- QC = Yes or Maybe, combining, not decomposable
+        QC.Combining ->
+            {-# SCC compose_reg_Combining #-}
+            pure (i0, ComposeReg (insertIntoRegBuf ch0 rbuf))
+        -- QC = No or Maybe, decomposable
+        QC.Decomposable ->
+            {-# SCC compose_reg_Decomposable #-}
+            go (UC.decompose mode ch0) i0 st0
+        -- QC = Maybe, starter, not decomposable
+        _
+            -- Combining starter
+            -- The first char in RegBuf may or may not be a starter. In
+            -- case it is not we rely on composeStarters failing.
+            | RegOne s <- rbuf
+            , UC.isCombiningStarter ch0
+            , Just x <- UC.composeStarters s ch0 ->
+                {-# SCC compose_reg_composable #-}
+                pure (i0, ComposeReg (RegOne x))
+            -- Jamo V or T
+            | UC.isJamo ch0 -> {-# SCC compose_reg_jamo #-} do
+                j <- writeRegBuf marr i0 rbuf
+                n <- unsafeWrite marr j ch0
+                pure (j + n, ComposeNone)
+            -- Cannot compose: flush buffer
+            | otherwise -> {-# SCC compose_reg_other #-} do
+                j <- writeRegBuf marr i0 rbuf
+                pure (j, ComposeReg (RegOne ch0))
+    -- Empty buffer
+    ComposeNone -> {-# SCC compose_None #-} case quickCheck ch0 of
+        -- QC = Yes, starter (includes Jamo L & Hangul syllables),
+        -- may decompose, may compose with next
+        QC.YesStarter ->
+            {-# SCC compose_none_YesStarter #-}
+            pure (i0, ComposeStarter ch0)
+        -- QC = No or Maybe, decomposable
+        QC.Decomposable ->
+            {-# SCC compose_none_Decomposable #-}
+            go (UC.decompose mode ch0) i0 st0
+        -- QC = Yes (combining) or Maybe (any), not decomposable
+        _
+            -- Jamo V or T
+            | UC.isJamo ch0 -> {-# SCC compose_none_other_jamo #-} do
+                n <- unsafeWrite marr i0 ch0
+                pure (i0 + n, ComposeNone)
+            -- Starter or combining
+            | otherwise ->
+                {-# SCC compose_none_other_other #-}
+                pure (i0, ComposeReg (RegOne ch0))
 
     where
+
+    ich0 = ord ch0
     quickCheck = case mode of
         UC.Canonical -> QC.isNFC_QC
         UC.Kompat    -> QC.isNFKC_QC
-
-    -- ch: input char
-    -- i: array index
-    -- st: compose state
-
-    -- Start normalization with initial compose state
-    go0 ch !i !st =
-        case st of
-            -- Pending starter, QC = Yes
-            ComposeStarter s -> {-# SCC compose_YesStarter #-} case quickCheck ch of
-                -- QC = Yes, starter (includes Jamo L & Hangul syllables),
-                -- may decompose, may compose with next
-                QC.YesStarter -> {-# SCC compose_YesStarter_YesStarter #-} do
-                    n <- unsafeWrite marr i s
-                    pure (i + n, ComposeStarter ch)
-                -- QC = Yes or Maybe, combining, not decomposable
-                QC.Combining
-                    -- Pending decomposition
-                    | UC.isDecomposable mode s ->
-                        {-# SCC compose_YesStarter_Combining_decomp #-}
-                        go (UC.decompose mode s ++ [ch]) i ComposeNone
-                    -- Starter + combining
-                    | otherwise ->
-                        {-# SCC compose_YesStarter_Combining_nodecomp #-}
-                        pure (i, ComposeReg (RegMany s ch []))
-                -- QC = No or Maybe, decomposable
-                QC.Decomposable
-                    -- Pending decomposition
-                    | UC.isDecomposable mode s ->
-                        {-# SCC compose_YesStarter_Decomposable_decomp #-}
-                        go (UC.decompose mode s ++ UC.decompose mode ch) i ComposeNone
-                    -- Starter + decomposable
-                    | otherwise ->
-                        {-# SCC compose_YesStarter_Decomposable_nodecomp #-}
-                        go (UC.decompose mode ch) i st
-                -- QC = Maybe, starter, not decomposable
-                _
-                    -- Pending decomposition
-                    | UC.isDecomposable mode s ->
-                        {-# SCC compose_YesStarter_other_decomp_starter #-}
-                        go (UC.decompose mode s ++ [ch]) i ComposeNone
-                    -- Jamo V or T
-                    | UC.isJamo ch -> {-# SCC compose_YesStarter_other_jamo #-} if
-                        -- Jamo L + jamo V
-                        | UC.jamoLFirst <= cp && cp <= UC.jamoLLast &&
-                            UC.jamoVFirst <= ich && ich <= UC.jamoVLast ->
-                            pure (i, composeJamoL s ch)
-                        -- Hangul LV + T
-                        | UC.isHangul s && UC.isHangulLV s &&
-                            UC.jamoTFirst < ich && ich <= UC.jamoTLast ->
-                            composeHangulLV marr s ch i
-                        -- Cannot compose: flush buffer
-                        | otherwise -> do
-                            n1 <- unsafeWrite marr i s
-                            n2 <- unsafeWrite marr (i + n1) ch
-                            pure (i + n1 + n2, ComposeNone)
-                    -- Combining starter
-                    | UC.isCombiningStarter ch
-                    , Just x <- UC.composeStarters s ch ->
-                        {-# SCC compose_YesStarter_other_composable #-}
-                        pure (i, ComposeReg (RegOne x))
-                    -- Two non-composable starters
-                    | otherwise -> {-# SCC compose_YesStarter_other_other #-}do
-                        n <- unsafeWrite marr i s
-                        pure (i + n, ComposeReg (RegOne ch))
-                    where cp = ord s
-            -- Pending composable string
-            ComposeReg rbuf -> {-# SCC compose_Reg #-} case quickCheck ch of
-                -- QC = Yes, starter (includes Jamo L & Hangul syllables),
-                -- may decompose, may compose with next
-                QC.YesStarter -> {-# SCC compose_reg_YesStarter #-} do
-                    j <- writeRegBuf marr i rbuf
-                    pure (j, ComposeStarter ch)
-                -- QC = Yes or Maybe, combining, not decomposable
-                QC.Combining ->
-                    {-# SCC compose_reg_Combining #-}
-                    pure (i, ComposeReg (insertIntoRegBuf ch rbuf))
-                -- QC = No or Maybe, decomposable
-                QC.Decomposable ->
-                    {-# SCC compose_reg_Decomposable #-}
-                    go (UC.decompose mode ch) i st
-                -- QC = Maybe, starter, not decomposable
-                _
-                    -- Combining starter
-                    -- The first char in RegBuf may or may not be a starter. In
-                    -- case it is not we rely on composeStarters failing.
-                    | RegOne s <- rbuf
-                    , UC.isCombiningStarter ch
-                    , Just x <- UC.composeStarters s ch ->
-                        {-# SCC compose_reg_composable #-}
-                        pure (i, ComposeReg (RegOne x))
-                    -- Jamo V or T
-                    | UC.isJamo ch -> {-# SCC compose_reg_jamo #-} do
-                        j <- writeRegBuf marr i rbuf
-                        n <- unsafeWrite marr j ch
-                        pure (j + n, ComposeNone)
-                    -- Cannot compose: flush buffer
-                    | otherwise -> {-# SCC compose_reg_other #-} do
-                        j <- writeRegBuf marr i rbuf
-                        pure (j, ComposeReg (RegOne ch))
-            -- Empty buffer
-            ComposeNone -> {-# SCC compose_None #-} case quickCheck ch of
-                -- QC = Yes, starter (includes Jamo L & Hangul syllables),
-                -- may decompose, may compose with next
-                QC.YesStarter ->
-                    {-# SCC compose_none_YesStarter #-}
-                    pure (i, ComposeStarter ch)
-                -- QC = No or Maybe, decomposable
-                QC.Decomposable ->
-                    {-# SCC compose_none_Decomposable #-}
-                    go (UC.decompose mode ch) i st
-                -- QC = Yes (combining) or Maybe (any), not decomposable
-                _
-                    -- Jamo V or T
-                    | UC.isJamo ch -> {-# SCC compose_none_other_jamo #-} do
-                        n <- unsafeWrite marr i ch
-                        pure (i + n, ComposeNone)
-                    -- Starter or combining
-                    | otherwise ->
-                        {-# SCC compose_none_other_other #-}
-                        pure (i, ComposeReg (RegOne ch))
-
-        where ich = ord ch
 
     -- Recursive decomposition
     go [] !i !st = pure (i, st)
