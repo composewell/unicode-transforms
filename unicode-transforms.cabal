@@ -22,6 +22,7 @@ tested-with:    GHC==8.0.2
               , GHC==8.10.7
               , GHC==9.0.1
               , GHC==9.2.1
+              , GHC==9.4.2
 build-type:     Simple
 extra-source-files:
     Changelog.md
@@ -82,10 +83,10 @@ library
   hs-source-dirs: .
   ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
   build-depends:
-      base         >= 4.8 && < 4.17
+      base         >= 4.8 && < 4.18
     , unicode-data >= 0.2 && < 0.4
     , bytestring   >= 0.9 && < 0.12
-    , ghc-prim     >= 0.2 && < 0.9
+    , ghc-prim     >= 0.2 && < 0.10
 
     -- We depend on a lot of internal modules in text. We keep the upper bound
     -- inclusive of the latest stable version.
