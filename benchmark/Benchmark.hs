@@ -25,7 +25,11 @@ import qualified Data.Text as T
 import qualified Data.Text.Normalize as UTText
 
 #ifdef BENCH_ICU
-import qualified Data.Text.ICU             as TI
+#if MIN_VERSION_text_icu(0,8,0)
+import qualified Data.Text.ICU.Normalize2 as TI    
+#else
+import qualified Data.Text.ICU            as TI
+#endif
 
 textICUFuncs :: [(String, Text -> Text)]
 textICUFuncs =
