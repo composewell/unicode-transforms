@@ -31,6 +31,7 @@ jobs:
         run: |
           ghc --version
           curl -s -L https://hackage.haskell.org/package/unicode-data-0.3.0.tar.gz | tar xz
+          export LC_ALL=C.UTF-8
           ghc --make -XMagicHash -XBangPatterns -XUnboxedTuples -itest:unicode-data-0.3.0/lib -o extras test/Extra.hs
           ./extras
           ghc --make -XMagicHash -XBangPatterns -XUnboxedTuples -itest:unicode-data-0.3.0/lib -o quickcheck test/Properties.hs
