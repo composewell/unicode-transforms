@@ -97,8 +97,8 @@ makeBenchComp
     -> Benchmark
 #ifdef USE_TASTY_BENCH
 makeBenchComp implRef impl (dataName, setup) = env setup
-    ( bcompare ("$NF == \"" <> (makeTestName (fst impl) dataName)
-               <> "\" && $(NF-1) == \"" <> implRef <> "\"")
+    ( bcompare ("$NF == \"" ++ (makeTestName (fst impl) dataName)
+               ++ "\" && $(NF-1) == \"" ++ implRef ++ "\"")
     . makeBench impl dataName)
 #else
 makeBenchComp _ = makeBenchRef
