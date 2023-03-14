@@ -86,8 +86,9 @@ jobs:
       fail-fast: false
       matrix:
         name:
-          - 9.4.2
-          - 9.2.4
+          - 9.6.1
+          - 9.4.4
+          - 9.2.7
           - 9.0.2
           - 8.10.7
           - 8.10.7+stack
@@ -97,14 +98,20 @@ jobs:
           - 8.2.2
           - 8.0.2
         include:
-          - name: 9.4.2
-            ghc-version: 9.4.2
+          - name: 9.6.1
+            ghc-version: 9.6.1
             command: cabal-v2
             runner: ubuntu-latest
-            cabal-version: 3.6
+            cabal-version: 3.10.1.0
 
-          - name: 9.2.4
-            ghc-version: 9.2.4
+          - name: 9.4.4
+            ghc-version: 9.4.4
+            command: cabal-v2
+            runner: ubuntu-latest
+            cabal-version: 3.8.1.0
+
+          - name: 9.2.7
+            ghc-version: 9.2.7
             command: cabal-v2
             runner: ubuntu-latest
             cabal-version: 3.6
@@ -167,15 +174,15 @@ jobs:
           #     HLINT_TARGETS="Data"
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
-    - uses: haskell/actions/setup@v1
+    - uses: haskell/actions/setup@v2
       with:
         ghc-version: ${{ matrix.ghc-version }}
         cabal-version: ${{ matrix.cabal-version }}
 
 
-    - uses: actions/cache@v2
+    - uses: actions/cache@v3
       name: Cache common directories
       with:
         path: |

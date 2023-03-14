@@ -1,7 +1,12 @@
+## (Unreleased)
+
+* Support GHC 9.4 and 9.6: allow `base 4.18` and `ghc-prim 0.10`
+* Support `unicode-data 0.4`
+
 ## 0.4.0.1 (March 2022)
 
-* Support text-icu == 0.8.* in tests
-* Support unicode-data == 0.3.*
+* Support `text-icu == 0.8.*` in tests
+* Support `unicode-data == 0.3.*`
 
 ## 0.4.0 (November 2021)
 
@@ -12,7 +17,7 @@
 
 ## 0.3.8
 
-* Allow ghc-prim 0.7
+* Allow `ghc-prim 0.7`
 * Extract `unicode-data` into its own package
 * Depend on the latest stable `text`
 
