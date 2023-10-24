@@ -21,8 +21,10 @@ tested-with:    GHC==8.0.2
               , GHC==8.8.4
               , GHC==8.10.7
               , GHC==9.0.2
-              , GHC==9.2.7
-              , GHC==9.4.4
+              , GHC==9.2.8
+              , GHC==9.4.7
+              , GHC==9.6.3
+              , GHC==9.8.1
 build-type:     Simple
 extra-source-files:
     Changelog.md
@@ -83,14 +85,14 @@ library
   hs-source-dirs: .
   ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
   build-depends:
-      base         >= 4.8 && < 4.19
+      base         >= 4.8 && < 4.20
     , unicode-data >= 0.2 && < 0.5
-    , bytestring   >= 0.9 && < 0.12
-    , ghc-prim     >= 0.2 && < 0.11
+    , bytestring   >= 0.9 && < 0.13
+    , ghc-prim     >= 0.2 && < 0.12
 
     -- We depend on a lot of internal modules in text. We keep the upper bound
     -- inclusive of the latest stable version.
-    , text         >=1.1.1 && <=1.2.5.0 || >=2.0 && <2.1
+    , text         >=1.1.1 && <=1.2.5.0 || >=2.0 && <2.2
   if flag(dev)
     ghc-options: -O0
   else
@@ -110,7 +112,7 @@ test-suite extras
   build-depends:
       QuickCheck >=2.1 && <2.15
     , base
-    , deepseq >=1.1 && <1.5
+    , deepseq >=1.1 && <1.6
     , text
     , unicode-transforms
   if flag(dev)
@@ -179,8 +181,8 @@ benchmark bench
       base
     , deepseq
     , filepath >=1.0 && <2
-    , path >=0.0.0 && <0.9
-    , path-io >=0.1.0 && <1.7
+    , path >=0.0.0 && <0.10
+    , path-io >=0.1.0 && <1.9
     , text
     , unicode-transforms
   if flag(use-gauge)
@@ -213,6 +215,6 @@ executable chart
         base
       , bench-show >= 0.3 && < 0.4
       , split
-      , transformers >= 0.4   && < 0.6
+      , transformers >= 0.4   && < 0.7
   else
     buildable: False

@@ -86,9 +86,10 @@ jobs:
       fail-fast: false
       matrix:
         name:
-          - 9.6.1
-          - 9.4.4
-          - 9.2.7
+          - 9.8.1
+          - 9.6.3
+          - 9.4.7
+          - 9.2.8
           - 9.0.2
           - 8.10.7
           - 8.10.7+stack
@@ -98,20 +99,26 @@ jobs:
           - 8.2.2
           - 8.0.2
         include:
-          - name: 9.6.1
-            ghc-version: 9.6.1
+          - name: 9.8.1
+            ghc-version: 9.8.1
             command: cabal-v2
             runner: ubuntu-latest
             cabal-version: 3.10.1.0
 
-          - name: 9.4.4
-            ghc-version: 9.4.4
+          - name: 9.6.3
+            ghc-version: 9.6.3
+            command: cabal-v2
+            runner: ubuntu-latest
+            cabal-version: 3.10.1.0
+
+          - name: 9.4.7
+            ghc-version: 9.4.7
             command: cabal-v2
             runner: ubuntu-latest
             cabal-version: 3.8.1.0
 
-          - name: 9.2.7
-            ghc-version: 9.2.7
+          - name: 9.2.8
+            ghc-version: 9.2.8
             command: cabal-v2
             runner: ubuntu-latest
             cabal-version: 3.6
@@ -176,7 +183,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - uses: haskell/actions/setup@v2
+    - uses: haskell-actions/setup@v2
       with:
         ghc-version: ${{ matrix.ghc-version }}
         cabal-version: ${{ matrix.cabal-version }}
