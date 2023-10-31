@@ -25,7 +25,7 @@ import Data.Unicode.Types (NormalizationMode(..))
 import Data.Unicode.Internal.NormalizeStream
     ( DecomposeMode(..)
     , stream
-    , unstream
+    , unstreamD
     , unstreamC
     )
 
@@ -34,7 +34,7 @@ import Data.Unicode.Internal.NormalizeStream
 normalize :: NormalizationMode -> Text -> Text
 normalize mode =
     case mode of
-      NFD  -> (unstream Canonical)   . stream
-      NFKD -> (unstream Kompat)  . stream
-      NFC  -> (unstreamC Canonical)  . stream
-      NFKC -> (unstreamC Kompat) . stream
+      NFD  -> (unstreamD Canonical) . stream
+      NFKD -> (unstreamD Kompat)    . stream
+      NFC  -> (unstreamC Canonical) . stream
+      NFKC -> (unstreamC Kompat)    . stream

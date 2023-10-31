@@ -2,7 +2,12 @@ packages:
 - '.'
 resolver: lts-18.18
 extra-deps:
-- unicode-data-0.2.0
+# [TODO] re-enable once unicode-data is released with quick check
+# - unicode-data-XXX
+- git: https://github.com/composewell/unicode-data.git
+  commit: dffcca331e4c8479c75983cfc8ce2591e9bad601
+  subdirs:
+    - unicode-data
 - tasty-bench-0.3
 
 # Look at https://stackoverflow.com/questions/70045586/could-not-find-module-system-console-mintty-win32-when-compiling-test-framework
