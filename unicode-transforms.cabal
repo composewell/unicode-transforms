@@ -27,13 +27,14 @@ tested-with:    GHC==8.0.2
               , GHC==9.8.1
               , GHC==9.10.1
 build-type:     Simple
-extra-source-files:
+extra-doc-files:
     Changelog.md
     MAINTAINING.md
     NOTES.md
     README.md
-    download-ucd-files.sh
     benchmark/README.md
+extra-source-files:
+    download-ucd-files.sh
     benchmark/NormalizeFile.hs
     benchmark/data/AllChars.txt
     benchmark/data/Deutsch.txt
