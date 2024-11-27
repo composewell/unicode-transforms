@@ -20,23 +20,27 @@ import Path.IO (listDir)
 import System.FilePath (dropExtensions, takeFileName)
 
 import Gauge.Main (Benchmark, bench, bgroup, defaultMain, env, nf)
+#ifdef USE_TASTY_BENCH
+import Gauge.Main (bcompare)
+#endif
 
 import qualified Data.Text as T
 import qualified Data.Text.Normalize as UTText
 
-#ifdef BENCH_ICU
+#ifdef HAS_ICU
+
 #if MIN_VERSION_text_icu(0,8,0)
-import qualified Data.Text.ICU.Normalize2 as TI    
+import qualified Data.Text.ICU.Normalize2 as ICU
 #else
-import qualified Data.Text.ICU            as TI
+import qualified Data.Text.ICU.Normalize as ICU
 #endif
 
 textICUFuncs :: [(String, Text -> Text)]
 textICUFuncs =
-    [ ("NFD", TI.normalize TI.NFD)
-    , ("NFKD", TI.normalize TI.NFKD)
-    , ("NFC", TI.normalize TI.NFC)
-    , ("NFKC", TI.normalize TI.NFKC)
+    [ ("NFD", ICU.normalize ICU.NFD)
+    , ("NFKD", ICU.normalize ICU.NFKD)
+    , ("NFC", ICU.normalize ICU.NFC)
+    , ("NFKC", ICU.normalize ICU.NFKC)
     ]
 #endif
 
@@ -57,30 +61,73 @@ dataDir = $(mkRelDir "benchmark") </> $(mkRelDir "data")
 dataSetSize :: Int
 dataSetSize = 1000000
 
-makeBench :: (NFData a, NFData b) => (String, a -> b) -> (String, IO a) -> Benchmark
-makeBench (implName, func) (dataName, setup) =
-    env setup (\txt -> bench (implName ++ "/" ++ dataName) (nf func txt))
+-- | Create a benchmark
+makeBench
+    :: (NFData a, NFData b)
+    => (String, a -> b)
+    -> String -- ^ Test name
+    -> a
+    -> Benchmark
+makeBench (implName, func) dataName =
+    \txt -> bench (makeTestName implName dataName) (nf func txt)
 
+-- | Format a test name
+makeTestName
+    :: String -- ^ Implementation name
+    -> String -- ^ Data name
+    -> String
+makeTestName implName dataName = implName ++ "/" ++ dataName
+
+#if defined(HAS_ICU) || !defined(USE_TASTY_BENCH)
+-- | Create refence benchmark
+makeBenchRef
+    :: (NFData a, NFData b)
+    => (String, a -> b)
+    -> (String, IO a)
+    -> Benchmark
+makeBenchRef impl (dataName, setup) = env setup (makeBench impl dataName)
+#endif
+
+-- | Create a benchmark which compares to the reference benchmark.
+makeBenchComp
+    :: (NFData a, NFData b)
+    => String -- ^ Reference implementation
+    -> (String, a -> b)
+    -> (String, IO a)
+    -> Benchmark
+#ifdef USE_TASTY_BENCH
+makeBenchComp implRef impl (dataName, setup) = env setup
+    ( bcompare ("$NF == \"" ++ (makeTestName (fst impl) dataName)
+               ++ "\" && $(NF-1) == \"" ++ implRef ++ "\"")
+    . makeBench impl dataName)
+#else
+makeBenchComp _ = makeBenchRef
+#endif
+
+-- [TODO] read as text directly?
+-- | Read a file as 'String'.
 strInput :: FilePath -> (String, IO String)
-strInput file = (dataName file,
-                 fmap (take dataSetSize . cycle) (readFile file))
+strInput file =
+    ( dataName file
+    , take dataSetSize . cycle <$> readFile file )
     where dataName = dropExtensions . takeFileName
 
+-- | Read a file as 'T.Text'.
 txtInput :: FilePath -> (String, IO Text)
-txtInput file = second (fmap T.pack) (strInput file)
-    where second f (a, b) = (a, f b)
+txtInput file = fmap T.pack <$> strInput file
 
 main :: IO ()
 main = do
-    dataFiles <- fmap (map toFilePath . snd) (listDir dataDir)
+    dataFiles <- map toFilePath . snd <$> listDir dataDir
     defaultMain $
         [
-#ifdef BENCH_ICU
+#ifdef HAS_ICU
           bgroup "text-icu"
-              $ makeBench <$> textICUFuncs <*> (map txtInput dataFiles)
+            $ makeBenchRef <$> textICUFuncs <*> (map txtInput dataFiles)
         ,
 #endif
           bgroup "unicode-transforms-text"
-            $ makeBench <$> unicodeTransformTextFuncs
-                        <*> (map txtInput dataFiles)
+            $ makeBenchComp "text-icu"
+                <$> unicodeTransformTextFuncs
+                <*> (map txtInput dataFiles)
         ]

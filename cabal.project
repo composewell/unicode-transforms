@@ -1,0 +1,3 @@
+packages: 
+  unicode-transforms.cabal
+  ucd2haskell/ucd2haskell.cabal

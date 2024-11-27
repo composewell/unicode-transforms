@@ -5,12 +5,12 @@
 The test suite uses files included in the UCD. These files should be
 synchronized with the version of unicode supported by `unicode-data`.
 
-`download-ucd-files.sh` downloads the required test files. Replace the `VERSION`
-with the current version supported by `unicode-data` and run this from the root
-of the project.
+`ucd.sh` downloads the required test files and generates corresponding code.
+Replace the `VERSION` with the current version supported by `unicode-data` and
+run the following from the root of the project:
 
 ```
-$ ./download-ucd-files.sh
+$ ./ucd.sh clean && ./ucd.sh download && ./ucd generate
 ```
 
 Additionally check for the unicode version in the documentation and make sure it
