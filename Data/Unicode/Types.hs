@@ -19,7 +19,9 @@ module Data.Unicode.Types
       NormalizationMode(..)
     ) where
 
+#if __GLASGOW_HASKELL__ < 912
 import           Data.Typeable (Typeable)
+#endif
 
 -- |
 -- Normalization transforms Unicode text into an equivalent
@@ -95,4 +97,8 @@ data NormalizationMode
     | NFKD   -- ^ Compatibility decomposition.
     | NFC    -- ^ Canonical decomposition followed by canonical composition.
     | NFKC   -- ^ Compatibility decomposition followed by canonical composition.
-      deriving (Eq, Show, Enum, Typeable)
+      deriving (Eq, Show, Enum
+#if __GLASGOW_HASKELL__ < 912
+                  , Typeable
+#endif
+               )
