@@ -87,10 +87,10 @@ library
   hs-source-dirs: .
   ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
   build-depends:
-      base         >= 4.8 && < 4.21
+      base         >= 4.8 && < 4.22
     , unicode-data >= 0.2 && < 0.7
     , bytestring   >= 0.9 && < 0.13
-    , ghc-prim     >= 0.2 && < 0.12
+    , ghc-prim     >= 0.2 && < 0.14
 
     -- We depend on a lot of internal modules in text. We keep the upper bound
     -- inclusive of the latest stable version.
