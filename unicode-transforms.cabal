@@ -112,7 +112,7 @@ test-suite extras
       test
   ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
   build-depends:
-      QuickCheck >=2.1 && <2.15
+      QuickCheck >=2.1 && <2.16
     , base
     , deepseq >=1.1 && <1.6
     , text
@@ -190,7 +190,7 @@ benchmark bench
   if flag(use-gauge)
     build-depends: gauge >=0.2.0 && <0.3
   else
-    build-depends: tasty-bench>= 0.2.5 && <0.4
+    build-depends: tasty-bench>= 0.2.5 && <0.5
     mixins: tasty-bench (Test.Tasty.Bench as Gauge.Main)
   if flag(dev)
     ghc-options: -O0
