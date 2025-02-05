@@ -160,12 +160,16 @@ jobs:
             command: cabal-v2
             runner: ubuntu-latest
             cabal-version: 3.2
+            pack_options: >-
+              DISABLE_BENCH=y
 
           - name: 8.4.4
             ghc-version: 8.4.4
             command: cabal-v2
             runner: ubuntu-latest
             cabal-version: 3.2
+            pack_options: >-
+              DISABLE_BENCH=y
 
           - name: 8.2.2
             ghc-version: 8.2.2
