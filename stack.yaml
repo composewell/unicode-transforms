@@ -1,8 +1,8 @@
 packages:
 - '.'
-resolver: lts-18.18
+resolver: lts-23.27
 extra-deps:
-- unicode-data-0.2.0
+- unicode-data-0.8.0
 - tasty-bench-0.3
 
 # Look at https://stackoverflow.com/questions/70045586/could-not-find-module-system-console-mintty-win32-when-compiling-test-framework
