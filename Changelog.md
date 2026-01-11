@@ -1,5 +1,6 @@
 ## (Unreleased)
 
+* Support GHC 9.12: allow `base 4.21` and `ghc-prim 0.13`
 * Support GHC 9.4 and 9.6: allow `base 4.18` and `ghc-prim 0.10`
 * Support `unicode-data 0.4`
 
