@@ -27,6 +27,7 @@ tested-with:    GHC==8.0.2
               , GHC==9.8.1
               , GHC==9.10.1
               , GHC==9.12.1
+              , GHC==9.14.1
 build-type:     Simple
 extra-doc-files:
     Changelog.md
@@ -88,7 +89,7 @@ library
   hs-source-dirs: .
   ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
   build-depends:
-      base         >= 4.8 && < 4.22
+      base         >= 4.8 && < 4.23
     , unicode-data >= 0.2 && < 0.9
     , bytestring   >= 0.9 && < 0.13
     , ghc-prim     >= 0.2 && < 0.14
