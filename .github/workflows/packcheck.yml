@@ -87,11 +87,11 @@ jobs:
       matrix:
         name:
           - 9.14.1
-          - 9.12.1
-          - 9.10.1
-          - 9.8.1
-          - 9.6.3
-          - 9.4.7
+          - 9.12.2
+          - 9.10.3
+          - 9.8.4
+          - 9.6.7
+          - 9.4.8
           - 9.2.8
           - 9.0.2
           - 8.10.7
@@ -108,32 +108,32 @@ jobs:
             runner: ubuntu-latest
             cabal-version: 3.14.1.1
 
-          - name: 9.12.1
-            ghc-version: 9.12.1
+          - name: 9.12.2
+            ghc-version: 9.12.2
             command: cabal-v2
             runner: ubuntu-latest
             cabal-version: 3.14.1.1
 
-          - name: 9.10.1
-            ghc-version: 9.10.1
+          - name: 9.10.3
+            ghc-version: 9.10.3
             command: cabal-v2
             runner: ubuntu-latest
             cabal-version: 3.10.1.0
 
-          - name: 9.8.1
-            ghc-version: 9.8.1
+          - name: 9.8.4
+            ghc-version: 9.8.4
             command: cabal-v2
             runner: ubuntu-latest
             cabal-version: 3.10.1.0
 
-          - name: 9.6.3
-            ghc-version: 9.6.3
+          - name: 9.6.7
+            ghc-version: 9.6.7
             command: cabal-v2
             runner: ubuntu-latest
             cabal-version: 3.10.1.0
 
-          - name: 9.4.7
-            ghc-version: 9.4.7
+          - name: 9.4.8
+            ghc-version: 9.4.8
             command: cabal-v2
             runner: ubuntu-latest
             cabal-version: 3.8.1.0
