@@ -90,7 +90,7 @@ library
   ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
   build-depends:
       base         >= 4.8 && < 4.23
-    , unicode-data >= 0.2 && < 0.9
+    , unicode-data >= 0.2 && < 0.10
     , bytestring   >= 0.9 && < 0.13
     , ghc-prim     >= 0.2 && < 0.14
 
@@ -114,7 +114,7 @@ test-suite extras
       test
   ghc-options: -Wall -fwarn-identities -fwarn-incomplete-record-updates -fwarn-incomplete-uni-patterns -fwarn-tabs
   build-depends:
-      QuickCheck >=2.1 && <2.18
+      QuickCheck >=2.1 && <2.20
     , base
     , deepseq >=1.1 && <1.6
     , text
